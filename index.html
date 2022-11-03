@@ -10,7 +10,7 @@
       height: 50px;
     }
 
-    #log, #isRTPrequest {
+    #log, #isRTPrequest, #result {
       white-space: pre;
       font-family: monospace;
     }
@@ -48,7 +48,9 @@
 <div id="isRTPrequestLabel" class="padding-after"><b>isReadyToPay request payload:</b></div>
 <div id="isRTPrequest" class="padding-after"></div>
 <div id="isRTP" class="padding-after"><b>isReadyToPay API response:</b></div>
-<div id="log"></div>
+<div id="log" class="padding-after"></div>
+<div id="resultLabel" class="padding-after"><b>Result:</b></div>
+<div id="result"></div>
 
 <script async
         src="https://pay.google.com/gp/p/js/pay.js"
@@ -336,6 +338,9 @@
       setTimeout(function () {
         // @todo pass payment token to your gateway to process payment
         paymentToken = paymentData.paymentMethodData.tokenizationData.token;
+
+        document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
+
 
         // if (attempts++ % 2 == 0) {
         //   reject(new Error('Every other attempt fails, next one should succeed'));
