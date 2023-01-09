@@ -256,6 +256,12 @@
   }
 
   function gateways(event) {
+    if(event.target.value === 'stripe') {
+      // special handling for Stripe. the publishable key is a publicly available key from their docs
+      tokenizationSpecification.parameters = { ...tokenizationSpecification.parameters, 'stripe:version': '2022-11-15', 'stripe:publishableKey': 'pk_test_LMUiQyn0mBZPsUIhVrVMblov'};
+      delete tokenizationSpecification.parameters.gatewayMerchantId;
+    }
+
     tokenizationSpecification.parameters.gateway = event.target.value;
     onGooglePayLoaded();
   }
