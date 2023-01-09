@@ -31,6 +31,16 @@
 <div id="container" class="padding-after"></div>
 <div id="info" class="padding-after"><small>Note: in this demo the Button is always displayed.<br/>No matter what the outcome of isReadyToPay is.</small></div>
 
+<div id="gatewayLabel" class="padding-after"><b>Gateway:</b></div>
+<div class="padding-after">
+  <select name="gateways" id="gateways">
+    <option value="adyen">adyen</option>
+    <option value="ariane" selected="selected">ariane</option>
+    <option value="example">example</option>
+    <option value="stripe">stripe</option>
+  </select>
+</div>
+
 <div id="allowedAuthMethodsLabel" class="padding-after"><b>allowedAuthMethods:</b></div>
 <div id="allowedAuthMethods" class="padding-after">
   <ul class="no-bullets">
@@ -245,6 +255,11 @@
     onGooglePayLoaded();
   }
 
+  function gateways(event) {
+    tokenizationSpecification.parameters.gateway = event.target.value;
+    onGooglePayLoaded();
+  }
+
   /**
    * Initialize Google PaymentsClient after Google-hosted JavaScript has loaded
    *
@@ -258,6 +273,10 @@
 
     document.querySelectorAll("input[name='allowedAuthMethods']").forEach((input) => {
       input.addEventListener('change', allowedAuthMethods);
+    });
+
+    document.querySelectorAll("select[name='gateways']").forEach((input) => {
+      input.addEventListener('change', gateways);
     });
 
     document.getElementById('isRTPrequest').innerHTML = JSON.stringify(getGoogleIsReadyToPayRequest(), null, 2);
