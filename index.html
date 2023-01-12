@@ -67,7 +67,7 @@
 <div id="isRTPrequest" class="padding-after"></div>
 <div id="isRTP" class="padding-after"><b>isReadyToPay API response:</b></div>
 <div id="log" class="padding-after"></div>
-<div id="resultLabel" class="padding-after"><b>Result:</b></div>
+<div id="resultLabel" class="padding-after"><b>paymentData response:</b></div>
 <div id="result"></div>
 
 
@@ -129,8 +129,7 @@
     type: 'CARD',
     parameters: {
       allowedAuthMethods: allowedCardAuthMethods,
-      allowedCardNetworks: allowedCardNetworks,
-      assuranceDetailsRequired: true
+      allowedCardNetworks: allowedCardNetworks
     }
   };
 
@@ -181,6 +180,7 @@
     const paymentDataRequest = Object.assign({}, baseRequest);
     paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
     paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
+    paymentDataRequest.allowedPaymentMethods[0].parameters.assuranceDetailsRequired = true;
     paymentDataRequest.merchantInfo = {
       // @todo a merchant ID is available for a production environment after approval by Google
       // See {@link https://developers.google.com/pay/api/web/guides/test-and-deploy/integration-checklist|Integration checklist}
@@ -349,6 +349,7 @@
    */
   function onGooglePaymentButtonClicked() {
     const paymentDataRequest = getGooglePaymentDataRequest();
+    console.log(JSON.stringify(paymentDataRequest, null, 2));
     paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
 
     const paymentsClient = getGooglePaymentsClient();

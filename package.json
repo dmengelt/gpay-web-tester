@@ -1,0 +1,23 @@
+{
+  "name": "gpay-web-tester",
+  "version": "1.0.0",
+  "description": "Google Pay web tester",
+  "main": "index.js",
+  "scripts": {
+    "serve": "serve .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmengelt/gpay-web-tester.git"
+  },
+  "author": "Dominik Mengelt",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dmengelt/gpay-web-tester/issues"
+  },
+  "homepage": "https://github.com/dmengelt/gpay-web-tester#readme",
+  "devDependencies": {
+    "serve": "^14.1.2"
+  }
+}

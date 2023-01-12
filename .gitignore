@@ -25,3 +25,5 @@ hs_err_pid*
 # Intelli IDEA
 .idea
 *.iml
+
+node_modules/
