@@ -151,13 +151,6 @@
   let existingPaymentMethodRequiredValue = true;
 
   /**
-   * An initialized google.payments.api.PaymentsClient object or null if not yet set
-   *
-   * @see {@link getGooglePaymentsClient}
-   */
-  let paymentsClient = null;
-
-  /**
    * Configure your site's support for payment methods supported by the Google Pay
    * API.
    *
@@ -200,6 +193,8 @@
     return paymentDataRequest;
   }
 
+  let environmentValue = 'TEST';
+
   /**
    * Return an active PaymentsClient or initialize
    *
@@ -207,15 +202,12 @@
    * @returns {google.payments.api.PaymentsClient} Google Pay API client
    */
   function getGooglePaymentsClient() {
-    if (paymentsClient === null) {
-      paymentsClient = new google.payments.api.PaymentsClient({
-        environment: 'TEST',
+      return new google.payments.api.PaymentsClient({
+        environment: environmentValue,
         paymentDataCallbacks: {
           onPaymentAuthorized: onPaymentAuthorized
         }
       });
-    }
-    return paymentsClient;
   }
 
   /**
@@ -273,7 +265,7 @@
   }
 
   function environments(event) {
-    paymentsClient.environment = event.target.value;
+    environmentValue = event.target.value;
     onGooglePayLoaded();
   }
 
@@ -305,7 +297,6 @@
     paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest())
         .then(function (response) {
           document.getElementById('log').innerHTML = JSON.stringify(response, null, 2);
-
           if (response.result) {
             addGooglePayButton();
           } else {
@@ -364,8 +355,6 @@
     paymentsClient.loadPaymentData(paymentDataRequest);
   }
 
-  let attempts = 0;
-
   /**
    * Process payment data returned by the Google Pay API
    *
@@ -377,15 +366,7 @@
       setTimeout(function () {
         // @todo pass payment token to your gateway to process payment
         paymentToken = paymentData.paymentMethodData.tokenizationData.token;
-
         document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
-
-
-        // if (attempts++ % 2 == 0) {
-        //   reject(new Error('Every other attempt fails, next one should succeed'));
-        // } else {
-        //   resolve({});
-        // }
         resolve({});
       }, 500);
     });
