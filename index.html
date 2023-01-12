@@ -31,6 +31,14 @@
 <div id="container" class="padding-after"></div>
 <div id="info" class="padding-after"><small>Note: in this demo the Button is always displayed.<br/>No matter what the outcome of isReadyToPay is.</small></div>
 
+<div id="environmentLabel" class="padding-after"><b>Environment:</b></div>
+<div class="padding-after">
+  <select name="environments" id="environments">
+    <option value="TEST" selected="selected">TEST</option>
+    <option value="PRODUCTION">PRODUCTION</option>
+  </select>
+</div>
+
 <div id="gatewayLabel" class="padding-after"><b>Gateway:</b></div>
 <div class="padding-after">
   <select name="gateways" id="gateways">
@@ -62,9 +70,7 @@
 <div id="resultLabel" class="padding-after"><b>Result:</b></div>
 <div id="result"></div>
 
-<script async
-        src="https://pay.google.com/gp/p/js/pay.js"
-        onload="onGooglePayLoaded()"></script>
+
 </body>
 
 <script type="application/javascript">
@@ -108,7 +114,7 @@
   const tokenizationSpecification = {
     type: 'PAYMENT_GATEWAY',
     parameters: {
-      'gateway': 'adyen',
+      'gateway': 'ariane',
       'gatewayMerchantId': 'exampleGatewayMerchantId'
     }
   };
@@ -266,6 +272,11 @@
     onGooglePayLoaded();
   }
 
+  function environments(event) {
+    paymentsClient.environment = event.target.value;
+    onGooglePayLoaded();
+  }
+
   /**
    * Initialize Google PaymentsClient after Google-hosted JavaScript has loaded
    *
@@ -285,11 +296,14 @@
       input.addEventListener('change', gateways);
     });
 
+    document.querySelectorAll("select[name='environments']").forEach((input) => {
+      input.addEventListener('change', environments);
+    });
+
     document.getElementById('isRTPrequest').innerHTML = JSON.stringify(getGoogleIsReadyToPayRequest(), null, 2);
     const paymentsClient = getGooglePaymentsClient();
     paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest())
         .then(function (response) {
-
           document.getElementById('log').innerHTML = JSON.stringify(response, null, 2);
 
           if (response.result) {
@@ -378,6 +392,10 @@
   }
 
 </script>
+
+<script async
+        src="https://pay.google.com/gp/p/js/pay.js"
+        onload="onGooglePayLoaded()"></script>
 
 </html>
 
