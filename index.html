@@ -25,10 +25,12 @@
       margin: 0; /* Remove margins */
     }
 
+    /*
     .gpay-border-radius {
       border-radius: 7px !important;
       height: 40px;
     }
+     */
 
   </style>
 </head>
@@ -38,6 +40,7 @@
 <div id="info" class="padding-after"><small>Note: in this demo the Button is always displayed.<br/>No
   matter what the outcome of isReadyToPay is.</small></div>
 
+<!--
 <div id="buttonShapeLabel"><b>Button shape:</b></div>
 <div id="shapeInfo" class="padding-after"><small>This is a hack and not officially
   supported!</small></div>
@@ -45,6 +48,7 @@
   <input type="radio" name="buttonShape" value="pill" checked="checked"/> pill
   <input type="radio" name="buttonShape" value="rectangular"/> rectangular
 </div>
+-->
 
 <div id="environmentLabel" class="padding-after"><b>Environment:</b></div>
 <div class="padding-after">
@@ -302,9 +306,11 @@
       input.addEventListener('change', existingPaymentMethodRequired);
     });
 
+    /*
     document.querySelectorAll("input[name='buttonShape']").forEach((input) => {
       input.addEventListener('change', buttonShape);
     });
+    */
 
     document.querySelectorAll("input[name='allowedAuthMethods']").forEach((input) => {
       input.addEventListener('change', allowedAuthMethods);
