@@ -36,9 +36,21 @@
 </head>
 
 <body>
+<div id="createButtonApiLabel" class="padding-after"><b>createButton() API variations:</b></div>
+<div id="info" class="padding-after"><small>Note: in this demo the buttons are always displayed.<br/>No
+  matter what the outcome of isReadyToPay is.<br/>If a payment method is not available,<br/>a generic "Buy with GPay" button is shown.</small></div>
+<div id="allPaymentMethodsInfo"><small>All payment methods</small></div>
 <div id="container" class="padding-after"></div>
-<div id="info" class="padding-after"><small>Note: in this demo the Button is always displayed.<br/>No
-  matter what the outcome of isReadyToPay is.</small></div>
+
+<div id="amexInfo"><small>Amex only</small></div>
+<div id="container2" class="padding-after"></div>
+
+<div id="masterCardInfo"><small>Mastercard only</small></div>
+<div id="container3" class="padding-after"></div>
+
+<div id="visaInfo"><small>Visa only</small></div>
+<div id="container4" class="padding-after"></div>
+
 
 <!--
 <div id="buttonShapeLabel"><b>Button shape:</b></div>
@@ -350,18 +362,31 @@
    */
   function addGooglePayButton() {
     const paymentsClient = getGooglePaymentsClient();
+    renderButton(paymentsClient, document.getElementById('container'), allowedCardNetworks);
+    renderButton(paymentsClient, document.getElementById('container2'), ["AMEX"])
+    renderButton(paymentsClient, document.getElementById('container3'), ["MASTERCARD"])
+    renderButton(paymentsClient, document.getElementById('container4'), ["VISA"])
+  }
+
+  function renderButton(paymentsClient, element, allowedCardNetworks) {
     const button =
-        paymentsClient.createButton({onClick: onGooglePaymentButtonClicked});
+        paymentsClient.createButton({
+          onClick: onGooglePaymentButtonClicked,
+          allowedPaymentMethods: [{
+            "type": "CARD",
+            "parameters": {
+              "allowedAuthMethods": ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+              "allowedCardNetworks": allowedCardNetworks
+            }
 
-    let container = document.getElementById('container');
-    if (container.firstChild) {
-      container.replaceChild(button, container.firstChild);
+          }]
+        });
+
+    if (element.firstChild) {
+      element.replaceChild(button, element.firstChild);
     } else {
-      container.appendChild(button);
+      element.appendChild(button);
     }
-
-    let shapeElement = document.querySelector("input[name=buttonShape]:checked");
-    shapeElement.dispatchEvent(new Event('change', {bubbles: true}));
 
   }
 
@@ -391,11 +416,11 @@
     const paymentsClient = getGooglePaymentsClient();
     //paymentsClient.loadPaymentData(paymentDataRequest);
 
-    paymentsClient.loadPaymentData(paymentDataRequest).then(function(paymentData){
+    paymentsClient.loadPaymentData(paymentDataRequest).then(function (paymentData) {
       let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
       document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
       console.log("loadPaymentData success");
-    }).catch(function(err){
+    }).catch(function (err) {
       console.error(err);
     });
   }
