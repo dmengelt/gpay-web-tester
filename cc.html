@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Network Logo Example</title>
+  <style>
+    input {
+      width: 250px;
+    }
+  </style>
+</head>
+
+<body style="padding: 25px">
+
+<small>Credit card autofill testing:</small>
+<br/>
+<br/>
+
+
+<form action="#" method="post">
+  <input placeholder="Credit card number" id="cc-number" name="cc-number" autocomplete="cc-number"
+         inputmode="numeric" maxlength="50" pattern="[\d ]{10,30}" required>
+  <br/>
+  <br/>
+
+  <input placeholder="Cardholder name" id="cc-name" name="cc-name" autocomplete="cc-name"
+         maxlength="50" pattern="[\p{L} \-\.]+" required>
+  <br/>
+  <br/>
+
+  <input placeholder="Expiry date" id="cc-exp" name="cc-exp" autocomplete="cc-exp"
+         placeholder="MM/YY" maxlength="5" required>
+  <br/>
+  <br/>
+
+  <input placeholder="CVC" id="cc-csc" name="cc-csc" inputmode="numeric" maxlength="3" required>
+</form>
+
+</body>
+
+</html>
+
