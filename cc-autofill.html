@@ -4,6 +4,26 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Credit card autofill test</title>
+
+  <script>
+    function knowsSharedAutofill() {
+      return document.featurePolicy && document.featurePolicy.features().includes('shared-autofill');
+    }
+
+    window.addEventListener('load', function() {
+      if(knowsSharedAutofill()) {
+        let element = document.getElementById("supported");
+        element.classList.remove("noSupport");
+        element.classList.add("support");
+        element.innerText = 'Yes';
+      }
+
+      document.getElementById("shared-autofill-support").style.display = 'block';
+
+    });
+  </script>
+
+
   <style>
 
     body {
@@ -20,23 +40,25 @@
       line-height: 0;
     }
 
-    #div1 {
+    #div1, #div2, #div3 {
+      vertical-align: top;
       padding: 10px;
       margin: 10px;
       display: inline-block;
     }
 
-    #div2 {
-      padding: 10px;
-      margin: 10px;
-      display: inline-block;
+    .noSupport {
+      color: white;
+      background-color: red;
+      padding: 3px;
     }
 
-    #div3 {
-      padding: 10px;
-      margin: 10px;
-      display: inline-block;
+    .support {
+      color: white;
+      background-color: green;
+      padding: 3px;
     }
+
   </style>
 </head>
 
@@ -44,7 +66,7 @@
 
 <div id="wrapper">
   <div id="div1">
-    <small>Normal form</small>
+    <small>Normal form<br/></small>
     <br/>
     <br/>
 
@@ -116,6 +138,10 @@
 
       <iframe src="https://bunpay.app/cc-autofill/cvc.html" allow="shared-autofill" frameBorder="0" scrolling="no" style="width: 260px; height: 3ex;"></iframe>
     </form>
+
+    <br/>
+
+    <div id="shared-autofill-support" style="display: none"><small>Browser supports shared-autofill: <span id="supported" class="noSupport">No</span></small></div>
   </div>
 
 
