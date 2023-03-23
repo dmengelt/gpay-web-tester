@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Credit card autofill test</title>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+
+    input {
+      width: 250px;
+    }
+  </style>
+</head>
+
+<body>
+<input placeholder="Credit card number" id="cc-number" name="cc-number"
+       autocomplete="cc-number"
+       inputmode="numeric" maxlength="50" pattern="[\d ]{10,30}" required>
+
+</body>
+
+</html>
+
