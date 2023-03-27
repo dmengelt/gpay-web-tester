@@ -49,7 +49,7 @@
 
     .noSupport {
       color: white;
-      background-color: red;
+      background-color: #EE0000;
       padding: 3px;
     }
 
@@ -72,7 +72,7 @@
 
     <form action="#" method="post">
       <input placeholder="Cardholder name" id="cc-name" name="cc-name" autocomplete="cc-name"
-             maxlength="50" pattern="[\p{L} \-\.]+" required>
+                                          maxlength="50" pattern="[\p{L} \-\.]+" required>
       <br/>
       <br/>
 
@@ -82,12 +82,12 @@
       <br/>
       <br/>
 
-      <input placeholder="Expiry date" id="cc-exp" name="cc-exp" autocomplete="cc-exp"
+      <input id="cc-exp" name="cc-exp" autocomplete="cc-exp"
              placeholder="MM/YY" maxlength="5" required>
       <br/>
       <br/>
 
-      <input placeholder="CVC" id="cc-csc" name="cc-csc" inputmode="numeric" maxlength="3" required>
+      <input placeholder="CVC" id="cc-csc" autocomplete="cc-csc" name="cc-csc" inputmode="numeric" maxlength="3" required>
     </form>
   </div>
 
@@ -102,21 +102,21 @@
       <br/>
       <br/>
 
-      <iframe src="https://bunpay.app/cc-autofill/cardnumber.html" frameBorder="0" scrolling="no" style="width: 260px; height: 3ex;"></iframe>
+      <iframe src="https://bunpay.app/cc-autofill/cardnumber.html" title="Credit card number" frameBorder="0" scrolling="no" style="width: 260px; height: 3ex;"></iframe>
       <br/>
       <br/>
 
-      <input placeholder="Expiry date" id="cc-exp2" name="cc-exp" autocomplete="cc-exp"
+      <input id="cc-exp2" name="cc-exp" autocomplete="cc-exp"
              placeholder="MM/YY" maxlength="5" required>
       <br/>
       <br/>
 
-      <iframe src="https://bunpay.app/cc-autofill/cvc.html" frameBorder="0" scrolling="no" style="width: 260px; height: 3ex;"></iframe>
+      <iframe src="https://bunpay.app/cc-autofill/cvc.html" title="CVC number" frameBorder="0" scrolling="no" style="width: 260px; height: 3ex;"></iframe>
     </form>
   </div>
 
   <div id="div3">
-    <small>form with cvc and card number input fields as <br/>iframes with shared autofill across
+    <small>form with cvc and card number input fields as <br/>iframes and shared autofill across
       iframes enabled</small>
     <br/>
     <br/>
@@ -127,16 +127,16 @@
       <br/>
       <br/>
 
-      <iframe src="https://bunpay.app/cc-autofill/cardnumber.html" allow="shared-autofill" frameBorder="0" scrolling="no" style="width: 260px; height: 3ex;"></iframe>
+      <iframe src="https://bunpay.app/cc-autofill/cardnumber.html" title="Credit card number" allow="shared-autofill" frameBorder="0" scrolling="no" style="width: 260px; height: 3ex;"></iframe>
       <br/>
       <br/>
 
-      <input placeholder="Expiry date" id="cc-exp3" name="cc-exp" autocomplete="cc-exp"
+      <input id="cc-exp3" name="cc-exp" autocomplete="cc-exp"
              placeholder="MM/YY" maxlength="5" required>
       <br/>
       <br/>
 
-      <iframe src="https://bunpay.app/cc-autofill/cvc.html" allow="shared-autofill" frameBorder="0" scrolling="no" style="width: 260px; height: 3ex;"></iframe>
+      <iframe src="https://bunpay.app/cc-autofill/cvc.html" title="Credit card number" allow="shared-autofill" frameBorder="0" scrolling="no" style="width: 260px; height: 3ex;"></iframe>
     </form>
 
     <br/>
