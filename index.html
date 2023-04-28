@@ -242,7 +242,7 @@
   function getGooglePaymentsClient() {
     return new google.payments.api.PaymentsClient({
       environment: environmentValue
-    }, /* opt_useIframe= */ true);
+    });
   }
 
   function existingPaymentMethodRequired(event) {
