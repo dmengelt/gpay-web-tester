@@ -101,8 +101,8 @@
 <div id="existingPaymentMethodRequireLabel" class="padding-after">
   <b>existingPaymentMethodRequired:</b></div>
 <div id="existingPaymentMethodRequired" class="padding-after">
-  <input type="radio" name="existingPaymentMethodRequired" value="true" checked="checked"/> true
-  <input type="radio" name="existingPaymentMethodRequired" value="false"/> false
+  <input type="radio" name="existingPaymentMethodRequired" value="true"/> true
+  <input type="radio" name="existingPaymentMethodRequired" value="false" checked="checked"/> false
 </div>
 <div id="isRTPrequestLabel" class="padding-after"><b>isReadyToPay request payload:</b></div>
 <div id="isRTPrequest" class="padding-after"></div>
@@ -189,7 +189,7 @@
       }
   );
 
-  let existingPaymentMethodRequiredValue = true;
+  let existingPaymentMethodRequiredValue = false;
 
   /**
    * Configure your site's support for payment methods supported by the Google Pay
@@ -318,7 +318,7 @@
    * Display a Google Pay payment button after confirmation of the viewer's
    * ability to pay.
    */
-  async function onGooglePayLoaded() {
+  function onGooglePayLoaded() {
     document.querySelectorAll("input[name='existingPaymentMethodRequired']").forEach((input) => {
       input.addEventListener('change', existingPaymentMethodRequired);
     });
@@ -345,22 +345,19 @@
         getGoogleIsReadyToPayRequest(), null, 2);
     const paymentsClient = getGooglePaymentsClient();
 
-    const response = paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest());
-    if(response) {
-      response
-          .then(function (res) {
-            document.getElementById('log').innerHTML = JSON.stringify(res, null, 2);
-            if (res.result) {
-              addGooglePayButton();
-            } else {
-              addGooglePayButton();
-            }
-          })
-          .catch(function (err) {
-            // show error in developer console for debugging
-            console.error(err);
-          });
-    }
+    paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest())
+        .then(res => {
+          document.getElementById('log').innerHTML = JSON.stringify(res, null, 2);
+          if (res.result) {
+            addGooglePayButton();
+          } else {
+            addGooglePayButton();
+          }
+        })
+        .catch(function (err) {
+          // show error in developer console for debugging
+          console.error(err);
+        });
 
   }
 
@@ -437,12 +434,8 @@
 
 </script>
 
-<script src="https://pay.google.com/gp/p/js/pay.js"></script>
-
-<script type="application/javascript">
-  document.addEventListener("DOMContentLoaded", function (event) {
-    onGooglePayLoaded();
-  });
+<script async
+        src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
 
 </script>
 
