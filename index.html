@@ -64,6 +64,15 @@
 </div>
 -->
 
+<div id="buttonColorLabel" class="padding-after"><b>Button color:</b></div>
+<div class="padding-after">
+  <select name="buttonColors" id="buttonColors">
+    <option value="default" selected="selected">default</option>
+    <option value="black">black</option>
+    <option value="white">white</option>
+  </select>
+</div>
+
 <div id="environmentLabel" class="padding-after"><b>Environment:</b></div>
 <div class="padding-after">
   <select name="environments" id="environments">
@@ -234,6 +243,7 @@
   }
 
   let environmentValue = 'TEST';
+  let buttonColor = 'default';
 
   /**
    * Return an active PaymentsClient or initialize
@@ -312,6 +322,11 @@
     onGooglePayLoaded();
   }
 
+   function buttonColors(event) {
+    buttonColor = event.target.value;
+    onGooglePayLoaded();
+  }
+
   /**
    * Initialize Google PaymentsClient after Google-hosted JavaScript has loaded
    *
@@ -339,6 +354,10 @@
 
     document.querySelectorAll("select[name='environments']").forEach((input) => {
       input.addEventListener('change', environments);
+    });
+
+    document.querySelectorAll("select[name='buttonColors']").forEach((input) => {
+      input.addEventListener('change', buttonColors);
     });
 
     document.getElementById('isRTPrequest').innerHTML = JSON.stringify(
@@ -378,6 +397,7 @@
   function renderButton(paymentsClient, element, allowedCardNetworks) {
     const button =
         paymentsClient.createButton({
+          buttonColor: buttonColor,
           onClick: onGooglePaymentButtonClicked,
           allowedPaymentMethods: [{
             "type": "CARD",
@@ -437,7 +457,6 @@
 <script async
         src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
 
-</script>
 
 </html>
 
