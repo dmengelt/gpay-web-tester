@@ -125,6 +125,7 @@ function getGooglePaymentDataRequest() {
 
 let environmentValue = 'TEST';
 let buttonColor = 'default';
+let buttonType = 'buy';
 
 /**
  * Return an active PaymentsClient or initialize
@@ -203,8 +204,13 @@ function environments(event) {
   onGooglePayLoaded();
 }
 
- function buttonColors(event) {
+function buttonColors(event) {
   buttonColor = event.target.value;
+  onGooglePayLoaded();
+}
+
+function buttonTypes(event) {
+  buttonType = event.target.value;
   onGooglePayLoaded();
 }
 
@@ -240,6 +246,10 @@ function onGooglePayLoaded() {
   document.querySelectorAll("select[name='buttonColors']").forEach((input) => {
     input.addEventListener('change', buttonColors);
   });
+
+  document.querySelectorAll("select[name='buttonTypes']").forEach((input) => {
+      input.addEventListener('change', buttonTypes);
+    });
 
   document.getElementById('isRTPrequest').innerHTML = JSON.stringify(
       getGoogleIsReadyToPayRequest(), null, 2);
@@ -279,6 +289,7 @@ function renderButton(paymentsClient, element, allowedCardNetworks) {
   const button =
       paymentsClient.createButton({
         buttonColor: buttonColor,
+        buttonType: buttonType,
         onClick: onGooglePaymentButtonClicked,
         allowedPaymentMethods: [{
           "type": "CARD",
