@@ -89,7 +89,8 @@ function onBuyClicked() {
   };
 
   var options = {
-    requestShipping: true
+    requestShipping: true,
+    shippingType: "delivery"
   };
 
   if (!window.PaymentRequest) {

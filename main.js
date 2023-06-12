@@ -317,10 +317,11 @@ function renderButton(paymentsClient, element, allowedCardNetworks) {
  */
 function getGoogleTransactionInfo() {
   return {
-    countryCode: 'CH',
+    countryCode: 'US',
     currencyCode: "USD",
     totalPriceStatus: "FINAL",
     totalPrice: "13.37",
+    checkoutOption: "COMPLETE_IMMEDIATE_PURCHASE"
   };
 }
 
@@ -337,6 +338,19 @@ function onGooglePaymentButtonClicked() {
   paymentDataRequest.shippingAddressParameters = {
     phoneNumberRequired: true
   }
+
+  paymentDataRequest.shippingOptionRequired = true;
+
+  paymentDataRequest.shippingOptionParameters = {
+    defaultSelectedOptionId: "shipping-001",
+    shippingOptions: [
+      {
+        "id": "shipping-001",
+        "label": "$0.00: Free worldwide shipping",
+        "description": "Free Shipping delivered in 5 business days."
+      }
+    ]
+}
 
   const paymentsClient = getGooglePaymentsClient();
   //paymentsClient.loadPaymentData(paymentDataRequest);
