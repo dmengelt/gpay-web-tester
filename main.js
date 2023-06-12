@@ -332,6 +332,12 @@ function onGooglePaymentButtonClicked() {
   console.log(JSON.stringify(paymentDataRequest, null, 2));
   paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
 
+  paymentDataRequest.emailRequired = true;
+  paymentDataRequest.shippingAddressRequired = true;
+  paymentDataRequest.shippingAddressParameters = {
+    phoneNumberRequired: true
+  }
+
   const paymentsClient = getGooglePaymentsClient();
   //paymentsClient.loadPaymentData(paymentDataRequest);
 
