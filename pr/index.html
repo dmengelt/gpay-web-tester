@@ -7,9 +7,47 @@
 </head>
 <body>
 <div id="contents">
-  <h1>requestShipping over the PR API</h1>
+  <h2>Setting <a href="https://www.w3.org/TR/2019/CR-payment-request-20190416/#paymentoptions-dictionary" target="_parent">PaymentOptions</a>  over the PR API</h2>
+
+  requestPayerName
+  <input type="radio" name="requestPayerName" value="true"/> true
+  <input type="radio" name="requestPayerName" value="false" checked="checked"/> false
+
+  <br/><br/>
+
+  requestBillingAddress
+  <input type="radio" name="requestBillingAddress" value="true"/> true
+  <input type="radio" name="requestBillingAddress" value="false" checked="checked"/> false
+
+  <br/><br/>
+
+  requestPayerEmail
+  <input type="radio" name="requestPayerEmail" value="true"/> true
+  <input type="radio" name="requestPayerEmail" value="false" checked="checked"/> false
+
+  <br/><br/>
+
+  requestPayerPhone
+  <input type="radio" name="requestPayerPhone" value="true"/> true
+  <input type="radio" name="requestPayerPhone" value="false" checked="checked"/> false
+
+  <br/><br/>
+
+  requestShipping
+  <input type="radio" name="requestShipping" value="true"/> true
+  <input type="radio" name="requestShipping" value="false" checked="checked"/> false
+
+  <br/><br/>
+
+  shippingType
+  <select name="shippingTypes" id="shippingTypes">
+    <option value="shipping" selected="selected">shipping</option>
+    <option value="delivery">delivery</option>
+    <option value="pickup">pickup</option>
+  </select>
+
   <p><button onclick="onBuyClicked()">Buy</button></p>
 </div>
-<script src="./pr.js"></script>
+<script src="pr.js"></script>
 </body>
 </html>

@@ -25,7 +25,7 @@ function onBuyClicked() {
           totalPrice: '1.00',
         },
         merchantInfo: {
-          merchantName: 'Example merchant Solomakhin',
+          merchantName: 'Example merchant',
         },
       }
   },
@@ -89,9 +89,15 @@ function onBuyClicked() {
   };
 
   var options = {
-    requestShipping: true,
-    shippingType: "delivery"
+    requestBillingAddress: document.querySelector("input[type='radio'][name=requestBillingAddress]:checked").value === 'true',
+    requestPayerName: document.querySelector("input[type='radio'][name=requestPayerName]:checked").value === 'true',
+    requestPayerEmail: document.querySelector("input[type='radio'][name=requestPayerEmail]:checked").value === 'true',
+    requestPayerPhone: document.querySelector("input[type='radio'][name=requestPayerPhone]:checked").value === 'true',
+    requestShipping: document.querySelector("input[type='radio'][name=requestShipping]:checked").value === 'true',
+    shippingType: document.getElementById("shippingTypes").value
   };
+
+  console.log(options);
 
   if (!window.PaymentRequest) {
     console.error('PaymentRequest API is not supported.');
