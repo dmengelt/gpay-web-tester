@@ -330,6 +330,11 @@ function getGoogleTransactionInfo() {
  */
 function onGooglePaymentButtonClicked() {
   const paymentDataRequest = getGooglePaymentDataRequest();
+
+  if(environmentValue === 'PRODUCTION') {
+    paymentDataRequest.merchantInfo.merchantId = '14697717800897553235';
+  }
+
   console.log(JSON.stringify(paymentDataRequest, null, 2));
   paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
 
