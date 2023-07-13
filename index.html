@@ -25,6 +25,18 @@
       margin: 0; /* Remove margins */
     }
 
+    .thirdPartyCookiesDisabled {
+      color: white;
+      background-color: #EE0000;
+      padding: 3px;
+    }
+
+    .thirdPartyCookiesEnabled {
+      color: white;
+      background-color: green;
+      padding: 3px;
+    }
+
     /*
     .gpay-border-radius {
       border-radius: 7px !important;
@@ -35,12 +47,18 @@
   </style>
 </head>
 
-<body>
+<body onload="cookieTest('https://bunpay.app/3pc/index.html')">
 <div id="createButtonApiLabel" class="padding-after"><b>createButton() API variations:</b></div>
 <div id="info" class="padding-after"><small>Note: in this demo the buttons are always
   displayed.<br/>No
   matter what the outcome of isReadyToPay is.<br/>If a payment method is not available,<br/>a
   generic "Buy with GPay" button is shown.</small></div>
+
+<div id="3pc-support" class="padding-after">
+  <small>3rd party cookies enabled: <span id="3pc" class="thirdPartyCookiesDisabled">false</span></small>
+</div>
+
+
 <div id="allPaymentMethodsInfo"><small>All payment methods</small></div>
 <div id="container" class="padding-after"></div>
 
@@ -63,7 +81,6 @@
   <input type="radio" name="buttonShape" value="rectangular"/> rectangular
 </div>
 -->
-
 <div id="buttonColorLabel" class="padding-after"><b>Button color:</b></div>
 <div class="padding-after">
   <select name="buttonColors" id="buttonColors">
@@ -138,6 +155,38 @@
 </body>
 
 <script src="main.js"></script>
+
+<script>
+  const cookieTest = (iFrameUri) => {
+
+  let messageHandler = (event) => {
+      // check for trusted origins here         
+      const data = JSON.parse(event.data)
+      console.log("3PC result: " + data['result']);      
+
+      if(data['result'] && data['result'] == true) {
+        let element = document.getElementById("3pc");
+        element.classList.remove("thirdPartyCookiesDisabled");
+        element.classList.add("thirdPartyCookiesEnabled");
+        element.innerText = 'true';
+
+        window.removeEventListener('message', messageHandler);
+        document.body.removeChild(frame)
+      }      
+
+  }
+  window.addEventListener('message', messageHandler);
+  const frame = document.createElement('iframe')
+  frame.src = iFrameUri
+  frame.sandbox = "allow-scripts allow-same-origin"
+  frame.style = `display:none`
+  frame.onload = (e) => {
+      frame.contentWindow.postMessage(JSON.stringify({ 'test': 'cookie' }), '*');
+  }
+  document.body.appendChild(frame)
+  }
+</script>
+
 <script async
         src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
 </html>
