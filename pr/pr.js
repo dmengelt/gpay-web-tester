@@ -45,7 +45,18 @@ function onBuyClicked() {
           ],
           countryCode: 'US'
       }
-    }];
+    },
+    {
+      supportedMethods: 'https://spay.samsung.com', 
+      data: {
+        version: '1',
+        productId: '2bc3e6da781e4e458b18bc',
+        allowedCardNetworks: ['mastercard','visa'],
+        merchantName: 'Shop Samsung (demo)',
+        orderNumber: '1233123',
+      }
+    }  
+  ];
 
   var details = {
     total: {
