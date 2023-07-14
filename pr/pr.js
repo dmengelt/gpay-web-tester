@@ -130,7 +130,7 @@ function onBuyClicked() {
       request.hasEnrolledInstrument().then(function(result) {
         console.log(result ? "Has enrolled instrument" : "No enrolled instrument");
       }).catch(function(err) {
-        console.error(err);
+        error(err);
       });
     }
 
@@ -155,15 +155,18 @@ function onBuyClicked() {
               console.log('This is a demo website. No payment will be processed.', instrumentResponse);
             })
             .catch(function(err) {
-              document.getElementById('log').innerHTML = err;
-              console.error(err);
+              error(err);
             });
       })
       .catch(function(err) {
-        console.error(err);
+        error(err);
       });
   } catch (e) {
-    document.getElementById('log').innerHTML = e.message;
-    console.error('Developer mistake: \'' + e.message + '\'');
+    error(e.message);    
   }
+}
+
+function error(msg) {
+  console.error(msg);
+  document.getElementById('log').innerHTML = msg;
 }
