@@ -151,9 +151,11 @@ function onBuyClicked() {
       .then(function(instrumentResponse) {
           instrumentResponse.complete('success')
             .then(function() {
+              document.getElementById('log').innerHTML = JSON.stringify(instrumentResponse, null, 2);
               console.log('This is a demo website. No payment will be processed.', instrumentResponse);
             })
             .catch(function(err) {
+              document.getElementById('log').innerHTML = err;
               console.error(err);
             });
       })
@@ -161,6 +163,7 @@ function onBuyClicked() {
         console.error(err);
       });
   } catch (e) {
+    document.getElementById('log').innerHTML = e.message;
     console.error('Developer mistake: \'' + e.message + '\'');
   }
 }
