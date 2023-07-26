@@ -168,11 +168,12 @@ function allowedAuthMethods(event) {
 
 function gateways(event) {
   if (event.target.value === 'stripe') {
-    // special handling for Stripe. the publishable key is a publicly available key from their docs
+    // special handling for Stripe. Please use your own publishable key
     tokenizationSpecification.parameters = {
       ...tokenizationSpecification.parameters,
       'stripe:version': '2022-11-15',
-      'stripe:publishableKey': 'pk_test_TYooMQauvdEDq54NiTphI7jx'
+      //'stripe:publishableKey': 'pk_test_TYooMQauvdEDq54NiTphI7jx' // publishable key from Sripe's docs
+      'stripe:publishableKey': 'pk_test_51Mg8nWA9tv049KWdCFQOwUElIVS3FvQLaGlugWfltUCuTjp4oj5oLkH5pq26W4cTr5GscxAgNaKAMA3z85j6GZUW00D54sM83r'      
     };
     delete tokenizationSpecification.parameters.gatewayMerchantId;
   }
