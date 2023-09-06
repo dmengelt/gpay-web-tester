@@ -261,6 +261,7 @@ function onGooglePayLoaded() {
         if (res.result) {
           addGooglePayButton();
         } else {
+          console.log("isReadyToPay returned false! still showing the button for the purpose of this demo...")
           addGooglePayButton();
         }
       })
