@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>beforeunload error reproducer</title>
+</head>
+
+<body>
+
+    <p>
+        Before running this sample navigate to chrome://settings/payments and turn of "Allow sites to check if you have
+        payment methods saved"
+
+    </p>
+
+    <button onclick="createFrame()">Show iframe with Google Pay button</button>
+    <div id="frame-container"></div>
+
+    <script>
+        const container = document.getElementById('frame-container')
+        createFrame = function () {
+            const frame = document.createElement('iframe')
+            frame.setAttribute('name', 'gp-frame')
+            frame.setAttribute('allow', 'payment')
+            frame.setAttribute('src', 'beforeunload-error-iframe.html')
+            //frame.style.cssText = 'z-index:9999;position:fixed;top:5%;left:1%;width:98%;height:90%;background-color:#fefefe'
+            frame.setAttribute('frameborder', '2')
+            container.appendChild(frame)
+        }
+    </script>
+</body>
+
+</html>
