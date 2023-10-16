@@ -201,6 +201,10 @@ function gateways(event) {
     delete tokenizationSpecification.parameters.gatewayMerchantId;
   }
 
+  if (event.target.value === 'adyen') {    
+    tokenizationSpecification.parameters.gatewayMerchantId = 'Google338ECOM';
+  }
+
   if (event.target.value === 'arianev2') {
     baseCardPaymentMethod.parameters.cvcRequired = true;
   }
