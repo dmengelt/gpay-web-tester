@@ -21,8 +21,8 @@ function onBuyClicked() {
         transactionInfo: {
           countryCode: 'US',
           currencyCode: 'USD',
-          totalPriceStatus: 'FINAL',
-          totalPrice: '1.00',
+          totalPriceStatus: 'NOT_CURRENTLY_KNOWN'
+          //totalPrice: '1.00',
         },
         merchantInfo: {
           merchantName: 'Example merchant',

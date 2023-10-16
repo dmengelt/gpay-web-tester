@@ -48,6 +48,16 @@ const tokenizationSpecification = {
     'gatewayMerchantId': 'exampleGatewayMerchantId'
   }
 };
+/*
+const tokenizationSpecification = {
+  type: 'DIRECT',
+  parameters: {
+    'protocolVersion': 'ECv2',
+    'publicKey': 'BOdoXP+9Aq473SnGwg3JU1aiNpsd9vH2ognq4PtDtlLGa3Kj8TPf+jaQNPyDSkh3JUhiS0KyrrlWhAgNZKHYF2Y='
+  }
+};
+*/
+
 
 /**
  * Describe your site's support for the CARD payment method and its required
@@ -319,9 +329,9 @@ function renderButton(paymentsClient, element, allowedCardNetworks) {
 function getGoogleTransactionInfo() {
   return {
     countryCode: 'US',
-    currencyCode: "USD",
+    currencyCode: "EUR",
     totalPriceStatus: "FINAL",
-    totalPrice: "13.37",
+    totalPrice: "1",
     checkoutOption: "COMPLETE_IMMEDIATE_PURCHASE"
   };
 }
@@ -334,6 +344,11 @@ function onGooglePaymentButtonClicked() {
 
   if(environmentValue === 'PRODUCTION') {
     paymentDataRequest.merchantInfo.merchantId = '14697717800897553235';
+    
+    if(tokenizationSpecification.parameters.gateway === 'stripe') {
+      tokenizationSpecification.parameters['stripe:publishableKey'] = 'pk_live_NkaQ1QQFUyXrPsCuOkzt3IeS';
+    }
+
   }
 
   console.log(JSON.stringify(paymentDataRequest, null, 2));
@@ -344,6 +359,7 @@ function onGooglePaymentButtonClicked() {
   paymentDataRequest.shippingAddressParameters = {
     phoneNumberRequired: true
   }
+  /*
 
   paymentDataRequest.shippingOptionRequired = true;
 
@@ -356,7 +372,8 @@ function onGooglePaymentButtonClicked() {
         "description": "Free Shipping delivered in 5 business days."
       }
     ]
-}
+  }
+  */
 
   const paymentsClient = getGooglePaymentsClient();
   //paymentsClient.loadPaymentData(paymentDataRequest);
