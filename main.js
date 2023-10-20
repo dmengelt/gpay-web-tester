@@ -360,9 +360,11 @@ function onGooglePaymentButtonClicked() {
 
   paymentDataRequest.emailRequired = true;
   paymentDataRequest.shippingAddressRequired = true;
+  /*
   paymentDataRequest.shippingAddressParameters = {
     phoneNumberRequired: true
   }
+  */
   /*
 
   paymentDataRequest.shippingOptionRequired = true;
@@ -380,8 +382,7 @@ function onGooglePaymentButtonClicked() {
   */
 
   const paymentsClient = getGooglePaymentsClient();
-  //paymentsClient.loadPaymentData(paymentDataRequest);
-
+  
   paymentsClient.loadPaymentData(paymentDataRequest).then(function (paymentData) {
     let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
     document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
