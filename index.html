@@ -4,7 +4,55 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Google Pay Example</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
   <style>
+
+    * {box-sizing: border-box;}
+
+    body.dark {
+      background-color: #000;
+      color: #fff;
+    } /* #9b59b6 */    
+
+    .checkbox {
+      opacity: 0;
+      position: absolute;
+    }
+
+    .checkbox-label {
+      background-color: #111;
+
+      border: 1px solid grey;
+      width: 50px;
+      height: 26px;
+      border-radius: 50px;
+      position: relative;
+      padding: 5px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .fa-moon {color: #f1c40f;}
+
+    .fa-sun {color: #f39c12;}
+
+    .checkbox-label .ball {
+      background-color: #fff;
+      width: 22px;
+      height: 22px;
+      position: absolute;
+      left: 1px;
+      top: 1px;
+      border-radius: 50%;
+      transition: transform 0.2s linear;
+    }
+
+    .checkbox:checked + .checkbox-label .ball {
+      transform: translateX(24px);
+    }
+
     #log, #isRTPrequest, #result {
       white-space: pre;
       font-family: monospace;
@@ -53,6 +101,15 @@
   <small>3rd party cookies enabled: <span id="3pc" class="thirdPartyCookiesDisabled">false</span></small>
 </div>
 
+<div>
+  <input type="checkbox" class="checkbox" id="checkbox">
+  <label for="checkbox" class="checkbox-label">
+    <i class="fas fa-moon"></i>
+    <i class="fas fa-sun"></i>
+    <span class="ball"></span>
+  </label>
+</div>
+<div class="padding-after"></div>
 
 <div id="allPaymentMethodsInfo"><small>All payment methods</small></div>
 <div id="container" class="padding-after"></div>
@@ -76,7 +133,7 @@
   <input type="radio" name="buttonShape" value="rectangular"/> rectangular
 </div>
 -->
-<div id="buttonColorLabel" class="padding-after"><b>Button color:</b></div>
+<div class="padding-after"><b>Button color:</b></div>
 <div class="padding-after">
   <select name="buttonColors" id="buttonColors">
     <option value="default" selected="selected">default</option>
@@ -85,7 +142,7 @@
   </select>
 </div>
 
-<div id="buttonTypeLabel" class="padding-after"><b>Button type:</b></div>
+<div class="padding-after"><b>Button type:</b></div>
 <div class="padding-after">
   <select name="buttonTypes" id="buttonTypes">
     <option value="buy" selected="selected">buy</option>
@@ -99,7 +156,14 @@
   </select>
 </div>
 
-<div id="environmentLabel" class="padding-after"><b>Environment:</b></div>
+<div class="padding-after"><b>Button radius:</b> <span id="buttonRadiusValueText" class="value">4px</span></div>
+<div class="padding-after">
+  <label class="control">    
+    <input id="button-radius" type="range" min="0" max="20" value="4" />
+  </label>
+</div>
+
+<div class="padding-after"><b>Environment:</b></div>
 <div class="padding-after">
   <select name="environments" id="environments">
     <option value="TEST" selected="selected">TEST</option>
@@ -107,7 +171,7 @@
   </select>
 </div>
 
-<div id="gatewayLabel" class="padding-after"><b>Gateway:</b></div>
+<div class="padding-after"><b>Gateway:</b></div>
 <div class="padding-after">
   <select name="gateways" id="gateways">
     <option value="adyen">adyen</option>

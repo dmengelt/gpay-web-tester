@@ -3,6 +3,11 @@ otMeta.httpEquiv = 'origin-trial';
 otMeta.content = 'AsMgTuvMft2My/+ti9JRH6mlE4BoHnJoAYtTiBrDeUywtoBRISsXp19XNOOVKcVml8izx9ECNSo0MwGtPEnLuQEAAABpeyJvcmlnaW4iOiJodHRwczovL2RtZW5nZWx0LmdpdGh1Yi5pbzo0NDMiLCJmZWF0dXJlIjoiUGF5bWVudEhhbmRsZXJNaW5pbWFsSGVhZGVyVVgiLCJleHBpcnkiOjE3MDE5OTM1OTl9';
 document.head.append(otMeta);
 
+const radiusSlider = document.getElementById('button-radius');
+
+document.getElementById("checkbox").addEventListener("change", () => {
+  document.body.classList.toggle("dark")
+})
 
 /**
  * Define the version of the Google Pay API referenced when creating your
@@ -135,6 +140,7 @@ function getGooglePaymentDataRequest() {
 let environmentValue = 'TEST';
 let buttonColor = 'default';
 let buttonType = 'buy';
+let buttonRadius = '4';
 
 /**
  * Return an active PaymentsClient or initialize
@@ -228,6 +234,13 @@ function buttonTypes(event) {
   onGooglePayLoaded();
 }
 
+function handleRadiusSliderInput(event) {
+  const element = document.getElementById('buttonRadiusValueText');
+  element.textContent = `${event.target.value}px`;
+  buttonRadius = event.target.value;
+  onGooglePayLoaded();
+}
+
 /**
  * Initialize Google PaymentsClient after Google-hosted JavaScript has loaded
  *
@@ -264,6 +277,8 @@ function onGooglePayLoaded() {
   document.querySelectorAll("select[name='buttonTypes']").forEach((input) => {
       input.addEventListener('change', buttonTypes);
     });
+
+  radiusSlider.addEventListener('input', handleRadiusSliderInput);
 
   document.getElementById('isRTPrequest').innerHTML = JSON.stringify(
       getGoogleIsReadyToPayRequest(), null, 2);
@@ -305,6 +320,7 @@ function renderButton(paymentsClient, element, allowedCardNetworks) {
       paymentsClient.createButton({
         buttonColor: buttonColor,
         buttonType: buttonType,
+        buttonRadius: buttonRadius,
         onClick: onGooglePaymentButtonClicked,
         allowedPaymentMethods: [{
           "type": "CARD",
