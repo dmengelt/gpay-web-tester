@@ -348,7 +348,7 @@ function renderButton(paymentsClient, element, allowedCardNetworks) {
  */
 function getGoogleTransactionInfo() {
   return {
-    countryCode: 'US',
+    countryCode: 'DE',
     currencyCode: "EUR",
     totalPriceStatus: "FINAL",
     totalPrice: "1",
