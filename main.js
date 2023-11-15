@@ -94,6 +94,7 @@ const cardPaymentMethod = Object.assign(
 );
 
 let existingPaymentMethodRequiredValue = false;
+let onPaymentAuthorizedCallbackValue = false;
 
 /**
  * Configure your site's support for payment methods supported by the Google Pay
@@ -149,13 +150,27 @@ let buttonRadius = '4';
  * @returns {google.payments.api.PaymentsClient} Google Pay API client
  */
 function getGooglePaymentsClient() {
-  return new google.payments.api.PaymentsClient({
-    environment: environmentValue
-  });
+  if(onPaymentAuthorizedCallbackValue) {
+    return new google.payments.api.PaymentsClient({
+      environment: environmentValue,
+      paymentDataCallbacks: {
+        onPaymentAuthorized: onPaymentAuthorizedCallbackHandler,   
+      }
+    });
+  } else {
+    return new google.payments.api.PaymentsClient({
+      environment: environmentValue
+    });
+  }
 }
 
 function existingPaymentMethodRequired(event) {
   existingPaymentMethodRequiredValue = (event.target.value === 'true');
+  onGooglePayLoaded();
+}
+
+function onPaymentAuthorizedCallback(event) {
+  onPaymentAuthorizedCallbackValue = (event.target.value === 'true');  
   onGooglePayLoaded();
 }
 
@@ -252,6 +267,10 @@ function onGooglePayLoaded() {
     input.addEventListener('change', existingPaymentMethodRequired);
   });
 
+  document.querySelectorAll("input[name='onPaymentAuthorizedCallback']").forEach((input) => {
+    input.addEventListener('change', onPaymentAuthorizedCallback);
+  });
+
   /*
   document.querySelectorAll("input[name='buttonShape']").forEach((input) => {
     input.addEventListener('change', buttonShape);
@@ -296,7 +315,7 @@ function onGooglePayLoaded() {
       })
       .catch(function (err) {
         // show error in developer console for debugging
-        console.error(err);
+        console.log(err);
       });
 
 }
@@ -356,6 +375,37 @@ function getGoogleTransactionInfo() {
   };
 }
 
+function onPaymentAuthorizedCallbackHandler(paymentData) {
+  return new Promise(function(resolve, reject){
+    // handle the response
+    processPayment(paymentData)
+    .then(function() {
+      resolve({transactionState: 'SUCCESS'});
+    })
+    .catch(function() {
+      resolve({
+        transactionState: 'ERROR',
+        error: {
+          intent: 'PAYMENT_AUTHORIZATION',
+          message: 'Insufficient funds',
+          reason: 'PAYMENT_DATA_INVALID'
+        }
+      });
+    });
+  });
+}
+
+function processPayment(paymentData) {
+  return new Promise(function(resolve, reject) {
+  setTimeout(function() {
+  let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
+  document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
+  console.log("loadPaymentData success");
+  resolve({});
+}, 1000);
+});
+}
+
 /**
  * Show Google Pay payment sheet when Google Pay payment button is clicked
  */
@@ -368,7 +418,10 @@ function onGooglePaymentButtonClicked() {
     if(tokenizationSpecification.parameters.gateway === 'stripe') {
       tokenizationSpecification.parameters['stripe:publishableKey'] = 'pk_live_NkaQ1QQFUyXrPsCuOkzt3IeS';
     }
+  }
 
+  if(onPaymentAuthorizedCallbackValue) {
+    paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION'];    
   }
 
   console.log(JSON.stringify(paymentDataRequest, null, 2));
@@ -400,10 +453,13 @@ function onGooglePaymentButtonClicked() {
   const paymentsClient = getGooglePaymentsClient();
   
   paymentsClient.loadPaymentData(paymentDataRequest).then(function (paymentData) {
-    let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
-    document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
-    console.log("loadPaymentData success");
+    if(!onPaymentAuthorizedCallbackValue) {
+      let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
+      document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
+      console.log("loadPaymentData success");
+    }
+
   }).catch(function (err) {
-    console.error(err);
+    console.log(err);
   });
 }
