@@ -453,7 +453,9 @@ function onGooglePaymentButtonClicked() {
   const paymentsClient = getGooglePaymentsClient();
   
   paymentsClient.loadPaymentData(paymentDataRequest).then(function (paymentData) {
-    if(!onPaymentAuthorizedCallbackValue || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+    // on mobile web there is no support for the onPaymentAuthorized callback handler
+    // thats why we are going to output the result here
+    if(onPaymentAuthorizedCallbackValue && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
       let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
       document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
       console.log("loadPaymentData success");
