@@ -308,9 +308,6 @@ function onGooglePayLoaded() {
         document.getElementById('log').innerHTML = JSON.stringify(res, null, 2);
         if (res.result) {
           addGooglePayButton();
-        } else {
-          console.log("isReadyToPay returned false! still showing the button for the purpose of this demo...")
-          addGooglePayButton();
         }
       })
       .catch(function (err) {
@@ -397,13 +394,13 @@ function onPaymentAuthorizedCallbackHandler(paymentData) {
 
 function processPayment(paymentData) {
   return new Promise(function(resolve, reject) {
-  setTimeout(function() {
-  let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
-  document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
-  console.log("loadPaymentData success");
-  resolve({});
-}, 1000);
-});
+    setTimeout(function() {
+      let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
+      document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
+      console.log("loadPaymentData success (triggered over onPaymentAuthorized callback)");
+      resolve({});
+    }, 1000);
+  });
 }
 
 /**
@@ -455,7 +452,7 @@ function onGooglePaymentButtonClicked() {
   paymentsClient.loadPaymentData(paymentDataRequest).then(function (paymentData) {
     // on mobile web there is no support for the onPaymentAuthorized callback handler
     // thats why we are going to output the result here
-    if(onPaymentAuthorizedCallbackValue && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+    if(!onPaymentAuthorizedCallbackValue || (onPaymentAuthorizedCallbackValue && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent))) {
       let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
       document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
       console.log("loadPaymentData success");
