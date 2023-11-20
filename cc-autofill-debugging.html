@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Credit card autofill test</title>
+
+  <script>
+    function knowsSharedAutofill() {
+      return document.featurePolicy && document.featurePolicy.features().includes('shared-autofill');
+    }
+
+    window.addEventListener('load', function() {
+      if(knowsSharedAutofill()) {
+        let element = document.getElementById("supported");
+        element.classList.remove("noSupport");
+        element.classList.add("support");
+        element.innerText = 'Yes';
+      }
+
+      document.getElementById("shared-autofill-support").style.display = 'block';
+
+    });
+  </script>
+
+
+  <style>
+
+    body {
+      padding: 25px;
+    }
+
+    input {
+      width: 250px;
+    }
+
+    iframe {
+      overflow: auto;
+      vertical-align: middle;
+      line-height: 0;
+    }
+
+    #div1, #div2, #div3 {
+      vertical-align: top;
+      padding: 10px;
+      margin: 10px;
+      display: inline-block;
+    }
+
+    .noSupport {
+      color: white;
+      background-color: #EE0000;
+      padding: 3px;
+    }
+
+    .support {
+      color: white;
+      background-color: green;
+      padding: 3px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <img src="//assets.accessocdn.com/assets/accesso/http_status_code_404.svg" alt="An unknown error" />
+
+<div id="wrapper">
+  <div id="div1">
+    <small>Normal form<br/></small>
+    <br/>
+    <br/>
+
+    <form action="#" method="post">
+      <input placeholder="Cardholder name" id="cc-name" name="cc-name"
+                                          maxlength="50" pattern="[\p{L} \-\.]+" required>
+      <br/>
+      <br/>
+
+      <input placeholder="Credit card number" id="cc-number" name="cc-number"
+             autocomplete="cc-number"
+             inputmode="numeric" maxlength="50" pattern="[\d ]{10,30}" required>
+      <br/>
+      <br/>
+
+      <input id="cc-exp" name="cc-exp" autocomplete="cc-exp"
+             placeholder="MM/YY" maxlength="5" required>
+      <br/>
+      <br/>
+
+      <input placeholder="CVC" id="cc-csc" autocomplete="cc-csc" name="cc-csc" inputmode="numeric" maxlength="3" required>
+    </form>
+  </div>
+
+  <div id="div2">
+    <small>form with cvc and card number input fields<br/>as iframes</small>
+    <br/>
+    <br/>
+
+    <form action="#" method="post">
+      <input placeholder="Cardholder name" id="cc-name2" name="cc-name" autocomplete="cc-name"
+             maxlength="50" pattern="[\p{L} \-\.]+" required>
+      <br/>
+      <br/>
+
+      <iframe src="https://bunpay.app/cc-autofill/cardnumber.html" title="Credit card number" frameBorder="0" scrolling="no" style="width: 260px; height: 3ex;"></iframe>
+      <br/>
+      <br/>
+
+      <input id="cc-exp2" name="cc-exp" autocomplete="cc-exp"
+             placeholder="MM/YY" maxlength="5" required>
+      <br/>
+      <br/>
+
+      <iframe src="https://bunpay.app/cc-autofill/cvc.html" title="CVC number" frameBorder="0" scrolling="no" style="width: 260px; height: 3ex;"></iframe>
+    </form>
+  </div>
+
+  <div id="div3">
+    <small>form with cvc and card number input fields as <br/>iframes and shared autofill across
+      iframes enabled</small>
+    <br/>
+    <br/>
+
+    <form action="#" method="post">
+      <input placeholder="Cardholder name" id="cc-name3" name="cc-name" autocomplete="cc-name"
+             maxlength="50" pattern="[\p{L} \-\.]+" required>
+      <br/>
+      <br/>
+
+      <iframe src="https://bunpay.app/cc-autofill/cardnumber.html" title="Credit card number" allow="shared-autofill" frameBorder="0" scrolling="no" style="width: 260px; height: 3ex;"></iframe>
+      <br/>
+      <br/>
+
+      <input id="cc-exp3" name="cc-exp" autocomplete="cc-exp"
+             placeholder="MM/YY" maxlength="5" required>
+      <br/>
+      <br/>
+
+      <iframe src="https://bunpay.app/cc-autofill/cvc.html" title="Credit card number" allow="shared-autofill" frameBorder="0" scrolling="no" style="width: 260px; height: 3ex;"></iframe>
+    </form>
+
+    <br/>
+
+    <div id="shared-autofill-support" style="display: none"><small>Browser supports shared-autofill: <span id="supported" class="noSupport">No</span></small></div>
+  </div>
+
+
+</div>
+
+</body>
+
+</html>
+
