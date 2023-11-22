@@ -128,7 +128,7 @@ function getGooglePaymentDataRequest() {
   paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
   paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
   paymentDataRequest.allowedPaymentMethods[0].parameters.assuranceDetailsRequired = true;
-  paymentDataRequest.allowedPaymentMethods[0].parameters.billingAddressRequired = true;  
+  //paymentDataRequest.allowedPaymentMethods[0].parameters.billingAddressRequired = true;  
   paymentDataRequest.merchantInfo = {
     // @todo a merchant ID is available for a production environment after approval by Google
     // See {@link https://developers.google.com/pay/api/web/guides/test-and-deploy/integration-checklist|Integration checklist}
