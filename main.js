@@ -227,6 +227,10 @@ function gateways(event) {
     tokenizationSpecification.parameters.gatewayMerchantId = 'Google338ECOM';
   }
 
+  if (event.target.value === 'shopify') {    
+    tokenizationSpecification.parameters.gatewayMerchantId = 'shop.bunpay.app';
+  }
+
   if (event.target.value === 'arianev2') {
     baseCardPaymentMethod.parameters.cvcRequired = true;
   }
