@@ -228,7 +228,7 @@ function gateways(event) {
   }
 
   if (event.target.value === 'shopify') {    
-    tokenizationSpecification.parameters.gatewayMerchantId = 'shop.bunpay.app';
+    tokenizationSpecification.parameters.gatewayMerchantId = 'gid://shopify/Shop/72379629841';
   }
 
   if (event.target.value === 'arianev2') {
