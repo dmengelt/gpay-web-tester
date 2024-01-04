@@ -313,6 +313,9 @@ function onGooglePayLoaded() {
         document.getElementById('log').innerHTML = JSON.stringify(res, null, 2);
         if (res.result) {
           addGooglePayButton();
+        } else {
+          // show the Google Pay button in any case
+          addGooglePayButton();
         }
       })
       .catch(function (err) {
