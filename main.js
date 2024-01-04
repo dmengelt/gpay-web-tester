@@ -308,20 +308,23 @@ function onGooglePayLoaded() {
       getGoogleIsReadyToPayRequest(), null, 2);
   const paymentsClient = getGooglePaymentsClient();
 
-  paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest())
-      .then(res => {
-        document.getElementById('log').innerHTML = JSON.stringify(res, null, 2);
-        if (res.result) {
-          addGooglePayButton();
-        } else {
-          // show the Google Pay button in any case
-          addGooglePayButton();
-        }
-      })
-      .catch(function (err) {
-        // show error in developer console for debugging
-        console.log(err);
-      });
+  addGooglePayButton();
+
+  // paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest())
+  //     .then(res => {
+  //       document.getElementById('log').innerHTML = JSON.stringify(res, null, 2);
+  //       if (res.result) {
+  //         addGooglePayButton();
+  //       } else {
+  //         // show the Google Pay button in any case
+  //         addGooglePayButton();
+  //       }
+  //     })
+  //     .catch(function (err) {
+  //       // show error in developer console for debugging
+  //       console.log(err);
+  //     });
+
 
 }
 
