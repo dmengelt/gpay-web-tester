@@ -457,9 +457,7 @@ function onGooglePaymentButtonClicked() {
       }
     ]
   }
-  */
-
-  paymentDataRequest.forceRedirect = true;
+  */ 
 
   const paymentsClient = getGooglePaymentsClient();
   
