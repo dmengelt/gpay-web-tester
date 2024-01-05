@@ -470,7 +470,8 @@ function onGooglePaymentButtonClicked() {
     }
 
   }).catch(function (err) {
-    document.getElementById('result').innerHTML = err;
-    console.log(err);    
+    //document.getElementById('result').innerHTML = err;
+    document.getElementById('result').innerHTML = JSON.stringify(err, null, 2);
+    console.log(JSON.stringify(err, null, 2));    
   });
 }
