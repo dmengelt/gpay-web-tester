@@ -16,7 +16,7 @@ document.getElementById("checkbox").addEventListener("change", () => {
  * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest|apiVersion in PaymentDataRequest}
  */
 const baseRequest = {
-  apiVersion: 2,
+  apiVersion: 1,
   apiVersionMinor: 0
 };
 
@@ -408,8 +408,7 @@ function processPayment(paymentData) {
     setTimeout(function() {
       let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
       document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
-      console.log("loadPaymentData success (triggered over onPaymentAuthorized callback)");
-      alert("loadPaymentData success (triggered over onPaymentAuthorized callback)");
+      console.log("loadPaymentData success (triggered over onPaymentAuthorized callback)");     
       resolve({});
     }, 1000);
   });
@@ -450,7 +449,7 @@ function onGooglePaymentButtonClicked() {
   paymentDataRequest.shippingOptionParameters = {
     defaultSelectedOptionId: "shipping-001",
     shippingOptions: [
-      {
+      {         
         "id": "shipping-001",
         "label": "$0.00: Free worldwide shipping",
         "description": "Free Shipping delivered in 5 business days."
@@ -467,17 +466,11 @@ function onGooglePaymentButtonClicked() {
     if(!onPaymentAuthorizedCallbackValue || (onPaymentAuthorizedCallbackValue && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent))) {
       let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
       document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
-      console.log("loadPaymentData success");
-      alert("loadPaymentData success");
-      document.getElementById('result').innerHTML = 'loadPaymentData success';
-    } else {
-      document.getElementById('result').innerHTML = 'loadPaymentData success else';
-      alert("loadPaymentData success else");
+      console.log("loadPaymentData success");            
     }
 
   }).catch(function (err) {
     document.getElementById('result').innerHTML = err;
-    console.log(err);
-    alert("error");
+    console.log(err);    
   });
 }
