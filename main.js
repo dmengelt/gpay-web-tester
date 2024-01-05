@@ -409,6 +409,7 @@ function processPayment(paymentData) {
       let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
       document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
       console.log("loadPaymentData success (triggered over onPaymentAuthorized callback)");
+      alert("loadPaymentData success (triggered over onPaymentAuthorized callback)");
       resolve({});
     }, 1000);
   });
@@ -458,6 +459,8 @@ function onGooglePaymentButtonClicked() {
   }
   */
 
+  paymentDataRequest.forceRedirect = true;
+
   const paymentsClient = getGooglePaymentsClient();
   
   paymentsClient.loadPaymentData(paymentDataRequest).then(function (paymentData) {
@@ -467,13 +470,16 @@ function onGooglePaymentButtonClicked() {
       let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
       document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
       console.log("loadPaymentData success");
+      alert("loadPaymentData success");
       document.getElementById('result').innerHTML = 'loadPaymentData success';
     } else {
       document.getElementById('result').innerHTML = 'loadPaymentData success else';
+      alert("loadPaymentData success else");
     }
 
   }).catch(function (err) {
     document.getElementById('result').innerHTML = err;
     console.log(err);
+    alert("error");
   });
 }
