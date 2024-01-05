@@ -151,6 +151,8 @@ let buttonRadius = '4';
  * @returns {google.payments.api.PaymentsClient} Google Pay API client
  */
 function getGooglePaymentsClient() {
+  google.payments.api.LogInternally = true;
+
   if(onPaymentAuthorizedCallbackValue) {
     return new google.payments.api.PaymentsClient({
       environment: environmentValue,
