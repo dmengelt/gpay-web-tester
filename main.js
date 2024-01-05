@@ -467,9 +467,13 @@ function onGooglePaymentButtonClicked() {
       let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
       document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
       console.log("loadPaymentData success");
+      document.getElementById('result').innerHTML = 'loadPaymentData success';
+    } else {
+      document.getElementById('result').innerHTML = 'loadPaymentData success else';
     }
 
   }).catch(function (err) {
+    document.getElementById('result').innerHTML = err;
     console.log(err);
   });
 }
