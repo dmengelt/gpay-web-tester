@@ -230,7 +230,8 @@ function gateways(event) {
   }
 
   if (event.target.value === 'shopify') {    
-    tokenizationSpecification.parameters.gatewayMerchantId = 'gid://shopify/Shop/72379629841';
+    //tokenizationSpecification.parameters.gatewayMerchantId = 'gid://shopify/Shop/72379629841';
+    tokenizationSpecification.parameters.gatewayMerchantId = '72379629841';
   }
 
   if (event.target.value === 'arianev2') {
