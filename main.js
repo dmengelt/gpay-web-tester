@@ -314,24 +314,26 @@ function onGooglePayLoaded() {
   // always display the Google Pay button. No matter what the outcome of isRTP is
   addGooglePayButton();
 
-  (navigator.userAgent.indexOf('GooglePayWebview') > 0 ? 
-    // Call Android native code for WebViews
-		GooglePayHelper.proxyCall('isReadyToPay', getGoogleIsReadyToPayRequest()) : 
-	paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest()))
-	.then(res => {
-        document.getElementById('log').innerHTML = JSON.stringify(res, null, 2);
-        // if (res.result) {
-        //   addGooglePayButton();
-        // } else {
-        //   // show the Google Pay button in any case
-        //   addGooglePayButton();
-        // }
-      })
-      .catch(function (err) {
-        // show error in developer console for debugging
-        console.log(err);
-        document.getElementById('log').innerHTML = err;
-      });
+  if(navigator.userAgent.indexOf('GooglePayWebview') > 0) {
+    GooglePayHelper.proxyCall('isReadyToPay', getGoogleIsReadyToPayRequest());
+  } else {
+    paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest())
+    .then(res => {
+          document.getElementById('log').innerHTML = JSON.stringify(res, null, 2);
+          // if (res.result) {
+          //   addGooglePayButton();
+          // } else {
+          //   // show the Google Pay button in any case
+          //   addGooglePayButton();
+          // }
+        })
+        .catch(function (err) {
+          // show error in developer console for debugging
+          console.log(err);
+          document.getElementById('log').innerHTML = err;
+        });
+  }
+
 }
 
 /**
@@ -465,23 +467,26 @@ function onGooglePaymentButtonClicked() {
   */ 
 
   const paymentsClient = getGooglePaymentsClient();
-  
-  (navigator.userAgent.indexOf('GooglePayWebview') > 0 ? 
-    // Call Android native code for WebViews
-    GooglePayHelper.proxyCall('loadPaymentData', paymentDataRequest) :
-	paymentsClient.loadPaymentData(paymentDataRequest))
-	.then(function (paymentData) {
-    // on mobile web there is no support for the onPaymentAuthorized callback handler
-    // thats why we are going to output the result here
-    if(!onPaymentAuthorizedCallbackValue || (onPaymentAuthorizedCallbackValue && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent))) {
-      let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
-      document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
-      console.log("loadPaymentData success");            
-    }
 
-  }).catch(function (err) {
-    //document.getElementById('result').innerHTML = err;
-    document.getElementById('result').innerHTML = JSON.stringify(err, null, 2);
-    console.log(JSON.stringify(err, null, 2));    
-  });
+  if(navigator.userAgent.indexOf('GooglePayWebview') > 0) {
+    GooglePayHelper.proxyCall('loadPaymentData', paymentDataRequest);
+  } else {
+    paymentsClient.loadPaymentData(paymentDataRequest)
+    .then(function (paymentData) {
+      // on mobile web there is no support for the onPaymentAuthorized callback handler
+      // thats why we are going to output the result here
+      if(!onPaymentAuthorizedCallbackValue || (onPaymentAuthorizedCallbackValue && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent))) {
+        let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
+        document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
+        console.log("loadPaymentData success");            
+      }
+
+    }).catch(function (err) {
+      //document.getElementById('result').innerHTML = err;
+      document.getElementById('result').innerHTML = JSON.stringify(err, null, 2);
+      console.log(JSON.stringify(err, null, 2));    
+    });
+
+  }
+	
 }
