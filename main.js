@@ -315,7 +315,7 @@ function onGooglePayLoaded() {
   addGooglePayButton();
 
   if(navigator.userAgent.indexOf('GooglePayWebview') > 0) {
-    GooglePayHelper.proxyCall('isReadyToPay', getGoogleIsReadyToPayRequest());
+    GooglePayHelper.proxyCall('isReadyToPay', JSON.stringify(getGoogleIsReadyToPayRequest()));
   } else {
     paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest())
     .then(res => {
@@ -469,7 +469,7 @@ function onGooglePaymentButtonClicked() {
   const paymentsClient = getGooglePaymentsClient();
 
   if(navigator.userAgent.indexOf('GooglePayWebview') > 0) {
-    GooglePayHelper.proxyCall('loadPaymentData', paymentDataRequest);
+    GooglePayHelper.proxyCall('loadPaymentData', JSON.stringify(paymentDataRequest));
   } else {
     paymentsClient.loadPaymentData(paymentDataRequest)
     .then(function (paymentData) {
