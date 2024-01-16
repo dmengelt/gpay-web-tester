@@ -316,7 +316,7 @@ function onGooglePayLoaded() {
 
   (navigator.userAgent.indexOf('GooglePayWebview') > 0 ? 
     // Call Android native code for WebViews
-		proxyCall('isReadyToPay', getGoogleIsReadyToPayRequest()) : 
+		Android.proxyCall('isReadyToPay', getGoogleIsReadyToPayRequest()) : 
 	paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest()))
 	.then(res => {
         document.getElementById('log').innerHTML = JSON.stringify(res, null, 2);
@@ -467,8 +467,9 @@ function onGooglePaymentButtonClicked() {
   const paymentsClient = getGooglePaymentsClient();
   
   (navigator.userAgent.indexOf('GooglePayWebview') > 0 ? 
-		proxyCall('loadPaymentData', paymentDataRequest) :
-		paymentsClient.loadPaymentData(paymentDataRequest))
+    // Call Android native code for WebViews
+    Android.proxyCall('loadPaymentData', paymentDataRequest) :
+	paymentsClient.loadPaymentData(paymentDataRequest))
 	.then(function (paymentData) {
     // on mobile web there is no support for the onPaymentAuthorized callback handler
     // thats why we are going to output the result here
