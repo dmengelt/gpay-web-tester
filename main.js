@@ -314,8 +314,11 @@ function onGooglePayLoaded() {
   // always display the Google Pay button. No matter what the outcome of isRTP is
   addGooglePayButton();
 
-  paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest())
-      .then(res => {
+  (navigator.userAgent.indexOf('GooglePayWebview') > 0 ? 
+    // Call Android native code for WebViews
+		proxyCall('isReadyToPay', getGoogleIsReadyToPayRequest()) : 
+	paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest()))
+	.then(res => {
         document.getElementById('log').innerHTML = JSON.stringify(res, null, 2);
         // if (res.result) {
         //   addGooglePayButton();
@@ -463,7 +466,10 @@ function onGooglePaymentButtonClicked() {
 
   const paymentsClient = getGooglePaymentsClient();
   
-  paymentsClient.loadPaymentData(paymentDataRequest).then(function (paymentData) {
+  (navigator.userAgent.indexOf('GooglePayWebview') > 0 ? 
+		proxyCall('loadPaymentData', paymentDataRequest) :
+		paymentsClient.loadPaymentData(paymentDataRequest))
+	.then(function (paymentData) {
     // on mobile web there is no support for the onPaymentAuthorized callback handler
     // thats why we are going to output the result here
     if(!onPaymentAuthorizedCallbackValue || (onPaymentAuthorizedCallbackValue && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent))) {
