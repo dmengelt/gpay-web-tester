@@ -201,6 +201,11 @@ function allowedAuthMethods(event) {
 }
 
 function gateways(event) {
+
+  tokenizationSpecification.parameters = {};
+  tokenizationSpecification.parameters.gateway = event.target.value;
+  tokenizationSpecification.parameters.gatewayMerchantId = 'exampleGatewayMerchantId';
+
   if (event.target.value === 'stripe') {
     // special handling for Stripe. Please use your own publishable key
     tokenizationSpecification.parameters = {
@@ -238,7 +243,7 @@ function gateways(event) {
     baseCardPaymentMethod.parameters.cvcRequired = true;
   }
 
-  tokenizationSpecification.parameters.gateway = event.target.value;
+  
   onGooglePayLoaded();
 }
 
