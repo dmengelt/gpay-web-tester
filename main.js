@@ -449,7 +449,7 @@ function onGooglePaymentButtonClicked() {
   paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
 
   paymentDataRequest.emailRequired = true;
-  paymentDataRequest.shippingAddressRequired = true;
+  //paymentDataRequest.shippingAddressRequired = true;
   /*
   paymentDataRequest.shippingAddressParameters = {
     phoneNumberRequired: true
