@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Google Pay Example</title>
+  <style>
+    #container {
+      width: 400px;
+      height: 40px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="container" class="padding-after"></div>
+</body>
+
+<script type="application/javascript">
+    function getGooglePaymentsClient() {
+      return new google.payments.api.PaymentsClient({
+        environment: 'TEST',
+      });
+    }
+
+    function onGooglePayLoaded() {
+      const paymentsClient = getGooglePaymentsClient();
+      addGooglePayButton();
+    }
+
+    function addGooglePayButton() {
+      const paymentsClient = getGooglePaymentsClient();
+
+      const buttonOptions = (google.payments.api.ButtonOptions = {
+        onClick: onGooglePaymentButtonClicked,
+      });
+
+      console.log(JSON.stringify(buttonOptions, null, 2));
+
+      const button = paymentsClient.createButton(buttonOptions);
+
+      let container = document.getElementById('container');
+      if (container.firstChild) {
+        container.replaceChild(button, container.firstChild);
+      } else {
+        container.appendChild(button);
+      }
+    }
+
+    function getRequest() {
+      const allowedCardNetworks = ['AMEX', 'MASTERCARD', 'VISA'];
+
+      googlePayConfig = {
+        apiVersion: 2,
+        apiVersionMinor: 0,
+      };
+
+      paymentDataRequest = Object.assign({}, googlePayConfig);
+      paymentDataRequest.transactionInfo = {
+        totalPriceStatus: 'FINAL',
+        totalPrice: '100',
+        currencyCode: 'USD',
+        countryCode: 'US',
+      };
+      paymentDataRequest.merchantInfo = {
+        merchantId: 'googlePayMerchantID',
+        merchantName: 'googlePayMerchantName',
+      };
+      const tokenizationSpec = {
+        type: 'PAYMENT_GATEWAY',
+        parameters: {
+          gateway: 'example',
+          gatewayMerchantId: 'gatewayMerchantId',
+        },
+      };
+      const cardPaymentMethod = {
+        type: 'CARD',
+        tokenizationSpecification: tokenizationSpec,
+        parameters: {
+          allowedCardNetworks: allowedCardNetworks,
+          allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS']
+        },
+      };
+      paymentDataRequest.shippingAddressRequired = false;
+      paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
+      return paymentDataRequest;
+    }
+
+    function onGooglePaymentButtonClicked() {
+      const paymentDataRequest = getRequest();
+      console.log(JSON.stringify(paymentDataRequest, null, 2));
+      const paymentsClient = getGooglePaymentsClient();
+      paymentsClient.loadPaymentData(paymentDataRequest);
+    }
+
+    function processPayment(paymentData) {
+      console.log(paymentData.paymentMethodData.tokenizationData.token);
+    }
+
+  </script>
+
+<script
+    async
+    src="https://pay.google.com/gp/p/js/pay.js"
+    onload="onGooglePayLoaded()"
+></script>
+</html>
