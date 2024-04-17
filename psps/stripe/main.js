@@ -8,8 +8,7 @@ const stripe = Stripe('pk_test_LMUiQyn0mBZPsUIhVrVMblov', {
     total: {
       label: 'Demo total',
       amount: 1099,
-    },
-    requestShipping: true
+    }
   });
 
 const elements = stripe.elements();
