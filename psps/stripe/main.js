@@ -1,5 +1,5 @@
-const stripe = Stripe('pk_test_LMUiQyn0mBZPsUIhVrVMblov', {
-    apiVersion: "2019-12-03",
+const stripe = Stripe('pk_test_51Mg8nWA9tv049KWdCFQOwUElIVS3FvQLaGlugWfltUCuTjp4oj5oLkH5pq26W4cTr5GscxAgNaKAMA3z85j6GZUW00D54sM83r', {
+    apiVersion: "2024-04-10",
   });
 
   const paymentRequest = stripe.paymentRequest({
