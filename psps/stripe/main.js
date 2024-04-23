@@ -8,7 +8,10 @@ const stripe = Stripe('pk_test_51Mg8nWA9tv049KWdCFQOwUElIVS3FvQLaGlugWfltUCuTjp4
     total: {
       label: 'Demo total',
       amount: 1099,
-    }
+    },
+    disableWallets: [
+      'link'
+    ]
   });
 
 const elements = stripe.elements();
