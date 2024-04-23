@@ -25,8 +25,7 @@ const prButton = elements.create('paymentRequestButton', {
   if (result) {
     prButton.mount('#payment-request-button');
   } else {
-    console.log("### canMakePayment returned false!");
-    prButton.mount('#payment-request-button');    
-    //document.getElementById('payment-request-button').style.display = 'none';    
+    console.log("### canMakePayment returned false!");   
+    document.getElementById('payment-request-button').innerHTML = 'canMakePayment returned false!'
   }
 })();
