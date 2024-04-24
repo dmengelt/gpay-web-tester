@@ -157,7 +157,8 @@ function getGooglePaymentsClient() {
     return new google.payments.api.PaymentsClient({
       environment: environmentValue,
       paymentDataCallbacks: {
-        onPaymentAuthorized: onPaymentAuthorizedCallbackHandler,   
+        onPaymentAuthorized: onPaymentAuthorizedCallbackHandler,
+        onPaymentDataChanged: onPaymentDataChanged   
       }
     });
   } else {
@@ -416,6 +417,12 @@ function onPaymentAuthorizedCallbackHandler(paymentData) {
   });
 }
 
+function onPaymentDataChanged(intermediatePaymentData) {
+  return new Promise(function(resolve, reject) {   
+    resolve(intermediatePaymentData);
+  });
+}
+
 function processPayment(paymentData) {
   return new Promise(function(resolve, reject) {
     setTimeout(function() {
@@ -465,6 +472,11 @@ function onGooglePaymentButtonClicked() {
         "id": "shipping-001",
         "label": "$0.00: Free worldwide shipping",
         "description": "Free Shipping delivered in 5 business days."
+      },
+      {         
+        "id": "shipping-002",
+        "label": "$10.00: Fast worldwide shipping",
+        "description": "Fast Shipping delivered in 1-2 business days."
       }
     ]
   }
