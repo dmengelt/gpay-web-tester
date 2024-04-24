@@ -13,15 +13,18 @@ const stripe = Stripe('pk_live_NkaQ1QQFUyXrPsCuOkzt3IeS', {
       'link'
     ],
     requestShipping: true,
-    // `shippingOptions` is optional at this point:
     shippingOptions: [
-      // The first shipping option in this list appears as the default
-      // option in the browser payment interface.
       {
         id: 'free-shipping',
         label: 'Free shipping',
         detail: 'Arrives in 5 to 7 days',
         amount: 0,
+      },
+      {         
+        id: 'fast-shipping',
+        label: 'Fast worldwide shipping',
+        detail: 'Fast Shipping delivered in 1-2 business days',
+        amount: 10
       }
     ]
   });
