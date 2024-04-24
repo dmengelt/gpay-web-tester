@@ -442,7 +442,8 @@ function onGooglePaymentButtonClicked() {
   }
 
   if(onPaymentAuthorizedCallbackValue) {
-    paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION'];    
+    //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION'];    
+    paymentDataRequest.callbackIntents = ["SHIPPING_ADDRESS",  "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"];
   }
 
   console.log(JSON.stringify(paymentDataRequest, null, 2));
