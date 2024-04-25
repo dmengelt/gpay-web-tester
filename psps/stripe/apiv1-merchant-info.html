@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Google Pay Example</title>
+  <style>
+    #container {
+      width: 400px;
+      height: 40px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="container" class="padding-after"></div>
+</body>
+
+<script type="application/javascript">	
+    function getGooglePaymentsClient() {
+      return new google.payments.api.PaymentsClient({
+        environment: 'PRODUCTION',
+      });
+    }
+
+    function onGooglePayLoaded() {
+      const paymentsClient = getGooglePaymentsClient();
+      addGooglePayButton();
+    }
+
+    function addGooglePayButton() {
+      const paymentsClient = getGooglePaymentsClient();
+
+      const buttonOptions = (google.payments.api.ButtonOptions = {
+        onClick: onGooglePaymentButtonClicked,
+      });
+
+      console.log(JSON.stringify(buttonOptions, null, 2));
+
+      const button = paymentsClient.createButton(buttonOptions);
+
+      let container = document.getElementById('container');
+      if (container.firstChild) {
+        container.replaceChild(button, container.firstChild);
+      } else {
+        container.appendChild(button);
+      }
+    }
+
+    function getRequest() {
+    	return {
+        merchantId: "01234567890123456789",
+        apiVersion: 1,
+        merchantInfo: {
+          merchantId: "01234567890123456789",
+          merchantOrigin: "https://dmengelt.github.io",
+          merchantName: "dmengelt.github.io"
+        },        
+        allowedPaymentMethods: [
+          "CARD",
+          "TOKENIZED_CARD"
+        ],
+        cardRequirements: {
+          allowedCardNetworks: [
+            "AMEX",
+            "DISCOVER",
+            "JCB",
+            "MASTERCARD",
+            "VISA"
+          ],
+          billingAddressRequired: true,
+          billingAddressFormat: "FULL"
+        },
+        paymentMethodTokenizationParameters: {
+          tokenizationType: "PAYMENT_GATEWAY",
+          parameters: {
+            gateway: "stripe",
+              'stripe:publishableKey': "pk_live_NkaQ1QQFUyXrPsCuOkzt3IeS",
+              'stripe:version': "Stripe.js\/PayWithGoogle"
+          }
+        },
+        transactionInfo: {
+          totalPriceStatus: "ESTIMATED",
+          totalPrice: "10.99",
+          currencyCode: "USD"
+        }
+      }  
+    }
+
+    function onGooglePaymentButtonClicked() {
+      const paymentDataRequest = getRequest();
+      console.log(JSON.stringify(paymentDataRequest, null, 2));
+      const paymentsClient = getGooglePaymentsClient();
+      paymentsClient.loadPaymentData(paymentDataRequest);
+    }
+
+    function processPayment(paymentData) {
+      console.log(paymentData.paymentMethodData.tokenizationData.token);
+    }
+
+  </script>
+
+<script
+    async
+    src="https://pay.google.com/gp/p/js/pay.js"
+    onload="onGooglePayLoaded()"
+></script>
+</html>
