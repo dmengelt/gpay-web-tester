@@ -5,16 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Google Pay Example</title>
   <style>
-    #container {
-      width: 400px;
-      height: 40px;
+    .outer {
+      display: table;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    .middle {
+      display: table-cell;     
+    }
+
+    .inner {
+      margin-left: auto;
+      margin-right: auto;
+      width: 200px;
+      /* Whatever width you want */
     }
   </style>
 </head>
 
 <body>
 
-<div id="container" class="padding-after"></div>
+  <div class="outer">
+    <div class="middle">
+      <div class="inner" id="container">               
+      </div>
+    </div>
+  </div>
+
 </body>
 
 <script type="application/javascript">
@@ -35,6 +56,7 @@
       const buttonOptions = (google.payments.api.ButtonOptions = {
         onClick: onGooglePaymentButtonClicked,
         buttonType: 'checkout',
+        buttonSizeMode: 'fill',
       });
 
       console.log(JSON.stringify(buttonOptions, null, 2));
