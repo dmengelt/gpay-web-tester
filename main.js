@@ -128,7 +128,15 @@ function getGooglePaymentDataRequest() {
   paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
   paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
   paymentDataRequest.allowedPaymentMethods[0].parameters.assuranceDetailsRequired = true;
-  //paymentDataRequest.allowedPaymentMethods[0].parameters.billingAddressRequired = true;  
+  //paymentDataRequest.allowedPaymentMethods[0].parameters.billingAddressRequired = true;
+
+  /*
+  paymentDataRequest.allowedPaymentMethods[0].parameters.billingAddressParameters = {
+    format: "MIN",
+    phoneNumberRequired: false
+  }
+  */
+
   paymentDataRequest.merchantInfo = {
     // @todo a merchant ID is available for a production environment after approval by Google
     // See {@link https://developers.google.com/pay/api/web/guides/test-and-deploy/integration-checklist|Integration checklist}
@@ -389,8 +397,8 @@ function renderButton(paymentsClient, element, allowedCardNetworks) {
  */
 function getGoogleTransactionInfo() {
   return {
-    countryCode: 'DE',
-    currencyCode: "EUR",
+    countryCode: 'US',
+    currencyCode: "USD",
     totalPriceStatus: "FINAL",
     totalPrice: "1",
     checkoutOption: "COMPLETE_IMMEDIATE_PURCHASE"
@@ -457,7 +465,10 @@ function onGooglePaymentButtonClicked() {
   paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
 
   paymentDataRequest.emailRequired = true;
+
+  /*
   paymentDataRequest.shippingAddressRequired = true;
+  
   
   paymentDataRequest.shippingAddressParameters = {
     phoneNumberRequired: true
@@ -480,7 +491,9 @@ function onGooglePaymentButtonClicked() {
       }
     ]
   }
-   
+
+  */
+     
 
   const paymentsClient = getGooglePaymentsClient();
 
