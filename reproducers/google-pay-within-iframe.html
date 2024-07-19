@@ -7,11 +7,12 @@
 </head>
 
 <body>
-    <p>This page loads <a href="https://gpay-live-demo.web.app" target="_blank">https://gpay-live-demo.web.app</a> in an &lt;iframe&gt;</p>
-    <p>Because the iframe does not set the allow="payment" attribute the isReadyToPay() API call fails and the following happens:</p>
+    <p>This page loads <a href="https://gpay-live-demo.web.app" target="_blank">https://gpay-live-demo.web.app</a> in an &lt;iframe&gt;.<br>
+        The demo calls isReadyToPay() to determine if a Google Pay button should be displayed or not.</p>
+    <p>Because the iframe does not set the <a href="https://www.w3.org/TR/payment-request-1.1/#using-with-cross-origin-iframes" target="_blank">allow="payment"</a> attribute, the Payment Request API is not available and the following happens:</p>
     <ul>
-        <li>Web: Button is shown and Google Pay gets triggered in POPUP mode.</li>
-        <li>Mobile Web (Chrome on Android): No button is displayed at all.</li>
+        <li>Web: Button is shown and Google Pay falls back to POPUP mode because the PaymentRequest API is not available and therefore can't trigger the Payment Handler window.</li>
+        <li>Mobile Web (Chrome on Android): No button is displayed at all because bridging to the native isReadyToPay() API also needs the Payment Request API.</li>
     </ul>
     <iframe src="https://gpay-live-demo.web.app" width="300" height="100" />
 </body>
