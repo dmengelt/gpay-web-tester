@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Google Pay within iframe</title> 
+</head>
+
+<body>
+    <p>This page loads <a href="https://gpay-live-demo.web.app" target="_blank">https://gpay-live-demo.web.app</a> in an &lt;iframe&gt;</p>
+    <p>Because the iframe does not set the allow="payment" attribute the isReadyToPay() API call fails and the following happens:</p>
+    <ul>
+        <li>Web: Button is shown and Google Pay gets triggered in POPUP mode.</li>
+        <li>Mobile Web (Chrome on Android): No button is displayed at all.</li>
+    </ul>
+    <iframe src="https://gpay-live-demo.web.app" width="300" height="100" />
+</body>
+
+</html>
+
