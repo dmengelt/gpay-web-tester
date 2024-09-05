@@ -6,8 +6,15 @@
   <title>Google Pay sandboxed iframe</title> 
 </head>
 
-<body>    
-    <iframe src="https://gpay-live-demo.web.app" width="300" height="100" allow="payment" sandbox="allow-scripts allow-popups allow-same-origin" />
+<body>           
+    <p><pre>sandbox="allow-scripts allow-popups"</pre></p>
+    <iframe id="iframe1" src="https://gpay-live-demo.web.app" width="300" height="60" allow="payment" sandbox="allow-scripts allow-popups"></iframe>
+    
+    <p><pre>sandbox="allow-scripts allow-popups allow-same-origin"</pre></p>
+    <iframe id="iframe2" src="https://gpay-live-demo.web.app" width="300" height="60" allow="payment" sandbox="allow-scripts allow-popups allow-same-origin"></iframe>
+    
+    <p><pre>sandbox="allow-scripts allow-popups allow-same-origin allow-forms"</pre></p>
+    <iframe id="iframe3" src="https://gpay-live-demo.web.app" width="300" height="60" allow="payment" sandbox="allow-scripts allow-popups allow-same-origin allow-forms"></iframe>
 </body>
 
 </html>
