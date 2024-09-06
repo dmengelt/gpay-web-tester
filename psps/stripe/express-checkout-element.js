@@ -19,7 +19,7 @@ const expressCheckoutOptions = {
 
 const elements = stripe.elements({
   mode: 'payment',
-  amount: 1099,
+  amount: 100,
   currency: 'usd',
   appearance,
 })
