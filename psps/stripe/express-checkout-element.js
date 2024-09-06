@@ -12,7 +12,7 @@ const appearance = {
 const expressCheckoutOptions = {
   buttonType: {
     applePay: 'buy',
-    googlePay: 'buy',
+    googlePay: 'plain',
     paypal: 'buynow'
   }
 }
