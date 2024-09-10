@@ -8,16 +8,35 @@
 
 <body>
     <p><pre>sandbox="allow-popups"</pre></p>
-    <iframe id="iframe0" src="https://gpay-live-demo.web.app" width="300" height="60" allow="payment" sandbox="allow-popups"></iframe>
+    <iframe id="iframe0" src="https://gpay-live-demo.web.app/iframed.html" width="300" height="60" allow="payment" sandbox="allow-popups"></iframe>
 
     <p><pre>sandbox="allow-scripts allow-popups"</pre></p>
-    <iframe id="iframe1" src="https://gpay-live-demo.web.app" width="300" height="60" allow="payment" sandbox="allow-scripts allow-popups"></iframe>
+    <iframe id="iframe1" src="https://gpay-live-demo.web.app/iframed.html" width="300" height="60" allow="payment" sandbox="allow-scripts allow-popups"></iframe>
     
     <p><pre>sandbox="allow-scripts allow-popups allow-same-origin"</pre></p>
-    <iframe id="iframe2" src="https://gpay-live-demo.web.app" width="300" height="60" allow="payment" sandbox="allow-scripts allow-popups allow-same-origin"></iframe>
+    <iframe id="iframe2" src="https://gpay-live-demo.web.app/iframed.html" width="300" height="60" allow="payment" sandbox="allow-scripts allow-popups allow-same-origin"></iframe>
     
     <p><pre>sandbox="allow-scripts allow-popups allow-same-origin allow-forms"</pre></p>
-    <iframe id="iframe3" src="https://gpay-live-demo.web.app" width="300" height="60" allow="payment" sandbox="allow-scripts allow-popups allow-same-origin allow-forms"></iframe>
+    <iframe id="iframe3" src="https://gpay-live-demo.web.app/iframed.html" width="300" height="60" allow="payment" sandbox="allow-scripts allow-popups allow-same-origin allow-forms"></iframe>
+
+    <p>Result resceived from the iframe via postMessage():</p>
+    <div id="result"></div>
+
+    <script>
+      window.addEventListener(
+        "message",
+        (event) => {
+          // Do we trust the sender of this message? (might be
+          // different from what we originally opened, for example).
+          if (event.origin !== "https://gpay-live-demo.web.app") {
+            console.log("Received message but origin was not gpay-live-demo.web.app but " + event.origin)
+            return;
+          }
+          document.getElementById('result').innerHTML = event.data;
+        },
+        false,
+      );
+    </script>
 </body>
 
 </html>
