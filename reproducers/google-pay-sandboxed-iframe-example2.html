@@ -3,22 +3,13 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Google Pay sandboxed iframe</title> 
+  <title>Google Pay sandboxed iframe - Example 2</title> 
 </head>
 
 <body>
-    <p><pre>allow="payment" sandbox="allow-popups"</pre></p>
-    <iframe id="iframe0" src="https://gpay-live-demo.web.app/iframed.html" width="300" height="60" allow="payment" sandbox="allow-popups"></iframe>
-
     <p><pre>allow="payment" sandbox="allow-scripts allow-popups"</pre></p>
     <iframe id="iframe1" src="https://gpay-live-demo.web.app/iframed.html" width="300" height="60" allow="payment" sandbox="allow-scripts allow-popups"></iframe>
     
-    <p><pre>allow="payment" sandbox="allow-scripts allow-popups allow-same-origin"</pre></p>
-    <iframe id="iframe2" src="https://gpay-live-demo.web.app/iframed.html" width="300" height="60" allow="payment" sandbox="allow-scripts allow-popups allow-same-origin"></iframe>
-    
-    <p><pre>allow="payment" sandbox="allow-scripts allow-popups allow-same-origin allow-forms"</pre></p>
-    <iframe id="iframe3" src="https://gpay-live-demo.web.app/iframed.html" width="300" height="60" allow="payment" sandbox="allow-scripts allow-popups allow-same-origin allow-forms"></iframe>
-
     <p>Result received from the iframe via postMessage():</p>
     <div id="result"></div>
 
