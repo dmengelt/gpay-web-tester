@@ -46,6 +46,8 @@ let allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
  * @todo check with your gateway on the parameters to pass
  * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#gateway|PaymentMethodTokenizationSpecification}
  */
+
+/*
 const tokenizationSpecification = {
   type: 'PAYMENT_GATEWAY',
   parameters: {
@@ -53,7 +55,9 @@ const tokenizationSpecification = {
     'gatewayMerchantId': 'exampleGatewayMerchantId'
   }
 };
-/*
+
+*/
+
 const tokenizationSpecification = {
   type: 'DIRECT',
   parameters: {
@@ -61,7 +65,9 @@ const tokenizationSpecification = {
     'publicKey': 'BOdoXP+9Aq473SnGwg3JU1aiNpsd9vH2ognq4PtDtlLGa3Kj8TPf+jaQNPyDSkh3JUhiS0KyrrlWhAgNZKHYF2Y='
   }
 };
-*/
+
+
+
 
 
 /**
@@ -149,7 +155,7 @@ function getGooglePaymentDataRequest() {
 
 let environmentValue = 'TEST';
 let buttonColor = 'default';
-let buttonType = 'buy';
+let buttonType = 'checkout';
 let buttonRadius = '4';
 
 /**
@@ -369,6 +375,7 @@ function renderButton(paymentsClient, element, allowedCardNetworks) {
         buttonColor: buttonColor,
         buttonType: buttonType,
         buttonRadius: buttonRadius,
+        buttonLocale: 'hu',
         onClick: onGooglePaymentButtonClicked,
         allowedPaymentMethods: [{
           "type": "CARD",

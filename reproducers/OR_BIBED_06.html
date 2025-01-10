@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>beforeunload error reproducer</title>
+</head>
+
+<body>
+    <h1>GooglePay</h1>
+    <div id="buttons">
+        <google-pay-button environment="TEST" button-type="short" button-color="black"></google-pay-button>
+    </div>
+    <script async src="https://unpkg.com/@google-pay/button-element@3.x/dist/index.umd.min.js"></script>
+    <script>
+
+        const button = document.querySelector('google-pay-button');
+        button.paymentRequest = {
+            apiVersion: 2,
+            apiVersionMinor: 0,
+            allowedPaymentMethods: [
+                {
+                    type: 'CARD',
+                    tokenizationSpecification: {
+                        type: 'PAYMENT_GATEWAY',
+                        parameters: {
+                            gateway: 'stripe',
+                            'stripe:version': '2020-08-27',
+                            'stripe:publishableKey': 'pk_test_51....'
+                        },
+                    },
+                    parameters: {
+                        allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+                        allowedCardNetworks: ['MASTERCARD', 'VISA'],
+                    }                    
+                },
+            ],
+            merchantInfo: {
+                merchantId: '12345678901234567890',
+                merchantName: 'Demo Merchant',
+            },
+            transactionInfo: {               
+                countryCode: 'US',
+                currencyCode: 'USD',
+                totalPriceStatus: 'FINAL',
+                totalPrice: '1337'
+            },
+        };
+
+        button.addEventListener('loadpaymentdata', event => {
+            console.log('load payment data', event.detail);
+            location = './beforeunload-transaction-end-page.html' // redirectTo3dsUrl
+        });
+    </script>
+</body>
+
+</html>
