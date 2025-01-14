@@ -66,10 +66,6 @@ const tokenizationSpecification = {
   }
 };
 
-
-
-
-
 /**
  * Describe your site's support for the CARD payment method and its required
  * fields
@@ -134,19 +130,19 @@ function getGooglePaymentDataRequest() {
   paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
   paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
   paymentDataRequest.allowedPaymentMethods[0].parameters.assuranceDetailsRequired = true;
-  //paymentDataRequest.allowedPaymentMethods[0].parameters.billingAddressRequired = true;
+  paymentDataRequest.allowedPaymentMethods[0].parameters.billingAddressRequired = true;
 
-  /*
+  
   paymentDataRequest.allowedPaymentMethods[0].parameters.billingAddressParameters = {
-    format: "MIN",
-    phoneNumberRequired: false
+    format: 'FULL',
+    phoneNumberRequired: true
   }
-  */
+  
 
   paymentDataRequest.merchantInfo = {
     // @todo a merchant ID is available for a production environment after approval by Google
     // See {@link https://developers.google.com/pay/api/web/guides/test-and-deploy/integration-checklist|Integration checklist}
-    // merchantId: '01234567890123456789',
+    merchantId: '01234567890123456789',
     merchantName: 'Example Merchant'
   };
 
@@ -155,7 +151,7 @@ function getGooglePaymentDataRequest() {
 
 let environmentValue = 'TEST';
 let buttonColor = 'default';
-let buttonType = 'checkout';
+let buttonType = 'buy';
 let buttonRadius = '4';
 
 /**
@@ -171,7 +167,8 @@ function getGooglePaymentsClient() {
     return new google.payments.api.PaymentsClient({
       environment: environmentValue,
       paymentDataCallbacks: {
-        onPaymentAuthorized: onPaymentAuthorizedCallbackHandler
+        onPaymentAuthorized: onPaymentAuthorizedCallbackHandler,
+        onPaymentDataChanged: onPaymentDataChanged
       }
     });
   } else {
@@ -374,8 +371,7 @@ function renderButton(paymentsClient, element, allowedCardNetworks) {
       paymentsClient.createButton({
         buttonColor: buttonColor,
         buttonType: buttonType,
-        buttonRadius: buttonRadius,
-        buttonLocale: 'hu',
+        buttonRadius: buttonRadius,        
         onClick: onGooglePaymentButtonClicked,
         allowedPaymentMethods: [{
           "type": "CARD",
@@ -432,7 +428,9 @@ function onPaymentAuthorizedCallbackHandler(paymentData) {
 }
 
 function onPaymentDataChanged(intermediatePaymentData) {
+  console.log(intermediatePaymentData);
   return new Promise(function(resolve, reject) {   
+    console.log(intermediatePaymentData);
     resolve(intermediatePaymentData);
   });
 }
@@ -463,7 +461,7 @@ function onGooglePaymentButtonClicked() {
   }
 
   if(onPaymentAuthorizedCallbackValue) {
-    paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION'];    
+    paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'PAYMENT_METHOD'];    
     //paymentDataRequest.callbackIntents = ["SHIPPING_ADDRESS",  "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"];
   }
 
