@@ -427,11 +427,11 @@ function onPaymentAuthorizedCallbackHandler(paymentData) {
   });
 }
 
-function onPaymentDataChanged(intermediatePaymentData) {
-  console.log(intermediatePaymentData);
+function onPaymentDataChanged(intermediatePaymentData) {  
+  console.log(JSON.stringify(intermediatePaymentData));
   return new Promise(function(resolve, reject) {   
-    console.log(intermediatePaymentData);
-    resolve(intermediatePaymentData);
+    let paymentDataRequestUpdate = {};
+    resolve(paymentDataRequestUpdate);
   });
 }
 
