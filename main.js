@@ -46,8 +46,6 @@ let allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
  * @todo check with your gateway on the parameters to pass
  * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#gateway|PaymentMethodTokenizationSpecification}
  */
-
-/*
 const tokenizationSpecification = {
   type: 'PAYMENT_GATEWAY',
   parameters: {
@@ -56,8 +54,8 @@ const tokenizationSpecification = {
   }
 };
 
-*/
 
+/*
 const tokenizationSpecification = {
   type: 'DIRECT',
   parameters: {
@@ -65,6 +63,7 @@ const tokenizationSpecification = {
     'publicKey': 'BOdoXP+9Aq473SnGwg3JU1aiNpsd9vH2ognq4PtDtlLGa3Kj8TPf+jaQNPyDSkh3JUhiS0KyrrlWhAgNZKHYF2Y='
   }
 };
+*/
 
 /**
  * Describe your site's support for the CARD payment method and its required
@@ -461,18 +460,20 @@ function onGooglePaymentButtonClicked() {
   }
 
   if(onPaymentAuthorizedCallbackValue) {
-    paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'PAYMENT_METHOD'];    
+    //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'SHIPPING_ADDRESS'];    
+    paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION'];
+    //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'PAYMENT_METHOD'];    
     //paymentDataRequest.callbackIntents = ["SHIPPING_ADDRESS",  "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"];
   }
 
   console.log(JSON.stringify(paymentDataRequest, null, 2));
   paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
 
-  paymentDataRequest.emailRequired = true;
+  //paymentDataRequest.emailRequired = true; 
+  //paymentDataRequest.shippingAddressRequired = true;
+  
 
   /*
-  paymentDataRequest.shippingAddressRequired = true;
-  
   
   paymentDataRequest.shippingAddressParameters = {
     phoneNumberRequired: true
