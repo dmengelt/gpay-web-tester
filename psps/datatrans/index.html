@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Datatrans Payment Button Example</title>
+
+  <style>
+    #paymentbutton {
+      width: 500px;
+    }
+  </style>
+</head>
+
+<body>
+Datatrans Payment Button
+
+<br/>
+<br/>
+
+<div id="paymentbutton"></div>
+
+</body>
+
+<script src="https://pay.datatrans.com/upp/payment/js/payment-button-2.0.0.js" type="text/javascript"></script>
+<script type="application/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) { 
+        let payment = {
+            // W3C spec
+            details: {
+                total: {
+                    label: "Total",
+                    amount: {value: "13.37", currency: "CHF"},
+                }
+                // displayItems: [
+                //     {
+                //         label: "Tax",
+                //         amount: { value: "2.50", currency: "USD" },
+                //     }
+                // ]
+            },
+            // W3C spec
+            options: {
+                requestPayerEmail: false,
+                requestPayerName: false,
+                requestPayerPhone: false
+            },
+            // Datatrans specific
+            transaction: {
+                countryCode: "CH",
+                refno: "" + Date.now()
+            }
+        };
+
+        PaymentButton.create(document.getElementById('paymentbutton'), payment);   
+    });
+
+    PaymentButton.init({
+        merchantId: "1100001231",
+        merchantName: "Test merchant",           
+        autoSettle: true,
+        allowedCardNetworks: ['MASTERCARD', 'VISA', 'AMEX'],
+        googlePayConfiguration: {
+            buttonType: "buy",
+            buttonStyle: "black",
+            merchantId: "14697717800897553235"
+        },
+        applePayConfiguration: {
+            buttonType: "plain",
+            buttonStyle: "black"
+        }
+    });
+
+    PaymentButton.on("init", function () {
+        console.log("init event dispatched");
+    });
+
+    PaymentButton.on("create", function () {
+        console.log("create event dispatched");
+    });
+
+    PaymentButton.on("authorization", function (authorizationResponse) {
+        console.log("authorization event dispatched");
+        console.log(authorizationResponse);
+    });
+
+    PaymentButton.on("abort", function () {
+        console.log("abort event dispatched");
+    });
+    PaymentButton.on("error", function (error) {
+        console.log("Error: " + JSON.stringify(error));            
+    });
+    
+
+    PaymentButton.on("unsupported", function () {
+        //console.log("Payment method not supported in this browser");
+        error();
+    });
+
+</script>
+</html>
+
