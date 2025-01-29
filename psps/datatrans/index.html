@@ -27,7 +27,8 @@ Datatrans Payment Button
     document.addEventListener("DOMContentLoaded", function(event) { 
         PaymentButton.init({
             merchantId: "1000011016",
-            merchantName: "Test merchant",           
+            merchantName: "Test merchant",    
+            tokenOnly: false,       
             autoSettle: false,
             allowedCardNetworks: ['MASTERCARD', 'VISA', 'AMEX'],
             googlePayConfiguration: {
