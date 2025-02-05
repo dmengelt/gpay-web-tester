@@ -30,7 +30,7 @@
             if(event.origin === "null" && Array.from(document.getElementsByTagName("iframe")).find((frame) => event.source === frame.contentWindow)) {
               console.log("Received message but origin was not gpay-live-demo.web.app but " + event.origin + ". This is the case where 'allow-same-origin' was not set on the sanboxed iframe and we need a different origin/data validation! It is still possible to return the data back to the parent page!")
             } else {
-              console.log("Received message but origin was not gpay-live-demo.web.app but " + event.origin) + ". No setting the result because we can't really validate the message!"
+              console.log("Received message but origin was not gpay-live-demo.web.app but " + event.origin) + ". Not setting the result because we can't really validate the message!"
               return;
             }            
           }
