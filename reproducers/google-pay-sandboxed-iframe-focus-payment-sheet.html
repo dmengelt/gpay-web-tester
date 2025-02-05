@@ -36,7 +36,7 @@
 
       function focusPaymentSheet() {
         console.log("Sending FOCUS_PAYMENT_SHEET event to the inner iframe!")
-        window.postMessage("FOCUS_PAYMENT_SHEET", "https://gpay-live-demo.web.app");
+        window.iframe3.postMessage("FOCUS_PAYMENT_SHEET", "https://gpay-live-demo.web.app");
       }
     </script>
 </body>
