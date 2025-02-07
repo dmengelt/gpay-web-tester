@@ -34,6 +34,20 @@
         false,
       );
 
+      window.onerror = function (message, file, line, col, error) {
+        console.log("Error occurred: " + error.message);
+        return false;
+      };
+
+      window.addEventListener("error", function (e) {
+        console.log("Error occurred: " + e.error.message);
+        return false;
+      });
+
+      window.addEventListener('unhandledrejection', function (e) {
+        console.log("Error occurred: " + e.reason.message);
+      });
+
       function focusPaymentSheet() {
         console.log("Sending FOCUS_PAYMENT_SHEET event to the inner iframe!")
         window.iframe3.contentWindow.postMessage("FOCUS_PAYMENT_SHEET", "https://gpay-live-demo.web.app");
