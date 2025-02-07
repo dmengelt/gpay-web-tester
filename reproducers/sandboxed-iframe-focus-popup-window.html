@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>popup window sandboxed iframe test</title> 
+</head>
+
+<body>
+    <p><pre>allow="payment" sandbox="allow-scripts allow-popups allow-same-origin allow-forms"</pre></p>
+    <iframe id="iframe3" src="https://gpay-live-demo.web.app/iframed-popup.html" width="300" height="120" allow="payment" sandbox="allow-scripts allow-popups allow-same-origin allow-forms"></iframe>
+
+    <div>
+      <button type="button" onclick="focusPopupWindow();">trigger popupWindo.focus()</button>
+    </div>
+    
+
+    <script>
+
+      window.onerror = function (message, file, line, col, error) {
+        console.log("Error occurred: " + error.message);
+        return false;
+      };
+
+      window.addEventListener("error", function (e) {
+        console.log("Error occurred: " + e.error.message);
+        return false;
+      });
+
+      window.addEventListener('unhandledrejection', function (e) {
+        console.log("Error occurred: " + e.reason.message);
+      });
+
+      function focusPopupWindow() {
+        console.log("Sending FOCUS_POPUP_WINDOW event to the inner iframe!")
+        window.iframe3.contentWindow.postMessage("FOCUS_POPUP_WINDOW", "https://gpay-live-demo.web.app");
+      }
+    </script>
+</body>
+
+</html>
+
