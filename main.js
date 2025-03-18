@@ -129,12 +129,11 @@ function getGooglePaymentDataRequest() {
   paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
   paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
   paymentDataRequest.allowedPaymentMethods[0].parameters.assuranceDetailsRequired = true;
-  paymentDataRequest.allowedPaymentMethods[0].parameters.billingAddressRequired = true;
-
-  
+  //paymentDataRequest.allowedPaymentMethods[0].parameters.allowCreditCards = false;  
+  paymentDataRequest.allowedPaymentMethods[0].parameters.billingAddressRequired = true;  
   paymentDataRequest.allowedPaymentMethods[0].parameters.billingAddressParameters = {
-    format: 'FULL',
-    phoneNumberRequired: true
+    format: 'FULL'
+    //phoneNumberRequired: true
   }
   
 
@@ -402,7 +401,38 @@ function getGoogleTransactionInfo() {
     currencyCode: "USD",
     totalPriceStatus: "FINAL",
     totalPrice: "1",
-    checkoutOption: "COMPLETE_IMMEDIATE_PURCHASE"
+    totalPriceLabel: "totalPriceLabel",
+    checkoutOption: "COMPLETE_IMMEDIATE_PURCHASE",       
+    displayItems: [
+      {
+        "label": "This is a SUBTOTAL item",
+        "type": "SUBTOTAL",
+        "price": "11.00"
+      },
+      {
+        "label": "This is a TAX item",
+        "type": "TAX",
+        "price": "1.00"
+      },
+      {
+        "label": "This is a LINE_ITEM",
+        "type": "LINE_ITEM",
+        "price": "0", // Won't be displayed since status is PENDING
+        "status": "PENDING"
+      },
+      {
+        "label": "This is a DISCOUNT item",
+        "type": "DISCOUNT",
+        "price": "1.00"
+      },
+      {
+        "label": "This is a SHIPPING_OPTION item",
+        "type": "SHIPPING_OPTION",
+        "price": "1.00",
+        "status": "PENDING"
+      }
+    ]  
+        
   };
 }
 
@@ -472,14 +502,11 @@ function onGooglePaymentButtonClicked() {
   //paymentDataRequest.emailRequired = true; 
   paymentDataRequest.shippingAddressRequired = true;
   
-
   /*
-  
   paymentDataRequest.shippingAddressParameters = {
     phoneNumberRequired: true
-  } 
-    
-   */
+  }
+  */    
 
   paymentDataRequest.shippingOptionRequired = true;
 
