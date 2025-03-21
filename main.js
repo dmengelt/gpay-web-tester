@@ -490,7 +490,18 @@ function onGooglePaymentButtonClicked() {
   }
 
   if(onPaymentAuthorizedCallbackValue) {
-    paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'SHIPPING_ADDRESS'];    
+    paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'OFFER'];
+
+    paymentDataRequest.offerInfo = {
+      "offers": [
+        {
+          "redemptionCode": "exampleCode",
+          "description": "example description of offer"
+        }
+      ]
+    }
+
+    //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'SHIPPING_ADDRESS'];    
     //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION'];
     //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'PAYMENT_METHOD'];    
     //paymentDataRequest.callbackIntents = ["SHIPPING_ADDRESS",  "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"];
