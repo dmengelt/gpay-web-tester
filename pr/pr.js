@@ -1,35 +1,39 @@
 function onBuyClicked() {
-  var supportedInstruments = [{
-    supportedMethods: 'https://google.com/pay',
-    data: {
-        apiVersion: 2,
-        apiVersionMinor: 0,
-        environment: 'TEST',
-        allowedPaymentMethods: [{
-          type: 'CARD',
-          parameters: {
-            allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
-            allowedCardNetworks: ['AMEX', 'DISCOVER', 'VISA', 'MASTERCARD'],
-          },
-          tokenizationSpecification: {
-            type: 'PAYMENT_GATEWAY',
+  var supportedInstruments = [
+    {
+      supportedMethods: 'https://bobbucks.dev/pay'
+    },  
+    {
+      supportedMethods: 'https://google.com/pay',
+      data: {
+          apiVersion: 2,
+          apiVersionMinor: 0,
+          environment: 'TEST',
+          allowedPaymentMethods: [{
+            type: 'CARD',
             parameters: {
-              'gateway': 'example',
+              allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+              allowedCardNetworks: ['AMEX', 'DISCOVER', 'VISA', 'MASTERCARD'],
             },
+            tokenizationSpecification: {
+              type: 'PAYMENT_GATEWAY',
+              parameters: {
+                'gateway': 'example',
+              },
+            },
+          }],
+          transactionInfo: {
+            countryCode: 'US',
+            currencyCode: 'USD',
+            totalPriceStatus: 'NOT_CURRENTLY_KNOWN'
+            //totalPrice: '1.00',
           },
-        }],
-        transactionInfo: {
-          countryCode: 'US',
-          currencyCode: 'USD',
-          totalPriceStatus: 'NOT_CURRENTLY_KNOWN'
-          //totalPrice: '1.00',
-        },
-        merchantInfo: {
-          merchantName: 'Example merchant',
-        },
-      }
-  },
-  {
+          merchantInfo: {
+            merchantName: 'Example merchant',
+          },
+        }
+    },
+    {
       supportedMethods: 'https://apple.com/apple-pay',
       data: {
           version: 3,
@@ -58,46 +62,46 @@ function onBuyClicked() {
     }  
   ];
 
-  var details = {
-    total: {
-      label: 'Donation',
-      amount: {
-        currency: 'USD',
-        value: '55.00'
-      }
-    },
-    displayItems: [{
-        label: 'Original donation amount',
+    var details = {
+      total: {
+        label: 'Donation',
         amount: {
           currency: 'USD',
-          value: '65.00'
+          value: '55.00'
         }
       },
-      {
-        label: 'Friends and family discount',
-        amount: {
-          currency: 'USD',
-          value: '-10.00'
+      displayItems: [{
+          label: 'Original donation amount',
+          amount: {
+            currency: 'USD',
+            value: '65.00'
+          }
+        },
+        {
+          label: 'Friends and family discount',
+          amount: {
+            currency: 'USD',
+            value: '-10.00'
+          }
+        },
+        {
+          label: 'Free worldwide shipping',
+          amount: {
+            currency: 'USD',
+            value: '0.00'
+          }
         }
-      },
-      {
+      ],
+      shippingOptions: [{
+        id: 'freeShippingOption',
         label: 'Free worldwide shipping',
         amount: {
           currency: 'USD',
           value: '0.00'
-        }
-      }
-    ],
-    shippingOptions: [{
-      id: 'freeShippingOption',
-      label: 'Free worldwide shipping',
-      amount: {
-        currency: 'USD',
-        value: '0.00'
-      },
-      selected: true
-    }]
-  };
+        },
+        selected: true
+      }]
+    };
 
   var options = {
     requestBillingAddress: document.querySelector("input[type='radio'][name=requestBillingAddress]:checked").value === 'true',
