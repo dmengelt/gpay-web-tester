@@ -481,6 +481,10 @@ function processPayment(paymentData) {
 function onGooglePaymentButtonClicked() {
   const paymentDataRequest = getGooglePaymentDataRequest();
 
+  if(environmentValue === 'SANDBOX') {
+    paymentDataRequest.merchantInfo.merchantId = 'BCR2DN6TXDBYXAJ7';
+  }
+
   if(environmentValue === 'PRODUCTION') {
     paymentDataRequest.merchantInfo.merchantId = '14697717800897553235';
     
