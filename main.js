@@ -491,6 +491,10 @@ function onGooglePaymentButtonClicked() {
     if(tokenizationSpecification.parameters.gateway === 'stripe') {
       tokenizationSpecification.parameters['stripe:publishableKey'] = 'pk_live_NkaQ1QQFUyXrPsCuOkzt3IeS';
     }
+    if(tokenizationSpecification.parameters.gateway === 'wallee') {
+      tokenizationSpecification.parameters.gateway = 'wallee';
+      tokenizationSpecification.parameters.gatewayMerchantId = 'wallee';
+    }
   }
 
   if(onPaymentAuthorizedCallbackValue) {
