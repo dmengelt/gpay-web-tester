@@ -441,8 +441,10 @@ function onPaymentAuthorizedCallbackHandler(paymentData) {
     // handle the response
     processPayment(paymentData)
     .then(function() {
-      console.log("resolving the success promise in onPaymentAuthorizedCallbackHandler")
-      resolve({transactionState: 'SUCCESS'});
+      setTimeout(function() {        
+        console.log("resolving the success promise in onPaymentAuthorizedCallbackHandler")
+        resolve({transactionState: 'SUCCESS'});
+      }, 15000);
     })
     .catch(function() {
       resolve({
