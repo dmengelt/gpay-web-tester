@@ -441,6 +441,7 @@ function onPaymentAuthorizedCallbackHandler(paymentData) {
     // handle the response
     processPayment(paymentData)
     .then(function() {
+      console.log("resolving the success promise in onPaymentAuthorizedCallbackHandler")
       resolve({transactionState: 'SUCCESS'});
     })
     .catch(function() {
@@ -498,8 +499,13 @@ function onGooglePaymentButtonClicked() {
   }
 
   if(onPaymentAuthorizedCallbackValue) {
-    paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'OFFER'];
+    //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'OFFER'];   
+    //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'SHIPPING_ADDRESS'];    
+    paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION'];
+    //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'PAYMENT_METHOD'];    
+    //paymentDataRequest.callbackIntents = ["SHIPPING_ADDRESS",  "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"];
 
+    /*
     paymentDataRequest.offerInfo = {
       "offers": [
         {
@@ -508,11 +514,7 @@ function onGooglePaymentButtonClicked() {
         }
       ]
     }
-
-    //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'SHIPPING_ADDRESS'];    
-    //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION'];
-    //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'PAYMENT_METHOD'];    
-    //paymentDataRequest.callbackIntents = ["SHIPPING_ADDRESS",  "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"];
+      */
   }
 
   console.log(JSON.stringify(paymentDataRequest, null, 2));
@@ -556,8 +558,8 @@ function onGooglePaymentButtonClicked() {
       // thats why we are going to output the result here
       if(!onPaymentAuthorizedCallbackValue || (onPaymentAuthorizedCallbackValue && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent))) {
         let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
-        //document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
-        document.getElementById('result').innerHTML = paymentToken;
+        document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
+        //document.getElementById('result').innerHTML = paymentToken;
         console.log("loadPaymentData success");            
       }
 
