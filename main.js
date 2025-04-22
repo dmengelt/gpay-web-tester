@@ -556,7 +556,8 @@ function onGooglePaymentButtonClicked() {
       // thats why we are going to output the result here
       if(!onPaymentAuthorizedCallbackValue || (onPaymentAuthorizedCallbackValue && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent))) {
         let paymentToken = paymentData.paymentMethodData.tokenizationData.token;
-        document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
+        //document.getElementById('result').innerHTML = JSON.stringify(paymentData, null, 2);
+        document.getElementById('result').innerHTML = paymentToken;
         console.log("loadPaymentData success");            
       }
 
