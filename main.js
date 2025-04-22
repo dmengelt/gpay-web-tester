@@ -166,7 +166,7 @@ function getGooglePaymentsClient() {
       environment: environmentValue,
       paymentDataCallbacks: {
         onPaymentAuthorized: onPaymentAuthorizedCallbackHandler,
-        onPaymentDataChanged: onPaymentDataChanged
+        //onPaymentDataChanged: onPaymentDataChanged
       }
     });
   } else {
