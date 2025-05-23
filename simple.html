@@ -9,6 +9,8 @@
 <body>
     <p>Demo merchant checkout page with a Google Pay button</p>
     <div id="gpay-container"></div>    
+    <hr/>
+    <div id="user-agent"></div>
     <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
     <script type="text/javascript">
         const GPAY_BUTTON_CONTAINER_ID = 'gpay-container';
@@ -65,6 +67,9 @@
         }
 
         function onGooglePayLoaded() {
+
+            document.getElementById('user-agent').innerHTML= window.navigator.userAgent;
+
             const req = deepCopy(baseGooglePayRequest);
             getGooglePaymentsClient()
                 .isReadyToPay(req)
