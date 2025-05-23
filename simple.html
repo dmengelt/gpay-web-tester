@@ -7,10 +7,9 @@
 </head>
 
 <body>
-    <p>Simple Google Pay example</p>
-    <div id="gpay-container"></div>
-    <script async src="http://localhost:9879/gp/p/pay.js" onload="onGooglePayLoaded()"></script>
-    <!-- <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script> -->
+    <p>Demo merchant checkout page with a Google Pay button</p>
+    <div id="gpay-container"></div>    
+    <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
     <script type="text/javascript">
         const GPAY_BUTTON_CONTAINER_ID = 'gpay-container';
 
@@ -73,7 +72,8 @@
                     if (res.result) {
                         renderGooglePayButton();
                     } else {
-                        console.log('Google Pay is not ready for this user.');
+                        //console.log('Google Pay is not ready for this user.');
+                        renderGooglePayButton();
                     }
                 })
                 .catch(console.error);
