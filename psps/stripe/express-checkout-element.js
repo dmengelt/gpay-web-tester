@@ -1,5 +1,5 @@
 const stripe = Stripe('pk_live_NkaQ1QQFUyXrPsCuOkzt3IeS', {
-    apiVersion: "2024-04-10",
+    apiVersion: "2025-06-30.basil",
 });
 
 const appearance = {
@@ -31,5 +31,13 @@ const elements = stripe.elements({
   appearance,
 })
 
+const expressCheckoutElement = checkout.createExpressCheckoutElement(expressCheckoutOptions);
+expressCheckoutElement.on('confirm', (event) => {
+  checkout.confirm({expressCheckoutConfirmEvent: event})
+});
+expressCheckoutElement.mount('#express-checkout-element');
+
+/*
 const expressCheckoutElement = elements.create('expressCheckout', expressCheckoutOptions)
 expressCheckoutElement.mount('#express-checkout-element')
+*/
