@@ -31,13 +31,6 @@ const elements = stripe.elements({
   appearance,
 })
 
-const expressCheckoutElement = checkout.createExpressCheckoutElement(expressCheckoutOptions);
-expressCheckoutElement.on('confirm', (event) => {
-  checkout.confirm({expressCheckoutConfirmEvent: event})
-});
-expressCheckoutElement.mount('#express-checkout-element');
 
-/*
 const expressCheckoutElement = elements.create('expressCheckout', expressCheckoutOptions)
 expressCheckoutElement.mount('#express-checkout-element')
-*/

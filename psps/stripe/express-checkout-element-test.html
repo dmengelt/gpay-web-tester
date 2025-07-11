@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stripe Express Element</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+        }
+        /* Custom styles for demonstration, though Tailwind handles most of it */
+        #express-checkout-element {
+            min-height: 50px; /* Ensure element has some height */
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full border border-gray-200">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Checkout with Express</h1>
+
+        <!-- Container for the Stripe Express Element -->
+        <div id="express-checkout-element" class="mb-6">
+            <!-- Stripe Express Element will be mounted here -->
+        </div>
+
+        <div id="payment-status-message" class="text-center text-sm text-gray-600"></div>
+    </div>
+
+    <!-- Stripe.js CDN -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script>
+        // Ensure the DOM is fully loaded before executing scripts
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Replace 'pk_test_TYooMQauvdEDq54NiTStEN8x' with your actual publishable key
+            // You can find your publishable key in your Stripe Dashboard:
+            // https://dashboard.stripe.com/apikeys
+            const stripe = Stripe('pk_live_NkaQ1QQFUyXrPsCuOkzt3IeS');
+
+            // Define appearance for the Express Element (optional)
+            const appearance = {
+                theme: 'stripe', // 'stripe', 'flat', 'none'
+                variables: {
+                    colorPrimary: '#6366f1', // Indigo 500
+                    colorText: '#1f2937', // Gray 900
+                    colorBackground: '#ffffff',
+                    fontFamily: 'Inter, sans-serif',
+                    spacingUnit: '4px',
+                    borderRadius: '8px',
+                },
+                rules: {
+                    '.Label': {
+                        fontWeight: '600', // Semibold
+                        marginBottom: '8px',
+                    },
+                    '.Input': {
+                        padding: '12px',
+                        borderColor: '#d1d5db', // Gray 300
+                        borderWidth: '1px',
+                        boxShadow: 'none',
+                    },
+                    '.Input--focus': {
+                        borderColor: '#6366f1',
+                        boxShadow: '0 0 0 1px #6366f1',
+                    },
+                    '.Tab, .Link': {
+                        color: '#4f46e5', // Indigo 600
+                    },
+                    '.Tab--selected': {
+                        color: '#6366f1',
+                    },
+                }
+            };
+
+            // Create the Express Element
+            const expressCheckoutElement = stripe.elements({
+                mode: 'payment',
+                amount: 1000, // Amount in cents (e.g., $10.00)
+                currency: 'usd',
+                // You can add more options here, like:
+                // billingAddressCollection: 'required',
+                // shippingAddressCollection: {
+                //     allowedCountries: ['US', 'CA'],
+                // },
+                appearance: appearance, // Apply the custom appearance
+            }).create('expressCheckout');
+
+            // Mount the element to the div container
+            expressCheckoutElement.mount('#express-checkout-element');
+
+            const paymentStatusMessage = document.getElementById('payment-status-message');
+
+            // Add an event listener for payment confirmation
+            // This client-side confirmation handler is for demonstration only.
+            // In a real application, you would send the payment_intent.id to your server
+            // to confirm the payment and fulfill the order.
+            expressCheckoutElement.on('confirm', async ({paymentIntent}) => {
+                if (paymentIntent) {
+                    // Payment was successful (client-side indication)
+                    // In a real application, you would now send paymentIntent.id to your server
+                    // for server-side confirmation and order fulfillment.
+                    paymentStatusMessage.textContent = 'Payment successful! Payment Intent ID: ' + paymentIntent.id;
+                    paymentStatusMessage.classList.remove('text-gray-600', 'text-red-500');
+                    paymentStatusMessage.classList.add('text-green-600', 'font-semibold');
+                    console.log('Payment successful:', paymentIntent);
+
+                    // You might want to disable the button or redirect the user here
+                    expressCheckoutElement.update({ disabled: true });
+
+                } else {
+                    // Handle cases where paymentIntent is not immediately available or an error occurred
+                    paymentStatusMessage.textContent = 'Payment failed. Please try again.';
+                    paymentStatusMessage.classList.remove('text-gray-600', 'text-green-600');
+                    paymentStatusMessage.classList.add('text-red-500', 'font-semibold');
+                    console.error('Payment confirmation failed or no payment intent:', paymentIntent);
+                }
+            });
+
+            // Handle errors from the Express Element
+            expressCheckoutElement.on('error', (event) => {
+                paymentStatusMessage.textContent = 'Error: ' + event.error.message;
+                paymentStatusMessage.classList.remove('text-gray-600', 'text-green-600');
+                paymentStatusMessage.classList.add('text-red-500', 'font-semibold');
+                console.error('Stripe Express Element error:', event.error);
+            });
+        });
+    </script>
+</body>
+</html>
