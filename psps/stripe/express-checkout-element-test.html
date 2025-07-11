@@ -76,6 +76,21 @@
                 }
             };
 
+            const expressCheckoutOptions = {
+                buttonType: {
+                    applePay: 'buy',
+                    googlePay: 'plain',
+                    paypal: 'buynow'
+                },
+                paymentMethods: {
+                    amazonPay: 'never',
+                    googlePay: 'never',
+                    applePay: 'never',
+                    payPal: 'never',
+                    klarna: 'never'
+                }
+            }
+
             // Create the Express Element
             const expressCheckoutElement = stripe.elements({
                 mode: 'payment',
@@ -87,7 +102,7 @@
                 //     allowedCountries: ['US', 'CA'],
                 // },
                 appearance: appearance, // Apply the custom appearance
-            }).create('expressCheckout');
+            }).create('expressCheckout', expressCheckoutOptions);
 
             // Mount the element to the div container
             expressCheckoutElement.mount('#express-checkout-element');
