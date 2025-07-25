@@ -113,7 +113,8 @@ function getGoogleIsReadyToPayRequest() {
       baseRequest,
       {
         allowedPaymentMethods: [baseCardPaymentMethod],
-        existingPaymentMethodRequired: existingPaymentMethodRequiredValue
+        existingPaymentMethodRequired: existingPaymentMethodRequiredValue,
+        activityModeRequired: true
       },
   );
 }
