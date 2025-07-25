@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Pay API for Web</title>
+    <style>
+        #log {
+            white-space: pre;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <p>Google Pay isReadyToPay API tester</p>
+    <hr/>
+    <div id="isRTP" class="padding-after"><b>isReadyToPay API response:</b></div>
+    <div id="log" class="padding-after"></div>    
+    <hr/>
+    <div id="userAgent" class="padding-after"><b>User-Agent</b></div>
+    <div id="user-agent"></div>
+    <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
+    <script type="text/javascript">
+        const GPAY_BUTTON_CONTAINER_ID = 'gpay-container';
+
+        const merchantInfo = {
+            merchantId: '12345678901234567890',
+            merchantName: 'Example Merchant',
+        };
+
+        const baseGooglePayRequest = {
+            apiVersion: 2,
+            apiVersionMinor: 0,
+            activityModeRequired: true,
+            allowedPaymentMethods: [
+                {
+                    type: 'CARD',
+                    parameters: {
+                        allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+                        allowedCardNetworks: ['AMEX', 'DISCOVER', 'INTERAC', 'JCB', 'MASTERCARD', 'VISA'],
+                    },
+                    tokenizationSpecification: {
+                        type: 'PAYMENT_GATEWAY',
+                        parameters: {
+                            gateway: 'example',
+                            gatewayMerchantId: 'exampleGatewayMerchantId',
+                        },
+                    },
+                },
+            ],
+            merchantInfo,
+        };
+
+        Object.freeze(baseGooglePayRequest);
+
+        let paymentsClient = null;
+
+        function getGooglePaymentsClient() {           
+            if (paymentsClient === null) {                
+                paymentsClient = new google.payments.api.PaymentsClient({                 
+                    environment: 'TEST',                  
+                    merchantInfo,
+                });
+            }
+
+            return paymentsClient;
+        }
+
+        const deepCopy = obj => JSON.parse(JSON.stringify(obj));
+
+        function renderGooglePayButton() {            
+            const button = getGooglePaymentsClient().createButton({             
+                onClick: onGooglePaymentButtonClicked,
+            });            
+            document.getElementById(GPAY_BUTTON_CONTAINER_ID).appendChild(button);
+        }
+
+        function onGooglePayLoaded() {
+            document.getElementById('user-agent').innerHTML= window.navigator.userAgent;
+            const req = deepCopy(baseGooglePayRequest);
+            getGooglePaymentsClient()
+                .isReadyToPay(req)
+                .then(function (res) {
+                    document.getElementById('log').innerHTML = JSON.stringify(res, null, 2);                    
+                })
+                .catch(console.error);
+        }       
+
+    </script>
+</body>
+</html>
