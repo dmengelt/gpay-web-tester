@@ -490,8 +490,8 @@ function onGooglePaymentButtonClicked() {
   }
 
   if(environmentValue === 'PRODUCTION') {
-    //paymentDataRequest.merchantInfo.merchantId = '14697717800897553235';    
-    paymentDataRequest.merchantInfo.merchantId = 'BCR2DN7TZD7MRM3M';
+    paymentDataRequest.merchantInfo.merchantId = '14697717800897553235';    
+    //paymentDataRequest.merchantInfo.merchantId = 'BCR2DN7TZD7MRM3M';
     
     if(tokenizationSpecification.parameters.gateway === 'stripe') {
       tokenizationSpecification.parameters['stripe:publishableKey'] = 'pk_live_NkaQ1QQFUyXrPsCuOkzt3IeS';
