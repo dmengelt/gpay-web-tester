@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Payment Request API tester</title>
+  <style>
+    .prNotSupported {
+      color: white;
+      background-color: #EE0000;
+      padding: 3px;
+    }
+
+    .prSupported {
+      color: white;
+      background-color: green;
+      padding: 3px;
+    }
+
+    #log {
+      white-space: pre;
+      font-family: monospace;
+    }
+  </style>
+</head>
+
+<body onload="checkPaymentRequestSupport()">
+  <div id="contents">
+    <h1>Payment Request API tester</h1>
+
+    <p>
+      Browser supports Payment Request API: <span id="pr" class="prNotSupported">false</span>
+    </p>
+
+    <p>
+      supportedMethods:
+    </p>
+    <ul>
+      <li>https://pay.sandbox.google.com/gp/p/payment_method_manifest.json</li>
+    </ul>
+    <h3>Setting <a href="https://www.w3.org/TR/2019/CR-payment-request-20190416/#paymentoptions-dictionary"
+        target="_parent">PaymentOptions:</a></h3>
+
+    requestPayerName:
+    <input type="radio" name="requestPayerName" value="true" /> true
+    <input type="radio" name="requestPayerName" value="false" checked="checked" /> false
+
+    <br /><br />
+
+    requestBillingAddress:
+    <input type="radio" name="requestBillingAddress" value="true" /> true
+    <input type="radio" name="requestBillingAddress" value="false" checked="checked" /> false
+
+    <br /><br />
+
+    requestPayerEmail:
+    <input type="radio" name="requestPayerEmail" value="true" /> true
+    <input type="radio" name="requestPayerEmail" value="false" checked="checked" /> false
+
+    <br /><br />
+
+    requestPayerPhone:
+    <input type="radio" name="requestPayerPhone" value="true" /> true
+    <input type="radio" name="requestPayerPhone" value="false" checked="checked" /> false
+
+    <br /><br />
+
+    requestShipping:
+    <input type="radio" name="requestShipping" value="true" /> true
+    <input type="radio" name="requestShipping" value="false" checked="checked" /> false
+
+    <br /><br />
+
+    shippingType:
+    <select name="shippingTypes" id="shippingTypes">
+      <option value="shipping" selected="selected">shipping</option>
+      <option value="delivery">delivery</option>
+      <option value="pickup">pickup</option>
+    </select>
+
+    <p><button onclick="onBuyClicked()">Buy</button></p>
+  </div>
+
+  <div id="log"></div>
+
+  <script>
+    function checkPaymentRequestSupport() {
+      if (window.PaymentRequest) {
+        let element = document.getElementById("pr");
+        element.classList.remove("prNotSupported");
+        element.classList.add("prSupported");
+        element.innerText = 'true';
+      }
+    }
+  </script>
+  <script src="pr-sandbox.js"></script>
+</body>
+
+</html>
