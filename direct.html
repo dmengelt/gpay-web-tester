@@ -12,11 +12,22 @@
         padding: 10px;
         margin-top: 10px;
       }
+
+      #environment-selector {
+        margin-bottom: 10px;
+      }
     </style>
 </head>
 
 <body>
-    <p>Demo merchant checkout page with a Google Pay button (direct, PROD)</p>
+    <p>Demo merchant checkout page with a Google Pay button (direct)</p>
+    <div id="environment-selector">
+      <label for="environment">Environment:</label>
+      <select id="environment">
+        <option value="PRODUCTION" selected>PRODUCTION</option>
+        <option value="TEST">TEST</option>
+      </select>
+    </div>
     <div id="gpay-container"></div>
     <div id="payment-data-container">Click the Google Pay button and complete a transaction to see the response here...</div>    
     <hr/>
@@ -27,7 +38,7 @@
 
         const merchantInfo = {
             merchantId: '14697717800897553235',
-            merchantName: '4242.cards (direct, PROD)',
+            merchantName: '4242.cards (direct)',
         };
 
         const baseGooglePayRequest = {
@@ -58,9 +69,10 @@
         let paymentsClient = null;
 
         function getGooglePaymentsClient() {           
-            if (paymentsClient === null) {                
+            if (paymentsClient === null) {
+                const environment = document.getElementById('environment').value;
                 paymentsClient = new google.payments.api.PaymentsClient({                 
-                    environment: 'PRODUCTION',                  
+                    environment: environment,
                     merchantInfo,
                 });
             }
@@ -78,9 +90,19 @@
         }
 
         function onGooglePayLoaded() {
-
             document.getElementById('user-agent').innerHTML= window.navigator.userAgent;
 
+            const environmentDropdown = document.getElementById('environment');
+            environmentDropdown.addEventListener('change', () => {
+                paymentsClient = null;
+                document.getElementById(GPAY_BUTTON_CONTAINER_ID).innerHTML = '';
+                loadAndRenderButton();
+            });
+
+            loadAndRenderButton();
+        }
+
+        function loadAndRenderButton() {
             const req = deepCopy(baseGooglePayRequest);
             getGooglePaymentsClient()
                 .isReadyToPay(req)
