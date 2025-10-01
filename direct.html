@@ -120,12 +120,24 @@
         function onGooglePaymentButtonClicked() {
             const req = {
                 ...deepCopy(baseGooglePayRequest),
-                transactionInfo: {
-                    countryCode: 'US',
-                    currencyCode: 'USD',
-                    totalPriceStatus: 'FINAL',
-                    totalPrice: '1',
-                },
+                recurringTransactionInfo: {
+                    "currencyCode": "EUR",
+                    "countryCode": "DE",
+                    "transactionId": "example-transaction-id",
+                    "tokenUpdateUrl": "https://merchant.com/api/token/update",
+                    "billingAgreement": "Example localized billing agreement and terms.",
+                    "immediateTotalPrice": "50.00",
+                    "recurrenceItems": [
+                        {
+                            "billingInitialDateTime": "2026-01-08T08:00:00Z",
+                            "label": "Video Streaming Monthly Subscription",
+                            "price": "50.00",
+                            "priceStatus": "FINAL",
+                            "recurrencePeriod": "MONTH",
+                            "recurrencePeriodCount": 1
+                        }
+                    ]
+                }
             };
 
             console.log('onGooglePaymentButtonClicked', req);
