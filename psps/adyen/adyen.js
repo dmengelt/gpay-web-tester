@@ -7,18 +7,24 @@
         enabled: true // Set to false to not send analytics data to Adyen.
       },
       session: {
-        id: 'CSEC8B331740AE0EDC', // Unique identifier for the payment session.
-        sessionData: 'Ab02b4c0!BQABAgBwlSUIhU8Y8tFj9euCPjiVKiH7Z3cuup5FNTkpGhO+z47bvfEuvJtV7jLGrS55rRqTxLNhkSWWdamIzHI7tGC04xGx57Qd\/1LslSTiVKxESIwPBRP1hw3DlXEu+ygS6Q2xH7hMGGQzI3qvTFlKyXJk35vfaZuFl1zx6fgSdinaLjSid6vjr+3QAgrCN6BhhgP1JB3+jdwjX1ZcIu00NrlKrPu45WiK2d1VCzsSjTrOc8h7kjkEwx3rxK2SLMWouc8Q24VAuPBzicvvU5RinpW9NFbZ8wvGlJMK2iVPZ5LM00wotBGCDovNJ4pow7v7KgDl8Et2nPCv0\/eUJ8obOKwpwTRvrBdVaWCFIiEIn4ZNZd\/wPD9EUxGSHCEh59YztRdYy6lIrn8zyEoTL9vCS49L3+VHUCyML\/3dHfbgja0w0EMjQy9wIoG2haVBnhvPvp6bDLl7zE6+C0Zx4KtsUvz8hg7sm\/FUEFO4bY55kfmhMh2GDcpnaqbOm4r0fbj9w\/J565d2ftd3wMUYJ0\/GxiyM2zdFEeQ1vZe1\/oxHXox5x9lLZzLkEWxvKbJwaoga72Gi54CtouMa9MAqi4JRnMFqoHtqBW7Qz5UH8xjqwLBq5OlpbHAJ2xfdoyW3K9uc8h3LLvI47s+xhF9bHdgmFGiKRTUYklh705qf0MfVMuxfvQxsLpzOK8zOBnwfjmoASnsia2V5IjoiQUYwQUFBMTAzQ0E1MzdFQUVEODdDMjRERDUzOTA5QjgwQTc4QTkyM0UzODIzRDY4REFDQzk0QjlGRjgzMDVEQyJ9kqfHEqmmfyGWKCGnOMSs\/C5qWzjoZS3EJuduHGGr21TkQOQ\/tPzsGnnAODNJemMYVBNtsDJrkCx5IlvjJb0kysC7VmujBbKSKzaHk3ZhF7sfQHVVtx1TiY4yGIcAjTLoQvVcsQB3IvQbFcBX5GuDbqXr0Hx64g3f9jd5aXdL6o6umrMPoRW3BhwXNwh4pji3Eq+83\/AqdotBCI7+q9MeB5qSdQP1YMl19UcsMPSokQZap9IoCBzZZXzTIG7aHMuqSZLosqi4X4Con4yIPOpM0HyHnGuaZ3yZioN5MHKFKtETbM5z34+GDn1nG7GhQbCWPvot1akk1V57\/DuWrgwE\/s\/UT28mglCHUrH8pytUGCW2GUvG99Skztmbav2AUPH6ilJW0DclY5IIiGsrAGaZL4CZsiV+R98sD05cwxKpJo\/omYlKvRLq7FcO1aFABiT6QSk2jJ\/y6wsnt6ddAkEVovQqhvGSTWaWNU9g3e+CYmK4YF+phWqOmx6wV2o2QPLOOrRDmiIQtffIK3kpjvX9oXUhMLw0ltQOR3SldHlQG51hRdVgV12ukTy9i9YFcUgtSWkKzuIuRg3zV5I6Lw3JgAxx\/mN\/vhXhOg=='
+        id: 'CSBF931123D492F2BD7B9E237', // Unique identifier for the payment session.
+        sessionData: 'Ab02b4c0!BQABAgCmsbFZ+VOnC\/mRlTU5aiWYexLyPIsvd1BSNCMkgx+ENclBiLKmUrj1lFUyLJ0xHStzoOvezMTFfyZ8HLkdndsoO86MbjTMJo1If334SclHsYzUXpiTPaU8hq\/B6+73G4BhbRRuCcYQTVu+1U7q4HHfyQkKdqDPXrQGCpzFxGR9nXDO5\/j8pZC2pZd2fSvyCizmXeogVr5cG16JI35Sic\/nIBALUzqiWTvkR+LWqOvrGFrZW3Om7AT1i2OJ15Gh8L7gZyjHxW+6suMEe1SAlRTiDOz8TLAGg5aSN3HI8SqgRBENkAnQFOVxEI\/C1OuPpv6b52Uygxa6JQHWl3+2SCNe9\/AnvgDAKtEFOIv\/++8cLrCIkKgQ+TESPUW9HL6c4CSpZRZ6aFu2+gGPP0G343uIJeRNCoaBoSN6eDq7xo7brnzHfNdsPHzJz3F9ZLhLyHYcW1uky4kV7Sx5vyNXHYBxqxSBIt8XXiAkDSrscn59lg77jOH\/cBqXT7+xfmjtIvIt+Zs\/PicI3NM27Ii0q\/iE0R8c4sVt\/z0FoKJOeQMOIspul0M+k8RiYstbFbrZ7QQH7ua95mEXgw9U23Jy1crislRUe4p6bIFqdaLL13romN09aGu5L2bw9s0LMH7FN1As3sXyAYL\/Z2fYbtS2NJ22ySWG0RrDvBOzvY\/yLIAd6gx0DyE4xtoNnnP924oASnsia2V5IjoiQUYwQUFBMTAzQ0E1MzdFQUVEODdDMjRERDUzOTA5QjgwQTc4QTkyM0UzODIzRDY4REFDQzk0QjlGRjgzMDVEQyJ98V7avr3A7NEIZUF2Sco2Wtf\/GP9lDAF5GDi\/ooYOHVfaas7PcqoAYjHB6MTWrALuLFbkeveBeJz9BiE94Sa+ibcVVkw0cYZJQ2z4GU+vkVNg7pvEahmybrIq3+jVTYMBv1bqt4Ar7a1ymUNbio+NrA6YtAIYdbRAZf1OWEzG4mVuNs+PYvGQS+Iw3YljMJQ7Csf3eZCaCkI2bY\/uPbiWuED+3N68PEW6WVQttXZghN8mXEACRK58QiWLqpzw31KO79P69MOGslQBDZxVqQJ8hgOj4KVekcKimvZWdGrTjVlwoQwg5ItnQP3K46WDYINkbtBa+QWp2Oh7fEZVGaolVnk1mzlJv5HbzxyfIFPSfaP5n6ox3+8LulARPW1Yb\/CFyyCc3m2mM9EXzk0XtItbgusw8YeUdiQxx\/\/uQING3cLagOYcNXCLop6HuHXY0ko\/akbxOql5IJOjNEoJ20KEIHnV4Nbyj1RSF0zDZYs0FVE+zvzLTOEmRA6JxdQQ\/6gCLMZaSiKi0yc2+ernzsRKHgoUW0NSHWAVy7bKu9jVpi4VTN3b3VccC446x20HsLazKprqeEmmGmzDBRGijVvpQ0K5cFvZz1fd2X25imruAyfj\/l\/baS28RvjiFAMVWeVDcbeKaslFoabP+tQJcZXtH24oT5JRWM7o\/k3Uqs+z4lKa6kQv4bSPb3wSXk\/D6tLkl7eBXAHeCAT8KrhxXmDY\/la3eJc='
       },
       onPaymentCompleted: (result, component) => {
         console.info(result, component);
       },
+      onAuthorized: (result, component) => {
+        console.info(result, component);
+      },
       onError: (error, component) => {
         console.error(error.name, error.message, error.stack, component);
-      },
-      // Any payment method specific configuration. Find the configuration specific to each payment method:  https://docs.adyen.com/payment-methods
-      // For example, this is 3D Secure configuration for cards:
-      paymentMethodsConfiguration: {
+      }
+    };
+
+    // Drop-in configuration.
+    const dropInConfiguration = {
+      // Configuration for individual payment methods.
+       paymentMethodsConfiguration: {
         card: {
           hasHolderName: true,
           holderNameRequired: true,
@@ -26,20 +32,27 @@
         },
         paywithgoogle: {
           allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
-          buttonType: 'pay'
+          buttonType: 'pay',
+          onAuthorized: (result, component) => {
+            console.info(result, component);
+          }
+        },
+        instantPaymentTypes: ['applepay', 'googlepay'],
+        googlepay: {
+          onAuthorized: (result, component) => {
+            console.info(result, component);
+          }
         }
       }
     };
 
+    const { AdyenCheckout, Dropin, Card, GooglePay, PayPal  } = window.AdyenWeb;
+
     // Create an instance of AdyenCheckout using the configuration object.
     const checkout = await AdyenCheckout(configuration);
 
-    const dropin = checkout.create('dropin', {
-      // ... other optional configuration
-      // For v5.30.0 or later: you can also use the value googlepay.
-      //instantPaymentTypes: ['googlepay']
+    const dropin = new Dropin(checkout, dropInConfiguration).mount('#googlepay-container');
 
-    }).mount('#googlepay-container');
 
 //    const googlePayComponent = checkout.create('googlepay');
 //    googlePayComponent
