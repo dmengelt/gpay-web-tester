@@ -8,7 +8,8 @@
 
 <body>
     <p>Demo merchant checkout page with a Google Pay button</p>
-    <div id="gpay-container"></div>    
+    <div id="gpay-container"></div>
+    <div id="payment-data-container">Click the Google Pay button and complete a transaction to see the response here...</div>     
     <hr/>
     <div id="user-agent"></div>
     <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
@@ -77,7 +78,7 @@
                     if (res.result) {
                         renderGooglePayButton();
                     } else {
-                        //console.log('Google Pay is not ready for this user.');
+                        // For the sake of the demo, still showing the Google Pay button
                         renderGooglePayButton();
                     }
                 })
@@ -100,7 +101,7 @@
             getGooglePaymentsClient()
                 .loadPaymentData(req)
                 .then(function (res) {
-                    console.log(res);
+                    document.getElementById('payment-data-container').innerHTML = JSON.stringify(res, null, 2);
                     paymentToken = res.paymentMethodData.tokenizationData.token;
                 })
                 .catch(console.error);
