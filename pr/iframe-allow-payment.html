@@ -19,6 +19,7 @@
     }
 
     #log {
+     color: gray;
       white-space: pre;
       font-family: monospace;
     }
@@ -27,19 +28,16 @@
 
 <body onload="checkPaymentRequestSupport()">
   <div id="contents">
-    <h1>Payment Request API tester</h1>
-
     <p>
       Payment Request API supported: <span id="pr" class="supported">false</span>
     </p>
+    <div id="log">if (window.PaymentRequest)</div>
+    <br><br>
     <p>
       'payment' feature allowed for this document: <span id="allowPayment" class="notSupported">false</span>
-    </p>   
-
-    <p><button onclick="onBuyClicked()">Buy</button></p>
+    </p>
+    <div id="log">if (document.featurePolicy && document.featurePolicy.allowsFeature('payment'))</div>   
   </div>
-
-  <div id="log"></div>
 
   <script>
     function checkPaymentRequestSupport() {
@@ -59,7 +57,6 @@
       }
     }
   </script>
-  <script src="iframe-allow-payment.js"></script>
 </body>
 
 </html>
