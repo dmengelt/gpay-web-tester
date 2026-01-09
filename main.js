@@ -167,7 +167,7 @@ function getGooglePaymentsClient() {
       environment: environmentValue,
       paymentDataCallbacks: {
         onPaymentAuthorized: onPaymentAuthorizedCallbackHandler,
-        //onPaymentDataChanged: onPaymentDataChanged
+        onPaymentDataChanged: onPaymentDataChanged
       }
     });
   } else {
@@ -504,8 +504,8 @@ function onGooglePaymentButtonClicked() {
 
   if(onPaymentAuthorizedCallbackValue) {
     //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'OFFER'];   
-    //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'SHIPPING_ADDRESS'];    
-    paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION'];
+    paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'SHIPPING_ADDRESS'];    
+    //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION'];
     //paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION', 'PAYMENT_METHOD'];    
     //paymentDataRequest.callbackIntents = ["SHIPPING_ADDRESS",  "SHIPPING_OPTION", "PAYMENT_AUTHORIZATION"];
 
