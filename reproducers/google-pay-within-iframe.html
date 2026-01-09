@@ -12,7 +12,7 @@
     <p>Because the iframe does not set the <a href="https://www.w3.org/TR/payment-request-1.1/#using-with-cross-origin-iframes" target="_blank">allow="payment"</a> attribute, the Payment Request API is not available and the following happens:</p>
     <ul>
         <li>Web: Button is shown and Google Pay falls back to POPUP mode because the PaymentRequest API is not available and therefore can't trigger the Payment Handler window.</li>
-        <li>Mobile Web (Chrome on Android): No button is displayed at all because bridging to the native isReadyToPay() API also needs the Payment Request API.</li>
+        <li>Mobile Web (Chrome on Android): Fallbacl to POPUP mode not supported. Google Pay does not work.</li>
     </ul>
     <iframe src="https://gpay-live-demo.web.app" width="300" height="100" />
 </body>
