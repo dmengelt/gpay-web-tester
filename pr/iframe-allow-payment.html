@@ -48,15 +48,17 @@
         element.innerText = 'true';
       }
 
-      // Check if the 'payment' feature is allowed for this document
-      if (document.featurePolicy && document.featurePolicy.allowsFeature('payment')) {
-        let element = document.getElementById("allowPayment");
-        element.classList.remove("notSupported");
-        element.classList.add("supported");
-        element.innerText = 'true';
-      } else {
-        console.error("[google-pay] 'payment' feature is not allowed for this document. Make sure all parent iframes have the allow='payment' attribute set.");
-      }
+      if (window.self !== window.top) {
+        // Check if the 'payment' feature is allowed when running in an iframe
+        if (document.featurePolicy && document.featurePolicy.allowsFeature('payment')) {
+            let element = document.getElementById("allowPayment");
+            element.classList.remove("notSupported");
+            element.classList.add("supported");
+            element.innerText = 'true';
+        } else {
+            console.error("[google-pay] 'payment' feature is not allowed for this document. Make sure all parent iframes have the allow='payment' attribute set.");
+        }
+      }      
     }
   </script>
 </body>
