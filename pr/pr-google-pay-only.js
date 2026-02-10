@@ -15,7 +15,7 @@ function onBuyClicked() {
             tokenizationSpecification: {
               type: 'PAYMENT_GATEWAY',
               parameters: {
-                'gateway': 'example',
+                'gateway': 'ariane',
               },
             },
           }],
