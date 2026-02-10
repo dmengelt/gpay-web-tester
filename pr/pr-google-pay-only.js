@@ -26,7 +26,7 @@ function onBuyClicked() {
             //totalPrice: '1.00',
           },
           merchantInfo: {
-            merchangtId: '14697717800897553235',
+            merchantId: '14697717800897553235',
             merchantName: 'Example merchant',
           },
         }
