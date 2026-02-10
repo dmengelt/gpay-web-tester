@@ -5,7 +5,7 @@ function onBuyClicked() {
       data: {
           apiVersion: 2,
           apiVersionMinor: 0,
-          environment: 'TEST',
+          environment: 'PRODUCTION',
           allowedPaymentMethods: [{
             type: 'CARD',
             parameters: {
