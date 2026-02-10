@@ -16,6 +16,7 @@ function onBuyClicked() {
               type: 'PAYMENT_GATEWAY',
               parameters: {
                 'gateway': 'ariane',
+                'gatewayMerchantId': 'exampleGatewayMerchantId'
               },
             },
           }],
