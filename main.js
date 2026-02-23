@@ -286,6 +286,15 @@ function handleRadiusSliderInput(event) {
  * ability to pay.
  */
 function onGooglePayLoaded() {
+  document.getElementById('user-agent').innerHTML= window.navigator.userAgent;
+
+  if (window.PaymentRequest) {
+    let element = document.getElementById("pr");
+    element.classList.remove("prNotSupported");
+    element.classList.add("prSupported");
+    element.innerText = 'true';
+  }
+
   document.querySelectorAll("input[name='existingPaymentMethodRequired']").forEach((input) => {
     input.addEventListener('change', existingPaymentMethodRequired);
   });
