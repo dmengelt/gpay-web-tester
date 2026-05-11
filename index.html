@@ -6,23 +6,256 @@
   <title>Google Pay Example</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
   <style>
-
-    * {box-sizing: border-box;}
+    :root {
+      --bg: #f7f8fa;
+      --surface: #ffffff;
+      --text: #1f2328;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #1a73e8;
+      --code-bg: #f3f4f6;
+      --badge-bad: #d93025;
+      --badge-good: #1e8e3e;
+      --radius: 10px;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
 
     body.dark {
-      background-color: #000;
-      color: #fff;
-    } /* #9b59b6 */    
+      --bg: #0d1117;
+      --surface: #161b22;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --code-bg: #0b0f14;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    }
 
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                   "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+    }
+
+    header.page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0 0 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .muted, small {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 720px) {
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field-label {
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    select,
+    input[type="range"] {
+      width: 100%;
+      font: inherit;
+      color: inherit;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+    }
+
+    input[type="range"] {
+      padding: 0;
+      accent-color: var(--accent);
+    }
+
+    select:focus,
+    input:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .radio-group.inline {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .radio-group label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    ul.no-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .buttons-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 560px) {
+      .buttons-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .button-tile {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 80px;
+    }
+
+    .button-tile small { font-weight: 500; }
+
+    .button-tile > div + div {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+
+    pre, .code {
+      white-space: pre;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12.5px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    .code:empty::before {
+      content: "—";
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .stack > * + * { margin-top: 12px; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .thirdPartyCookiesDisabled,
+    .prNotSupported {
+      background-color: var(--badge-bad);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+    }
+
+    .thirdPartyCookiesEnabled,
+    .prSupported {
+      background-color: var(--badge-good);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Theme toggle */
     .checkbox {
       opacity: 0;
       position: absolute;
+      pointer-events: none;
     }
 
     .checkbox-label {
       background-color: #111;
-
-      border: 1px solid grey;
+      border: 1px solid #444;
       width: 50px;
       height: 26px;
       border-radius: 50px;
@@ -32,11 +265,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-shrink: 0;
     }
 
-    .fa-moon {color: #f1c40f;}
-
-    .fa-sun {color: #f39c12;}
+    .fa-moon { color: #f1c40f; }
+    .fa-sun  { color: #f39c12; }
 
     .checkbox-label .ball {
       background-color: #fff;
@@ -53,213 +286,223 @@
       transform: translateX(24px);
     }
 
-    #log, #isRTPrequest, #result {
-      white-space: pre;
-      font-family: monospace;
+    #user-agent {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+      word-break: break-all;
     }
 
-    .padding-after {
-      padding-bottom: 10px;
-    }
-
-    ul.no-bullets {
-      list-style-type: none; /* Remove bullets */
-      padding: 0; /* Remove padding */
-      margin: 0; /* Remove margins */
-    }
-
-    .thirdPartyCookiesDisabled {
-      color: white;
-      background-color: #EE0000;
-      padding: 3px;
-    }
-
-    .thirdPartyCookiesEnabled {
-      color: white;
-      background-color: green;
-      padding: 3px;
-    }
-
-    .prNotSupported {
-      color: white;
-      background-color: #EE0000;
-      padding: 3px;
-    }
-
-    .prSupported {
-      color: white;
-      background-color: green;
-      padding: 3px;
-    }
-
+    .footer-card .row + .row { margin-top: 8px; }
   </style>
 </head>
 
 <body onload="cookieTest('https://bunpay.app/3pc/index.html')">
-<div id="createButtonApiLabel" class="padding-after"><b>createButton() API variations:</b></div>
-<div id="info" class="padding-after"><small>Note: in this demo the buttons are always
-  displayed.<br/>No
-  matter what the outcome of isReadyToPay is.<br/>If a payment method is not available,<br/>a
-  generic "Buy with GPay" button is shown.</small></div>
+  <div class="container">
 
-<div id="3pc-support" class="padding-after">
-  <small>3rd party cookies enabled: <span id="3pc" class="thirdPartyCookiesDisabled">false</span></small>
-</div>
+    <header class="page-header">
+      <h1>Google Pay Example</h1>
+      <div>
+        <input type="checkbox" class="checkbox" id="checkbox">
+        <label for="checkbox" class="checkbox-label" aria-label="Toggle dark mode">
+          <i class="fas fa-moon"></i>
+          <i class="fas fa-sun"></i>
+          <span class="ball"></span>
+        </label>
+      </div>
+    </header>
 
-<div>
-  <input type="checkbox" class="checkbox" id="checkbox">
-  <label for="checkbox" class="checkbox-label">
-    <i class="fas fa-moon"></i>
-    <i class="fas fa-sun"></i>
-    <span class="ball"></span>
-  </label>
-</div>
-<div class="padding-after"></div>
+    <div id="3pc-support" class="status-row card" style="padding:12px 16px;">
+      <small>3rd party cookies enabled:</small>
+      <span id="3pc" class="thirdPartyCookiesDisabled">false</span>
+    </div>
 
-<div id="allPaymentMethodsInfo"><small>All payment methods</small></div>
-<div id="container" class="padding-after"></div>
+    <section class="card">
+      <h2>createButton() API variations</h2>
+      <div id="info" class="muted" style="margin-bottom:14px;">
+        Buttons are always displayed regardless of the <code>isReadyToPay</code> outcome.
+        If a payment method isn't available, a generic "Buy with GPay" button is shown.
+      </div>
 
-<div id="amexInfo"><small>Amex only</small></div>
-<div id="container2" class="padding-after"></div>
+      <div class="buttons-grid">
+        <div class="button-tile">
+          <div><small id="allPaymentMethodsInfo">All payment methods</small></div>
+          <div id="container"></div>
+        </div>
+        <div class="button-tile">
+          <div><small id="amexInfo">Amex only</small></div>
+          <div id="container2"></div>
+        </div>
+        <div class="button-tile">
+          <div><small id="masterCardInfo">Mastercard only</small></div>
+          <div id="container3"></div>
+        </div>
+        <div class="button-tile">
+          <div><small id="visaInfo">Visa only</small></div>
+          <div id="container4"></div>
+        </div>
+      </div>
+    </section>
 
-<div id="masterCardInfo"><small>Mastercard only</small></div>
-<div id="container3" class="padding-after"></div>
+    <section class="card">
+      <h2>Button appearance</h2>
+      <div class="grid-2">
+        <div class="field">
+          <label class="field-label" for="buttonColors">Button color</label>
+          <select name="buttonColors" id="buttonColors">
+            <option value="default" selected="selected">default</option>
+            <option value="black">black</option>
+            <option value="white">white</option>
+          </select>
+        </div>
 
-<div id="visaInfo"><small>Visa only</small></div>
-<div id="container4" class="padding-after"></div>
+        <div class="field">
+          <label class="field-label" for="buttonTypes">Button type</label>
+          <select name="buttonTypes" id="buttonTypes">
+            <option value="buy" selected="selected">buy</option>
+            <option value="book">book</option>
+            <option value="checkout">checkout</option>
+            <option value="donate">donate</option>
+            <option value="order">order</option>
+            <option value="pay">pay</option>
+            <option value="plain">plain</option>
+            <option value="subscribe">subscribe</option>
+          </select>
+        </div>
 
-<div class="padding-after"><b>Button color:</b></div>
-<div class="padding-after">
-  <select name="buttonColors" id="buttonColors">
-    <option value="default" selected="selected">default</option>
-    <option value="black">black</option>
-    <option value="white">white</option>
-  </select>
-</div>
+        <div class="field">
+          <label class="field-label" for="button-radius">
+            Button radius: <span id="buttonRadiusValueText" class="value">4px</span>
+          </label>
+          <input id="button-radius" type="range" min="0" max="20" value="4" />
+        </div>
+      </div>
+    </section>
 
-<div class="padding-after"><b>Button type:</b></div>
-<div class="padding-after">
-  <select name="buttonTypes" id="buttonTypes">
-    <option value="buy" selected="selected">buy</option>
-    <option value="book">book</option>
-    <option value="checkout">checkout</option>
-    <option value="donate">donate</option>
-    <option value="order">order</option>
-    <option value="pay">pay</option>
-    <option value="plain">plain</option>
-    <option value="subscribe">subscribe</option>
-  </select>
-</div>
+    <section class="card">
+      <h2>Payment configuration</h2>
+      <div class="grid-2">
+        <div class="field">
+          <label class="field-label" for="environments">Environment</label>
+          <select name="environments" id="environments">
+            <option value="TEST" selected="selected">TEST</option>
+            <option value="PRODUCTION">PRODUCTION</option>
+            <option value="SANDBOX">SANDBOX</option>
+          </select>
+        </div>
 
-<div class="padding-after"><b>Button radius:</b> <span id="buttonRadiusValueText" class="value">4px</span></div>
-<div class="padding-after">
-  <label class="control">    
-    <input id="button-radius" type="range" min="0" max="20" value="4" />
-  </label>
-</div>
+        <div class="field">
+          <label class="field-label" for="gateways">Gateway</label>
+          <select name="gateways" id="gateways">
+            <option value="adyen">adyen</option>
+            <option value="ariane" selected="selected">ariane</option>
+            <option value="arianev2">arianev2</option>
+            <option value="braintree">braintree</option>
+            <option value="checkoutltd">checkoutltd</option>
+            <option value="cybersource">cybersource</option>
+            <option value="example">example</option>
+            <option value="paysafe">paysafe</option>
+            <option value="shopify">shopify</option>
+            <option value="stripe">stripe</option>
+            <option value="wallee">wallee</option>
+            <option value="worldpay">worldpay</option>
+          </select>
+        </div>
 
-<div class="padding-after"><b>Environment:</b></div>
-<div class="padding-after">
-  <select name="environments" id="environments">
-    <option value="TEST" selected="selected">TEST</option>
-    <option value="PRODUCTION">PRODUCTION</option>
-    <option value="SANDBOX">SANDBOX</option>
-  </select>
-</div>
+        <div class="field">
+          <span class="field-label" id="allowedAuthMethodsLabel">allowedAuthMethods</span>
+          <div id="allowedAuthMethods" class="radio-group">
+            <ul class="no-bullets">
+              <li><label><input type="radio" name="allowedAuthMethods" value="PAN_ONLY"/> PAN_ONLY</label></li>
+              <li><label><input type="radio" name="allowedAuthMethods" value="CRYPTOGRAM_3DS"/> CRYPTOGRAM_3DS</label></li>
+              <li><label><input type="radio" name="allowedAuthMethods" value="PAN_ONLY_CRYPTOGRAM_3DS" checked="checked"/> PAN_ONLY, CRYPTOGRAM_3DS</label></li>
+            </ul>
+          </div>
+        </div>
 
-<div class="padding-after"><b>Gateway:</b></div>
-<div class="padding-after">
-  <select name="gateways" id="gateways">
-    <option value="adyen">adyen</option>
-    <option value="ariane" selected="selected">ariane</option>
-    <option value="arianev2">arianev2</option>
-    <option value="braintree">braintree</option>
-    <option value="checkoutltd">checkoutltd</option>
-    <option value="cybersource">cybersource</option>
-    <option value="example">example</option>
-    <option value="paysafe">paysafe</option>
-    <option value="shopify">shopify</option>
-    <option value="stripe">stripe</option>
-    <option value="wallee">wallee</option>
-    <option value="worldpay">worldpay</option>
-  </select>
-</div>
+        <div class="field">
+          <span class="field-label" id="existingPaymentMethodRequireLabel">existingPaymentMethodRequired</span>
+          <div id="existingPaymentMethodRequired" class="radio-group inline">
+            <label><input type="radio" name="existingPaymentMethodRequired" value="true"/> true</label>
+            <label><input type="radio" name="existingPaymentMethodRequired" value="false" checked="checked"/> false</label>
+          </div>
+        </div>
 
-<div id="allowedAuthMethodsLabel" class="padding-after"><b>allowedAuthMethods:</b></div>
-<div id="allowedAuthMethods" class="padding-after">
-  <ul class="no-bullets">
-    <li><input type="radio" name="allowedAuthMethods" value="PAN_ONLY"/> PAN_ONLY</li>
-    <li><input type="radio" name="allowedAuthMethods" value="CRYPTOGRAM_3DS"/> CRYPTOGRAM_3DS</li>
-    <li><input type="radio" name="allowedAuthMethods" value="PAN_ONLY_CRYPTOGRAM_3DS"
-               checked="checked"/> PAN_ONLY, CRYPTOGRAM_3DS
-    </li>
-  </ul>
-</div>
+        <div class="field">
+          <span class="field-label" id="onPaymentAuthorizedLabel">Set onPaymentAuthorized callback</span>
+          <div id="onPaymentAuthorizedCallback" class="radio-group inline">
+            <label><input type="radio" name="onPaymentAuthorizedCallback" value="true"/> true</label>
+            <label><input type="radio" name="onPaymentAuthorizedCallback" value="false" checked="checked"/> false</label>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<div id="existingPaymentMethodRequireLabel" class="padding-after">
-  <b>existingPaymentMethodRequired:</b></div>
-<div id="existingPaymentMethodRequired" class="padding-after">
-  <input type="radio" name="existingPaymentMethodRequired" value="true"/> true
-  <input type="radio" name="existingPaymentMethodRequired" value="false" checked="checked"/> false
-</div>
+    <section class="card stack">
+      <h2>API output</h2>
 
-<div id="onPaymentAuthorizedLabel" class="padding-after">
-  <b>Set onPaymentAuthorized callback:</b></div>
-<div id="onPaymentAuthorizedCallback" class="padding-after">
-  <input type="radio" name="onPaymentAuthorizedCallback" value="true"/> true
-  <input type="radio" name="onPaymentAuthorizedCallback" value="false" checked="checked"/> false
-</div>
+      <div>
+        <div class="field-label" id="isRTPrequestLabel">isReadyToPay request payload</div>
+        <pre id="isRTPrequest" class="code"></pre>
+      </div>
 
+      <div>
+        <div class="field-label" id="isRTP">isReadyToPay API response</div>
+        <pre id="log" class="code"></pre>
+      </div>
 
-<div id="isRTPrequestLabel" class="padding-after"><b>isReadyToPay request payload:</b></div>
-<div id="isRTPrequest" class="padding-after"></div>
-<div id="isRTP" class="padding-after"><b>isReadyToPay API response:</b></div>
-<div id="log" class="padding-after"></div>
-<div id="resultLabel" class="padding-after"><b>paymentData response:</b></div>
-<div id="result"></div>
-<hr>
-<p>
-  Browser supports Payment Request API: <span id="pr" class="prNotSupported">false</span>
-</p>
-<div id="user-agent"></div>
+      <div>
+        <div class="field-label" id="resultLabel">paymentData response</div>
+        <pre id="result" class="code"></pre>
+      </div>
+    </section>
 
+    <section class="card footer-card">
+      <h2>Environment</h2>
+      <div class="row status-row">
+        <small>Browser supports Payment Request API:</small>
+        <span id="pr" class="prNotSupported">false</span>
+      </div>
+      <div class="row">
+        <div class="muted" style="margin-bottom:4px;">User agent</div>
+        <div id="user-agent"></div>
+      </div>
+    </section>
 
+  </div>
+
+  <script src="main.js"></script>
+
+  <script>
+    const cookieTest = (iFrameUri) => {
+      let messageHandler = (event) => {
+        // check for trusted origins here
+        const data = JSON.parse(event.data)
+        console.log("3PC result: " + data['result']);
+
+        if (data['result'] && data['result'] == true) {
+          let element = document.getElementById("3pc");
+          element.classList.remove("thirdPartyCookiesDisabled");
+          element.classList.add("thirdPartyCookiesEnabled");
+          element.innerText = 'true';
+
+          window.removeEventListener('message', messageHandler);
+          document.body.removeChild(frame)
+        }
+      }
+      window.addEventListener('message', messageHandler);
+      const frame = document.createElement('iframe')
+      frame.src = iFrameUri
+      frame.sandbox = "allow-scripts allow-same-origin"
+      frame.style = `display:none`
+      frame.onload = (e) => {
+        frame.contentWindow.postMessage(JSON.stringify({ 'test': 'cookie' }), '*');
+      }
+      document.body.appendChild(frame)
+    }
+  </script>
+
+  <script async
+          src="https://pay.sandbox.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
 </body>
-
-<script src="main.js"></script>
-
-<script>
-  const cookieTest = (iFrameUri) => {
-
-  let messageHandler = (event) => {
-      // check for trusted origins here         
-      const data = JSON.parse(event.data)
-      console.log("3PC result: " + data['result']);      
-
-      if(data['result'] && data['result'] == true) {
-        let element = document.getElementById("3pc");
-        element.classList.remove("thirdPartyCookiesDisabled");
-        element.classList.add("thirdPartyCookiesEnabled");
-        element.innerText = 'true';
-
-        window.removeEventListener('message', messageHandler);
-        document.body.removeChild(frame)
-      }      
-
-  }
-  window.addEventListener('message', messageHandler);
-  const frame = document.createElement('iframe')
-  frame.src = iFrameUri
-  frame.sandbox = "allow-scripts allow-same-origin"
-  frame.style = `display:none`
-  frame.onload = (e) => {
-      frame.contentWindow.postMessage(JSON.stringify({ 'test': 'cookie' }), '*');
-  }
-  document.body.appendChild(frame)
-  }
-</script>
-
-<script async
-        src="https://pay.sandbox.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
 </html>
-

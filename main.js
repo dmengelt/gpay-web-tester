@@ -354,7 +354,7 @@ function onGooglePayLoaded() {
         .catch(function (err) {
           // show error in developer console for debugging
           console.log(err);
-          document.getElementById('log').innerHTML = err;
+          document.getElementById('log').innerHTML = JSON.stringify(err, Object.getOwnPropertyNames(err), 2);
         });
   }
 
