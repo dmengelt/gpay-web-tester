@@ -5,8 +5,12 @@ document.head.append(otMeta);
 
 const radiusSlider = document.getElementById('button-radius');
 
-document.getElementById("checkbox").addEventListener("change", () => {
-  document.body.classList.toggle("dark")
+document.getElementById("checkbox").addEventListener("change", (e) => {
+  document.body.classList.toggle("dark");
+  buttonColor = e.target.checked ? "white" : "default";
+  const colorSelect = document.getElementById("buttonColors");
+  if (colorSelect) colorSelect.value = buttonColor;
+  onGooglePayLoaded();
 })
 
 /**
