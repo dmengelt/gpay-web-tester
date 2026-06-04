@@ -382,6 +382,7 @@
 
           if (result.status === "SUCCESS") {
             console.log("AcceleratedCheckoutClient loaded successfully. Ready for checkout.");
+            document.getElementById("status-badge").style.display = "none";
             //updateStatus("Google Pay ready for one-click checkout.", "success");
           } else {
             console.warn("Client loaded but status is: ", result.status);
