@@ -381,18 +381,19 @@
           }
 
           if (result.status === "SUCCESS") {
-            updateStatus("Google Pay ready for one-click checkout.", "success");
+            console.log("AcceleratedCheckoutClient loaded successfully. Ready for checkout.");
+            //updateStatus("Google Pay ready for one-click checkout.", "success");
           } else {
             console.warn("Client loaded but status is: ", result.status);
             updateStatus("Express checkout unavailable. Reason: " + (result.errorMessage || result.status), "error");
           }
         }).catch(function(err) {
           console.error("AcceleratedCheckoutClient load error:", err);
-          updateStatus("Failed to load Google Pay accelerated checkout session.", "error");
+          updateStatus("Failed to load Google Pay direct checkout session.", "error");
         });
       } catch (err) {
         console.error("Initialization failed:", err);
-        updateStatus("Failed to initialize Google Pay Accelerated Checkout.", "error");
+        updateStatus("Failed to initialize Google Pay direct Checkout.", "error");
       }
     }
 
