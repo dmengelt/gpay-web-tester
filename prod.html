@@ -29,11 +29,12 @@
                     parameters: {
                         allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
                         allowedCardNetworks: ['AMEX', 'DISCOVER', 'INTERAC', 'JCB', 'MASTERCARD', 'VISA'],
+                        assuranceDetailsRequired: true,
                     },
                     tokenizationSpecification: {
                         type: 'PAYMENT_GATEWAY',
                         parameters: {
-                            gateway: 'example',
+                            gateway: 'arianev2',
                             gatewayMerchantId: 'exampleGatewayMerchantId',
                         },
                     },
