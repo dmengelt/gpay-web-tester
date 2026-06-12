@@ -371,8 +371,28 @@
         checkoutClient = new google.payments.api.AcceleratedCheckoutClient(options);
         console.log("AcceleratedCheckoutClient successfully instantiated.");
         
-        // Trigger automated checkout load sequence
-        checkoutClient.load().then(function(result) {
+        // Trigger automated checkout availability and load sequence
+        checkoutClient.isAvailable().then(function(result) {
+          if (result && result.status === "SUCCESS") {
+            console.log("AcceleratedCheckoutClient is available. Loading session...");
+            return checkoutClient.load();
+          } else {
+            console.warn("AcceleratedCheckoutClient is not available:", result);
+            const errorMsg = result ? (result.errorMessage || result.status) : "User is ineligible for accelerated checkout.";
+            updateStatus("Direct checkout unavailable. Reason: " + errorMsg, "error");
+            
+            // Remove custom loader spinner
+            const spinner = document.getElementById("loading-spinner");
+            if (spinner) {
+              spinner.style.display = "none";
+            }
+            return null;
+          }
+        }).then(function(result) {
+          if (!result) {
+            return; // Already handled in the availability check failure
+          }
+
           // Remove custom loader spinner
           const spinner = document.getElementById("loading-spinner");
           if (spinner) {
@@ -385,10 +405,15 @@
             //updateStatus("Google Pay ready for one-click checkout.", "success");
           } else {
             console.warn("Client loaded but status is: ", result.status);
-            updateStatus("Express checkout unavailable. Reason: " + (result.errorMessage || result.status), "error");
+            updateStatus("Direct checkout unavailable. Reason: " + (result.errorMessage || result.status), "error");
           }
         }).catch(function(err) {
-          console.error("AcceleratedCheckoutClient load error:", err);
+          console.error("AcceleratedCheckoutClient sequence error:", err);
+          // Make sure spinner is hidden
+          const spinner = document.getElementById("loading-spinner");
+          if (spinner) {
+            spinner.style.display = "none";
+          }
           updateStatus("Failed to load Google Pay direct checkout session.", "error");
         });
       } catch (err) {
