@@ -606,6 +606,14 @@
     // Accelerated checkout clients
     let checkoutClient = null;
 
+    // Common reasons direct checkout may be unavailable (shown in the debug console)
+    const UNAVAILABLE_REASONS =
+      "\nReasons might be:" +
+      "\n  • This page is served from localhost" +
+      "\n  • Browser not supported" +
+      "\n  • Browser does not allow cross-site tracking" +
+      "\n  • You are in incognito mode";
+
     /**
      * Routes status messaging to the debug console only — nothing is shown to the user here.
      */
@@ -674,7 +682,7 @@
           } else {
             console.warn("AcceleratedCheckoutClient is not available:", result);
             const errorMsg = result ? (result.errorMessage || result.status) : "User is ineligible for accelerated checkout.";
-            updateStatus("Direct checkout unavailable. Reason: " + errorMsg, "error");
+            updateStatus("Direct checkout unavailable. Error message: " + errorMsg + UNAVAILABLE_REASONS, "error");
 
             // Remove custom loader spinner
             const spinner = document.getElementById("loading-spinner");
@@ -703,7 +711,7 @@
             //updateStatus("Google Pay ready for one-click checkout.", "success");
           } else {
             console.warn("Client loaded but status is: ", result.status);
-            updateStatus("Direct checkout unavailable. Reason: " + (result.errorMessage || result.status), "error");
+            updateStatus("Direct checkout unavailable. Error message: " + (result.errorMessage || result.status) + UNAVAILABLE_REASONS, "error");
           }
         }).catch(function(err) {
           console.error("AcceleratedCheckoutClient sequence error:", err);
