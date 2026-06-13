@@ -23,9 +23,7 @@
       background-color: #ffffff;
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      max-width: 900px;
-      width: 90%;
-      margin: 40px auto;
+      width: 100%;
       overflow: hidden;
     }
 
@@ -278,11 +276,19 @@
       background-color: #1765cc;
     }
 
-    /* Debug link (bottom-right of container) */
+    /* Wrapper holding the container + debug link */
+    .checkout-wrapper {
+      display: flex;
+      flex-direction: column;
+      max-width: 900px;
+      width: 90%;
+      margin: 40px auto;
+    }
+
+    /* Debug link (below container, bottom-right) */
     .debug-link {
-      position: absolute;
-      bottom: 12px;
-      right: 16px;
+      align-self: flex-end;
+      margin-top: 10px;
       font-size: 0.75rem;
       color: #5f6368;
       text-decoration: none;
@@ -400,6 +406,7 @@
 </head>
 <body>
 
+  <div class="checkout-wrapper">
   <div class="checkout-container">
     <!-- Left: Order Summary -->
     <div class="summary-panel" id="summary-section">
@@ -486,10 +493,11 @@
           Buy Again
         </button>
       </div>
-
-      <!-- Debug link (bottom-right) -->
-      <a class="debug-link" onclick="toggleDebugOverlay(true)">🐛 Debug</a>
     </div>
+  </div>
+
+    <!-- Debug link (below container, bottom-right) -->
+    <a class="debug-link" onclick="toggleDebugOverlay(true)">🐛 Debug</a>
   </div>
 
   <!-- Debug Console Overlay -->
@@ -609,10 +617,12 @@
     // Common reasons direct checkout may be unavailable (shown in the debug console)
     const UNAVAILABLE_REASONS =
       "\nReasons might be:" +
-      "\n  • This page is served from localhost" +
+      "\n  • User not logged in to Google" +
+      "\n  • User logged in to Google but no existing payment method" +
       "\n  • Browser not supported" +
       "\n  • Browser does not allow cross-site tracking" +
-      "\n  • You are in incognito mode";
+      "\n  • You are in incognito mode" +
+      "\n  • This page is served from localhost";
 
     /**
      * Routes status messaging to the debug console only — nothing is shown to the user here.
