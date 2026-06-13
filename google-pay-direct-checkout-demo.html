@@ -208,6 +208,76 @@
       max-height: 200px;
     }
 
+    /* Fallback card form */
+    .fallback-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: #5f6368;
+      background-color: #f1f3f4;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin: 0 0 20px 0;
+    }
+
+    .fallback-note .fallback-icon {
+      flex-shrink: 0;
+      font-size: 1rem;
+      color: #1a73e8;
+    }
+
+    .card-field {
+      flex: 1;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .card-field label {
+      display: block;
+      font-size: 0.8rem;
+      color: #5f6368;
+      margin-bottom: 6px;
+    }
+
+    .card-field input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .card-field input:focus {
+      border-color: #1a73e8;
+    }
+
+    .card-field-row {
+      display: flex;
+      gap: 16px;
+    }
+
+    .card-pay-btn {
+      width: 100%;
+      background-color: #1a73e8;
+      color: #ffffff;
+      border: none;
+      padding: 12px;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+
+    .card-pay-btn:hover {
+      background-color: #1765cc;
+    }
+
     /* Debug link (bottom-right of container) */
     .debug-link {
       position: absolute;
@@ -372,8 +442,30 @@
           </div>
         </div>
 
-        <div id="status-badge" class="status-alert info">
+        <div id="status-badge" class="status-alert" style="display: none;">
           Initializing Google Pay Accelerated Checkout...
+        </div>
+
+        <!-- Fallback Card Form (hidden until Google Pay is unavailable) -->
+        <div id="card-fallback-form" style="display: none;">
+          <p class="fallback-note"><span class="fallback-icon">ℹ️</span><span>Google Pay Direct Checkout not available. Falling back to a normal card input form. Check the debug logs for more information.</span></p>
+          <form onsubmit="handleCardSubmit(event)">
+            <div class="card-field">
+              <label for="card-number">Card number</label>
+              <input type="text" id="card-number" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+            </div>
+            <div class="card-field-row">
+              <div class="card-field">
+                <label for="card-expiry">Expiry</label>
+                <input type="text" id="card-expiry" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5" required>
+              </div>
+              <div class="card-field">
+                <label for="card-cvv">CVV</label>
+                <input type="text" id="card-cvv" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4" required>
+              </div>
+            </div>
+            <button type="submit" class="card-pay-btn">Pay $13.37</button>
+          </form>
         </div>
 
         <!-- Collapsible Developer Details -->
@@ -515,13 +607,14 @@
     let checkoutClient = null;
 
     /**
-     * Shows current loader/error status messaging
+     * Routes status messaging to the debug console only — nothing is shown to the user here.
      */
     function updateStatus(message, type) {
-      const statusElement = document.getElementById("status-badge");
-      statusElement.textContent = message;
-      statusElement.className = "status-alert " + type;
-      statusElement.style.display = "flex";
+      if (type === "error") {
+        console.error(message);
+      } else {
+        console.log(message);
+      }
     }
 
     /**
@@ -582,12 +675,15 @@
             console.warn("AcceleratedCheckoutClient is not available:", result);
             const errorMsg = result ? (result.errorMessage || result.status) : "User is ineligible for accelerated checkout.";
             updateStatus("Direct checkout unavailable. Reason: " + errorMsg, "error");
-            
+
             // Remove custom loader spinner
             const spinner = document.getElementById("loading-spinner");
             if (spinner) {
               spinner.style.display = "none";
             }
+
+            // Fall back to a normal card input form
+            showCardFallback();
             return null;
           }
         }).then(function(result) {
@@ -622,6 +718,35 @@
         console.error("Initialization failed:", err);
         updateStatus("Failed to initialize Google Pay direct Checkout.", "error");
       }
+    }
+
+    /**
+     * Reveals the fallback card input form when Google Pay is unavailable
+     */
+    function showCardFallback() {
+      const form = document.getElementById("card-fallback-form");
+      if (form) {
+        form.style.display = "block";
+      }
+      console.log("Falling back to manual card input form.");
+
+      // Hide the Google Pay target container since it won't render
+      const gpayContainer = document.getElementById("gpay-accelerated-checkout-container");
+      if (gpayContainer) {
+        gpayContainer.style.display = "none";
+      }
+    }
+
+    /**
+     * Handles submission of the fallback card form (demo only)
+     */
+    function handleCardSubmit(event) {
+      event.preventDefault();
+      console.log("Card form submitted. Processing payment...");
+
+      // Transition to the success state (demo flow)
+      document.getElementById("checkout-entry-flows").style.display = "none";
+      document.getElementById("checkout-success-view").style.display = "flex";
     }
 
     /**
