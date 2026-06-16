@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Array Prototype MD Reproducer</title>
+  <script src="https://pay.google.com/gp/p/js/pay.js"></script>
+</head>
+<body>
+  <h1>Array Prototype MD Reproducer</h1>
+  <p>Check the browser console for any errors.</p>
+  <script type="module">
+    // strict mode (ES modules are strict)
+    const arr = ["0px", "30em", "48em"];
+    arr.md = "48em"; // throws: Cannot set property md of [object Array] which has only a getter
+  </script>
+</body>
+</html>
