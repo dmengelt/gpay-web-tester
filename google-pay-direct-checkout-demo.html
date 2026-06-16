@@ -671,7 +671,8 @@
       paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
       paymentDataRequest.shippingAddressRequired = true;
       paymentDataRequest.merchantInfo = {
-        merchantId: "14697717800897553235", // standard test merchant ID
+        // SANDBOX uses a dedicated merchant ID; other environments use the standard test merchant ID
+        merchantId: currentEnvironment === "SANDBOX" ? "BCR2DN6TXDBYXAJ7" : "14697717800897553235",
         merchantName: "4242.cards - Demo Mode",
       };
       paymentDataRequest.callbackIntents = ["PAYMENT_AUTHORIZATION"];
