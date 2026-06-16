@@ -679,7 +679,7 @@
       const checkoutRequest = getGooglePaymentDataRequest();
 
       const options = {
-        environment: "PRODUCTION", // Run corresponding to standard testing demo client
+        environment: "TEST", // Run corresponding to standard testing demo client
         acceleratedCheckoutConfig: {
           type: "INLINE",
           containerId: "gpay-accelerated-checkout-container"
@@ -779,8 +779,8 @@
   </script>
 
   <!-- Load the libraries -->
-  <script async src="https://pay.google.com/gp/p/acceleratedcheckout.js" onload="onGooglePayAcceleratedCheckoutLoaded()"></script>
-  <script async src="https://pay.google.com/gp/p/pay.js"></script>
+  <script async src="https://pay.sandbox.google.com/gp/p/acceleratedcheckout.js" onload="onGooglePayAcceleratedCheckoutLoaded()"></script>
+  <script async src="https://pay.sandbox.google.com/gp/p/pay.js"></script>
 
 </body>
 </html>
