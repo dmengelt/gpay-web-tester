@@ -285,10 +285,28 @@
       margin: 40px auto;
     }
 
-    /* Debug link (below container, bottom-right) */
-    .debug-link {
+    /* Footer bar (env switcher + debug link), below container, bottom-right */
+    .debug-bar {
       align-self: flex-end;
       margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .env-switcher {
+      font-size: 0.75rem;
+      color: #5f6368;
+      background-color: #ffffff;
+      border: 1px solid #dadce0;
+      border-radius: 6px;
+      padding: 3px 6px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* Debug link */
+    .debug-link {
       font-size: 0.75rem;
       color: #5f6368;
       text-decoration: none;
@@ -496,8 +514,15 @@
     </div>
   </div>
 
-    <!-- Debug link (below container, bottom-right) -->
-    <a class="debug-link" onclick="toggleDebugOverlay(true)">🐛 Debug</a>
+    <!-- Footer bar: environment switcher + debug link (below container, bottom-right) -->
+    <div class="debug-bar">
+      <select class="env-switcher" id="env-switcher" onchange="onEnvironmentChange(this.value)" title="Google Pay environment">
+        <option value="SANDBOX">SANDBOX</option>
+        <option value="TEST" selected>TEST</option>
+        <option value="PRODUCTION">PRODUCTION</option>
+      </select>
+      <a class="debug-link" onclick="toggleDebugOverlay(true)">🐛 Debug</a>
+    </div>
   </div>
 
   <!-- Debug Console Overlay -->
@@ -614,6 +639,9 @@
     // Accelerated checkout clients
     let checkoutClient = null;
 
+    // Currently selected Google Pay environment (SANDBOX | TEST | PRODUCTION), changed via the env switcher
+    let currentEnvironment = "TEST";
+
     // Common reasons direct checkout may be unavailable (shown in the debug console)
     const UNAVAILABLE_REASONS =
       "\nReasons might be:" +
@@ -673,13 +701,38 @@
     }
 
     /**
+     * Handles the environment switcher: resets the UI and re-runs the whole
+     * accelerated checkout flow against the newly selected environment.
+     */
+    function onEnvironmentChange(env) {
+      currentEnvironment = env;
+      console.log("Environment switched to: " + env + ". Reloading accelerated checkout flow...");
+
+      // Reset views back to the initial loading state
+      document.getElementById("checkout-entry-flows").style.display = "block";
+      document.getElementById("checkout-success-view").style.display = "none";
+      document.getElementById("card-fallback-form").style.display = "none";
+      document.getElementById("debug-payload-section").style.display = "none";
+      document.getElementById("status-badge").style.display = "none";
+
+      // Clear any previously rendered Google Pay UI and restore the spinner
+      const container = document.getElementById("gpay-accelerated-checkout-container");
+      container.style.display = "flex";
+      container.innerHTML =
+        '<div style="font-size: 0.9rem; color: #5f6368;" id="loading-spinner">Loading Google Pay...</div>';
+
+      checkoutClient = null;
+      onGooglePayAcceleratedCheckoutLoaded();
+    }
+
+    /**
      * Callback when script loaded
      */
     async function onGooglePayAcceleratedCheckoutLoaded() {
       const checkoutRequest = getGooglePaymentDataRequest();
 
       const options = {
-        environment: "TEST", // Run corresponding to standard testing demo client
+        environment: currentEnvironment, // Selected via the env switcher (default TEST)
         acceleratedCheckoutConfig: {
           type: "INLINE",
           containerId: "gpay-accelerated-checkout-container"
