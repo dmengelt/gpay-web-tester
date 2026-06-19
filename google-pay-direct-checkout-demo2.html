@@ -120,6 +120,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
+    }
+
+    #gpay-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 10;
     }
 
     /* Status Notifications */
@@ -461,7 +471,7 @@
       <div id="checkout-entry-flows">       
         
         <!-- Google Pay Header -->
-        <div id="gpay-header" style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px;">
+        <div id="gpay-header">
           <img src="https://developers.google.com/static/pay/api/images/brand-guidelines/google-pay-mark.png" alt="Google Pay" style="height: 24px; width: auto; vertical-align: middle;">
           <span style="font-size: 1.2rem; font-weight: 500; color: #202124; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; vertical-align: middle;">Google Pay</span>
         </div>
