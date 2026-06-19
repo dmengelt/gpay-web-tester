@@ -516,6 +516,10 @@
 
     <!-- Footer bar: environment switcher + debug link (below container, bottom-right) -->
     <div class="debug-bar">
+      <label class="shipping-required-label" style="font-size: 0.75rem; color: #5f6368; display: flex; align-items: center; gap: 4px; cursor: pointer; user-select: none;">
+        <input type="checkbox" id="shipping-required-checkbox" onchange="onShippingRequiredChange()" style="margin: 0; cursor: pointer;">
+        Shipping required
+      </label>
       <select class="env-switcher" id="env-switcher" onchange="onEnvironmentChange(this.value)" title="Google Pay environment">
         <option value="SANDBOX">SANDBOX</option>
         <option value="TEST" selected>TEST</option>
@@ -669,7 +673,12 @@
     function getGooglePaymentDataRequest() {
       const paymentDataRequest = Object.assign({}, baseRequest);
       paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
-      paymentDataRequest.shippingAddressRequired = true;
+      
+      const shippingCheckbox = document.getElementById("shipping-required-checkbox");
+      if (shippingCheckbox && shippingCheckbox.checked) {
+        paymentDataRequest.shippingAddressRequired = true;
+      }
+
       paymentDataRequest.merchantInfo = {
         // SANDBOX uses a dedicated merchant ID; other environments use the standard test merchant ID
         merchantId: currentEnvironment === "SANDBOX" ? "BCR2DN6TXDBYXAJ7" : "14697717800897553235",
@@ -699,6 +708,15 @@
       if (spinner) {
         spinner.style.display = "none";
       }
+    }
+
+    /**
+     * Handles the "Shipping required" checkbox toggle: reloads accelerated checkout.
+     */
+    function onShippingRequiredChange() {
+      const isRequired = document.getElementById("shipping-required-checkbox").checked;
+      console.log("Shipping required changed to: " + isRequired + ". Reloading accelerated checkout flow...");
+      onEnvironmentChange(currentEnvironment);
     }
 
     /**
