@@ -96,8 +96,8 @@
     /* Right Panel: Payment */
     .payment-panel {
       flex: 1.2;
-      padding: 40px;
-      background-color: #f7f7f8;
+      padding: 20px;
+      background-color: #ffffff;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -113,10 +113,17 @@
     }
 
     /* Accelerated Checkout Container */
+    .gpay-unified-box {
+      background-color: #f7f7f8;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
     #gpay-accelerated-checkout-container {
       width: 100%;
       min-height: 250px;
-      margin-bottom: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -127,9 +134,50 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       position: relative;
       z-index: 10;
+    }
+
+    /* Saved Payment Method Section */
+    #saved-payment-method-container {
+      display: block;
+      margin-bottom: 24px;
+    }
+
+    .saved-payment-method-title {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-top: 0;
+      margin-bottom: 24px;
+      color: #202124;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .mastercard-payment-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background-color: #ffffff;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      margin-top: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .mastercard-logo {
+      height: 24px;
+      width: auto;
+      vertical-align: middle;
+    }
+
+    .mastercard-text {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #3c4043;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
     /* Status Notifications */
@@ -470,17 +518,31 @@
       <!-- Standard Checkout State -->
       <div id="checkout-entry-flows">       
         
-        <!-- Google Pay Header -->
-        <div id="gpay-header">
-          <img src="https://developers.google.com/static/pay/api/images/brand-guidelines/google-pay-mark.png" alt="Google Pay" style="height: 24px; width: auto; vertical-align: middle;">
-          <span style="font-size: 1.2rem; font-weight: 500; color: #202124; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; vertical-align: middle;">Google Pay</span>
-        </div>
+        <!-- Saved Payment Method Container -->
+        <div id="saved-payment-method-container">
+          <h3 class="saved-payment-method-title">Saved payment method</h3>
 
-        <!-- Accelerated Checkout Target Container -->
-        <div id="gpay-accelerated-checkout-container">
-          <!-- Loading placeholder spinner or text -->
-          <div style="font-size: 0.9rem; color: #5f6368;" id="loading-spinner">
-            Loading Google Pay...
+          <!-- Unified Google Pay Box -->
+          <div class="gpay-unified-box">
+            <!-- Google Pay Header -->
+            <div id="gpay-header">
+              <img src="https://developers.google.com/static/pay/api/images/brand-guidelines/google-pay-mark.png" alt="Google Pay" style="height: 24px; width: auto; vertical-align: middle;">
+              <span style="font-size: 1.2rem; font-weight: 500; color: #202124; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; vertical-align: middle;">Google Pay</span>
+            </div>
+
+            <!-- Accelerated Checkout Target Container -->
+            <div id="gpay-accelerated-checkout-container">
+              <!-- Loading placeholder spinner or text -->
+              <div style="font-size: 0.9rem; color: #5f6368;" id="loading-spinner">
+                Loading Google Pay...
+              </div>
+            </div>
+          </div>
+
+          <!-- Mastercard Option -->
+          <div class="mastercard-payment-option">
+            <img src="https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/mc_voucher_br.svg" alt="Mastercard" class="mastercard-logo">
+            <span class="mastercard-text">•••• 0002</span>
           </div>
         </div>
 
@@ -686,7 +748,7 @@
     function getGooglePaymentDataRequest() {
       const paymentDataRequest = Object.assign({}, baseRequest);
       paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
-      paymentDataRequest.shippingAddressRequired = true;
+      //paymentDataRequest.shippingAddressRequired = true;
       paymentDataRequest.merchantInfo = {
         // SANDBOX uses a dedicated merchant ID; other environments use the standard test merchant ID
         merchantId: currentEnvironment === "SANDBOX" ? "BCR2DN6TXDBYXAJ7" : "14697717800897553235",
@@ -732,6 +794,12 @@
       document.getElementById("card-fallback-form").style.display = "none";
       document.getElementById("debug-payload-section").style.display = "none";
       document.getElementById("status-badge").style.display = "none";
+
+      // Restore saved payment method container
+      const savedContainer = document.getElementById("saved-payment-method-container");
+      if (savedContainer) {
+        savedContainer.style.display = "block";
+      }
 
       // Restore Google Pay header
       const gpayHeader = document.getElementById("gpay-header");
@@ -810,6 +878,12 @@
         form.style.display = "block";
       }
       console.log("Falling back to manual card input form.");
+
+      // Hide the saved payment methods container
+      const savedContainer = document.getElementById("saved-payment-method-container");
+      if (savedContainer) {
+        savedContainer.style.display = "none";
+      }
 
       // Hide the Google Pay target container since it won't render
       const gpayContainer = document.getElementById("gpay-accelerated-checkout-container");
