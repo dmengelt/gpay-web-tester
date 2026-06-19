@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google Pay Accelerated Checkout Demo</title>
+  <title>Google Pay Direct Checkout Demo</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -111,8 +111,8 @@
       color: #202124;
     }
 
-    /* Accelerated Checkout Container */
-    #gpay-accelerated-checkout-container {
+    /* Direct Checkout Container */
+    #gpay-direct-checkout-container {
       width: 100%;
       min-height: 250px;
       margin-bottom: 20px;
@@ -459,8 +459,8 @@
       <!-- Standard Checkout State -->
       <div id="checkout-entry-flows">       
         
-        <!-- Accelerated Checkout Target Container -->
-        <div id="gpay-accelerated-checkout-container">
+        <!-- Direct Checkout Target Container -->
+        <div id="gpay-direct-checkout-container">
           <!-- Loading placeholder spinner or text -->
           <div style="font-size: 0.9rem; color: #5f6368;" id="loading-spinner">
             Loading Google Pay...
@@ -468,7 +468,7 @@
         </div>
 
         <div id="status-badge" class="status-alert" style="display: none;">
-          Initializing Google Pay Accelerated Checkout...
+          Initializing Google Pay Direct Checkout...
         </div>
 
         <!-- Fallback Card Form (hidden until Google Pay is unavailable) -->
@@ -543,7 +543,7 @@
     </div>
   </div>
 
-  <!-- Google Pay Accelerated Checkout Scripts -->
+  <!-- Google Pay Direct Checkout Scripts -->
   <script>
     // --- Debug console capture ---
     // Intercept console methods early so every message is recorded for the Debug overlay.
@@ -640,7 +640,7 @@
       tokenizationSpecification: tokenizationSpecification,
     });
 
-    // Accelerated checkout clients
+    // Direct checkout clients
     let checkoutClient = null;
 
     // Currently selected Google Pay environment (SANDBOX | TEST | PRODUCTION), changed via the env switcher
@@ -668,7 +668,7 @@
     }
 
     /**
-     * Constructs standard PaymentDataRequest (AcceleratedCheckoutRequest)
+     * Constructs standard PaymentDataRequest (DirectCheckoutRequest)
      */
     function getGooglePaymentDataRequest() {
       const paymentDataRequest = Object.assign({}, baseRequest);
@@ -691,7 +691,7 @@
         totalPrice: "13.37",
       };
 
-      // Configuration specific to Accelerated Checkout
+      // Configuration specific to Direct Checkout
       paymentDataRequest.i = {
         disableNgbf: false,
         productType: "ACCELERATED_CHECKOUT"
@@ -711,21 +711,21 @@
     }
 
     /**
-     * Handles the "Shipping required" checkbox toggle: reloads accelerated checkout.
+     * Handles the "Shipping required" checkbox toggle: reloads direct checkout.
      */
     function onShippingRequiredChange() {
       const isRequired = document.getElementById("shipping-required-checkbox").checked;
-      console.log("Shipping required changed to: " + isRequired + ". Reloading accelerated checkout flow...");
+      console.log("Shipping required changed to: " + isRequired + ". Reloading direct checkout flow...");
       onEnvironmentChange(currentEnvironment);
     }
 
     /**
      * Handles the environment switcher: resets the UI and re-runs the whole
-     * accelerated checkout flow against the newly selected environment.
+     * direct checkout flow against the newly selected environment.
      */
     function onEnvironmentChange(env) {
       currentEnvironment = env;
-      console.log("Environment switched to: " + env + ". Reloading accelerated checkout flow...");
+      console.log("Environment switched to: " + env + ". Reloading direct checkout flow...");
 
       // Reset views back to the initial loading state
       document.getElementById("checkout-entry-flows").style.display = "block";
@@ -735,26 +735,26 @@
       document.getElementById("status-badge").style.display = "none";
 
       // Clear any previously rendered Google Pay UI and restore the spinner
-      const container = document.getElementById("gpay-accelerated-checkout-container");
+      const container = document.getElementById("gpay-direct-checkout-container");
       container.style.display = "flex";
       container.innerHTML =
         '<div style="font-size: 0.9rem; color: #5f6368;" id="loading-spinner">Loading Google Pay...</div>';
 
       checkoutClient = null;
-      onGooglePayAcceleratedCheckoutLoaded();
+      onGooglePayDirectCheckoutLoaded();
     }
 
     /**
      * Callback when script loaded
      */
-    async function onGooglePayAcceleratedCheckoutLoaded() {
+    async function onGooglePayDirectCheckoutLoaded() {
       const checkoutRequest = getGooglePaymentDataRequest();
 
       const options = {
         environment: currentEnvironment, // Selected via the env switcher (default TEST)
         acceleratedCheckoutConfig: {
           type: "INLINE",
-          containerId: "gpay-accelerated-checkout-container"
+          containerId: "gpay-direct-checkout-container"
         },
         paymentDataCallbacks: {
           onPaymentAuthorized: onPaymentAuthorized
@@ -764,12 +764,12 @@
 
       try {
         checkoutClient = new google.payments.api.AcceleratedCheckoutClient(options);
-        console.log("AcceleratedCheckoutClient successfully instantiated.");
+        console.log("DirectCheckoutClient successfully instantiated.");
 
         // Step 1: check availability (is the user eligible?)
         const availability = await checkoutClient.isAvailable();
         if (!availability || availability.status !== "SUCCESS") {
-          console.warn("AcceleratedCheckoutClient is not available:", availability);
+          console.warn("DirectCheckoutClient is not available:", availability);
           updateStatus("Direct checkout unavailable. " + UNAVAILABLE_REASONS, "error");
           hideSpinner();
           showCardFallback(); // Fall back to a normal card input form
@@ -777,12 +777,12 @@
         }
 
         // Step 2: load the session
-        console.log("AcceleratedCheckoutClient is available. Loading session...");
+        console.log("DirectCheckoutClient is available. Loading session...");
         const loaded = await checkoutClient.load();
         hideSpinner();
 
         if (loaded.status === "SUCCESS") {
-          console.log("AcceleratedCheckoutClient loaded successfully. Ready for checkout.");
+          console.log("DirectCheckoutClient loaded successfully. Ready for checkout.");
           document.getElementById("status-badge").style.display = "none";
           //updateStatus("Google Pay ready for one-click checkout.", "success");
         } else {
@@ -790,7 +790,7 @@
           updateStatus("Direct checkout was available but failed to load the session. Status: " + (loaded.errorMessage || loaded.status), "error");
         }
       } catch (err) {
-        console.error("AcceleratedCheckoutClient sequence error:", err);
+        console.error("DirectCheckoutClient sequence error:", err);
         hideSpinner();
         updateStatus("Failed to load Google Pay direct checkout session.", "error");
       }
@@ -807,7 +807,7 @@
       console.log("Falling back to manual card input form.");
 
       // Hide the Google Pay target container since it won't render
-      const gpayContainer = document.getElementById("gpay-accelerated-checkout-container");
+      const gpayContainer = document.getElementById("gpay-direct-checkout-container");
       if (gpayContainer) {
         gpayContainer.style.display = "none";
       }
@@ -851,7 +851,7 @@
   </script>
 
   <!-- Load the libraries -->
-  <script async src="https://pay.sandbox.google.com/gp/p/acceleratedcheckout.js" onload="onGooglePayAcceleratedCheckoutLoaded()"></script>
+  <script async src="https://pay.sandbox.google.com/gp/p/acceleratedcheckout.js" onload="onGooglePayDirectCheckoutLoaded()"></script>
   <script async src="https://pay.sandbox.google.com/gp/p/pay.js"></script>
 
 </body>
