@@ -119,6 +119,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: height 0.25s ease, min-height 0.25s ease;
     }
 
     /* Status Notifications */
@@ -759,6 +760,9 @@
         paymentDataCallbacks: {
           onPaymentAuthorized: onPaymentAuthorized
         },
+        checkoutUiCallbacks: {
+          onPaymentSheetResized: onPaymentSheetResized
+        },
         checkoutRequest: checkoutRequest
       };
 
@@ -823,6 +827,30 @@
       // Transition to the success state (demo flow)
       document.getElementById("checkout-entry-flows").style.display = "none";
       document.getElementById("checkout-success-view").style.display = "flex";
+    }
+
+    /**
+     * Handles vertical resizing of the Google Pay Direct Checkout container
+     * when triggered by the paysheet (Option 1 callback).
+     * @param {!Object} resizeData payload containing height and/or heightCss
+     */
+    function onPaymentSheetResized(resizeData) {
+      console.log("onPaymentSheetResized received:", resizeData);
+      if (!resizeData) return;
+
+      const container = document.getElementById("gpay-direct-checkout-container");
+      if (!container) return;
+
+      let newHeightCss = resizeData.heightCss;
+      if (!newHeightCss && typeof resizeData.height === "number") {
+        newHeightCss = resizeData.height + "px";
+      }
+
+      if (newHeightCss) {
+        console.info("Resizing #gpay-direct-checkout-container to: " + newHeightCss);
+        container.style.height = newHeightCss;
+        container.style.minHeight = newHeightCss;
+      }
     }
 
     /**
