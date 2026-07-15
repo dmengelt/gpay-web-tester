@@ -112,15 +112,24 @@
       color: #202124;
     }
 
+    /* Direct Checkout Wrapper Box */
+    .gpay-checkout-box {
+      border: 1px solid #e8eaed;
+      border-radius: 12px;
+      padding: 28px 20px 20px 20px;
+      margin-bottom: 20px;
+      background-color: #ffffff;
+      transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
     /* Direct Checkout Container */
     #gpay-direct-checkout-container {
       width: 100%;
       min-height: 250px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
       transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1), min-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -512,11 +521,14 @@
         <div id="saved-payment-method-container">
           <h3 class="saved-payment-method-title">Saved payment method</h3>
 
-          <!-- Direct Checkout Target Container -->
-          <div id="gpay-direct-checkout-container">
-            <!-- Loading placeholder spinner or text -->
-            <div style="font-size: 0.9rem; color: #5f6368; margin: auto;" id="loading-spinner">
-              Loading Google Pay...
+          <!-- Direct Checkout Box Wrapper -->
+          <div id="gpay-checkout-box" class="gpay-checkout-box">
+            <!-- Direct Checkout Target Container -->
+            <div id="gpay-direct-checkout-container">
+              <!-- Loading placeholder spinner or text -->
+              <div style="font-size: 0.9rem; color: #5f6368; margin: auto;" id="loading-spinner">
+                Loading Google Pay...
+              </div>
             </div>
           </div>
 
@@ -803,6 +815,10 @@
 
 
       // Clear any previously rendered Google Pay UI and restore the spinner
+      const gpayBox = document.getElementById("gpay-checkout-box");
+      if (gpayBox) {
+        gpayBox.style.display = "block";
+      }
       const container = document.getElementById("gpay-direct-checkout-container");
       container.style.display = "flex";
       container.style.height = "";
@@ -885,7 +901,11 @@
         savedContainer.style.display = "none";
       }
 
-      // Hide the Google Pay target container since it won't render
+      // Hide the Google Pay wrapper box and target container since it won't render
+      const gpayBox = document.getElementById("gpay-checkout-box");
+      if (gpayBox) {
+        gpayBox.style.display = "none";
+      }
       const gpayContainer = document.getElementById("gpay-direct-checkout-container");
       if (gpayContainer) {
         gpayContainer.style.display = "none";

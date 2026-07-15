@@ -118,14 +118,16 @@
       padding: 28px 20px 20px 20px;
       margin-bottom: 20px;
       background-color: #ffffff;
+      transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* Direct Checkout Container */
     #gpay-direct-checkout-container {
       width: 100%;
       min-height: 250px;
+      position: relative;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: center;
       overflow: hidden;
       transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1), min-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
