@@ -597,7 +597,7 @@
     <!-- Footer bar: environment switcher + debug link (below container, bottom-right) -->
     <div class="debug-bar">
       <label class="shipping-required-label" style="font-size: 0.75rem; color: #5f6368; display: flex; align-items: center; gap: 4px; cursor: pointer; user-select: none;">
-        <input type="checkbox" id="shipping-required-checkbox" onchange="onShippingRequiredChange()" style="margin: 0; cursor: pointer;">
+        <input type="checkbox" id="shipping-required-checkbox" onchange="onShippingRequiredChange()" checked style="margin: 0; cursor: pointer;">
         Shipping required
       </label>
       <select class="env-switcher" id="env-switcher" onchange="onEnvironmentChange(this.value)" title="Google Pay environment">
@@ -755,7 +755,7 @@
       paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
       
       const shippingCheckbox = document.getElementById("shipping-required-checkbox");
-      if (shippingCheckbox && shippingCheckbox.checked) {
+      if (!shippingCheckbox || shippingCheckbox.checked) {
         paymentDataRequest.shippingAddressRequired = true;
       }
 
