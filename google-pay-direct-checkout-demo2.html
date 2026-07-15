@@ -113,31 +113,20 @@
     }
 
     /* Direct Checkout Container */
-    .gpay-unified-box {
-      background-color: #f7f7f8;
-      border: 1px solid #dadce0;
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
     #gpay-direct-checkout-container {
       width: 100%;
       min-height: 250px;
+      margin-bottom: 20px;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       position: relative;
-      transition: height 0.25s ease, min-height 0.25s ease;
+      overflow: hidden;
+      transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1), min-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    #gpay-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-      position: relative;
-      z-index: 10;
+    #gpay-direct-checkout-container iframe {
+      transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* Saved Payment Method Section */
@@ -523,20 +512,11 @@
         <div id="saved-payment-method-container">
           <h3 class="saved-payment-method-title">Saved payment method</h3>
 
-          <!-- Unified Google Pay Box -->
-          <div class="gpay-unified-box">
-            <!-- Google Pay Header -->
-            <div id="gpay-header">
-              <img src="https://developers.google.com/static/pay/api/images/brand-guidelines/google-pay-mark.png" alt="Google Pay" style="height: 24px; width: auto; vertical-align: middle;">
-              <span style="font-size: 1.2rem; font-weight: 500; color: #202124; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; vertical-align: middle;">Google Pay</span>
-            </div>
-
-            <!-- Direct Checkout Target Container -->
-            <div id="gpay-direct-checkout-container">
-              <!-- Loading placeholder spinner or text -->
-              <div style="font-size: 0.9rem; color: #5f6368;" id="loading-spinner">
-                Loading Google Pay...
-              </div>
+          <!-- Direct Checkout Target Container -->
+          <div id="gpay-direct-checkout-container">
+            <!-- Loading placeholder spinner or text -->
+            <div style="font-size: 0.9rem; color: #5f6368; margin: auto;" id="loading-spinner">
+              Loading Google Pay...
             </div>
           </div>
 
@@ -820,17 +800,15 @@
         savedContainer.style.display = "block";
       }
 
-      // Restore Google Pay header
-      const gpayHeader = document.getElementById("gpay-header");
-      if (gpayHeader) {
-        gpayHeader.style.display = "flex";
-      }
+
 
       // Clear any previously rendered Google Pay UI and restore the spinner
       const container = document.getElementById("gpay-direct-checkout-container");
       container.style.display = "flex";
+      container.style.height = "";
+      container.style.minHeight = "";
       container.innerHTML =
-        '<div style="font-size: 0.9rem; color: #5f6368;" id="loading-spinner">Loading Google Pay...</div>';
+        '<div style="font-size: 0.9rem; color: #5f6368; margin: auto;" id="loading-spinner">Loading Google Pay...</div>';
 
       checkoutClient = null;
       onGooglePayDirectCheckoutLoaded();
@@ -913,11 +891,7 @@
         gpayContainer.style.display = "none";
       }
 
-      // Hide the Google Pay brand header
-      const gpayHeader = document.getElementById("gpay-header");
-      if (gpayHeader) {
-        gpayHeader.style.display = "none";
-      }
+
     }
 
     /**
