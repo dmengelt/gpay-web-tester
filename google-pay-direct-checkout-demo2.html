@@ -717,8 +717,28 @@
     // Direct checkout clients
     let checkoutClient = null;
 
-    // Currently selected Google Pay environment (SANDBOX | TEST | PRODUCTION), changed via the env switcher
-    let currentEnvironment = "TEST";
+    // Automatically default to EMULATOR environment if served from localhost
+    const isLocalhost = Boolean(
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1" ||
+      window.location.hostname === "[::1]" ||
+      window.location.hostname.endsWith(".localhost")
+    );
+
+    // Currently selected Google Pay environment (SANDBOX | TEST | PRODUCTION | EMULATOR), changed via the env switcher
+    let currentEnvironment = isLocalhost ? "EMULATOR" : "TEST";
+
+    if (isLocalhost) {
+      const envSelect = document.getElementById("env-switcher");
+      if (envSelect) {
+        envSelect.value = "EMULATOR";
+        const testOption = envSelect.querySelector('option[value="TEST"]');
+        if (testOption) {
+          testOption.disabled = true;
+        }
+      }
+      console.log("Page served from localhost: Automatically switched environment to EMULATOR.");
+    }
 
     // Common reasons direct checkout may be unavailable (shown in the debug console)
     const UNAVAILABLE_REASONS =
