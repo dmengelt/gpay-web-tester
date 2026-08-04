@@ -596,8 +596,8 @@
       </label>
       <select class="env-switcher" id="env-switcher" onchange="onEnvironmentChange(this.value)" title="Google Pay environment">
         <option value="SANDBOX">SANDBOX</option>
-        <option value="TEST" selected>TEST</option>
-        <option value="PRODUCTION">PRODUCTION</option>
+        <option value="TEST">TEST</option>
+        <option value="PRODUCTION" selected>PRODUCTION</option>
         <option value="EMULATOR">🧪 Emulator</option>
       </select>
       <a class="debug-link" onclick="toggleDebugOverlay(true)">🐛 Debug</a>
@@ -727,7 +727,7 @@
     );
 
     // Currently selected Google Pay environment (SANDBOX | TEST | PRODUCTION | EMULATOR), changed via the env switcher
-    let currentEnvironment = isLocalhost ? "EMULATOR" : "TEST";
+    let currentEnvironment = isLocalhost ? "EMULATOR" : "PRODUCTION";
 
     if (isLocalhost) {
       const envSelect = document.getElementById("env-switcher");
@@ -861,7 +861,7 @@
       const checkoutRequest = getGooglePaymentDataRequest();
 
       const options = {
-        environment: currentEnvironment, // Selected via the env switcher (default TEST)
+        environment: currentEnvironment, // Selected via the env switcher (default PRODUCTION)
         acceleratedCheckoutConfig: {
           type: "INLINE",
           containerId: "gpay-direct-checkout-container"
