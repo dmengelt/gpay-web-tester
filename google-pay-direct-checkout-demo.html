@@ -221,6 +221,7 @@
       border: 1px solid #dadce0;
       margin-top: 8px;
       max-height: 200px;
+      text-align: left;
     }
 
     /* Fallback card form */
@@ -513,11 +514,7 @@
           </form>
         </div>
 
-        <!-- Collapsible Developer Details -->
-        <details class="payload-details" id="debug-payload-section" style="display: none;">
-          <summary>View Decryptable Payment Token Payload</summary>
-          <pre id="payload-content"></pre>
-        </details>
+        </div>
       </div>
 
       <!-- Checkout Success Screen -->
@@ -530,6 +527,12 @@
         <button onclick="window.location.reload();" style="background-color: #1a73e8; color: white; border: none; padding: 10px 20px; border-radius: 4px; font-weight: 500; cursor: pointer;">
           Buy Again
         </button>
+
+        <!-- Collapsible Developer Details -->
+        <details class="payload-details" id="debug-payload-section" style="display: none;">
+          <summary>View Decryptable Payment Token Payload</summary>
+          <pre id="payload-content"></pre>
+        </details>
       </div>
     </div>
   </div>
