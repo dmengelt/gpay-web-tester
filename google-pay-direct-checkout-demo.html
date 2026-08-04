@@ -714,7 +714,8 @@
     function getGooglePaymentDataRequest() {
       const paymentDataRequest = Object.assign({}, baseRequest);
       paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
-      
+      paymentDataRequest.allowedPaymentMethods[0].parameters.assuranceDetailsRequired = true;
+
       const shippingCheckbox = document.getElementById("shipping-required-checkbox");
       if (shippingCheckbox && shippingCheckbox.checked) {
         paymentDataRequest.shippingAddressRequired = true;
