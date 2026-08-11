@@ -129,13 +129,15 @@
       min-height: 250px;
       position: relative;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       overflow: hidden;
       transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1), min-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     #gpay-direct-checkout-container iframe {
+      align-self: flex-start;
+      margin-top: 0;
       transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -528,7 +530,7 @@
             <!-- Direct Checkout Target Container -->
             <div id="gpay-direct-checkout-container">
               <!-- Loading placeholder spinner or text -->
-              <div style="font-size: 0.9rem; color: #5f6368; margin: auto;" id="loading-spinner">
+              <div style="font-size: 0.9rem; color: #5f6368; margin: 32px auto 0 auto;" id="loading-spinner">
                 Loading Google Pay...
               </div>
             </div>
