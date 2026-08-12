@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyStore - Checkout</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation / Header */
+    .store-header {
+      width: 100%;
+      border-bottom: 1px solid #f1f5f9;
+      background-color: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .brand-logo {
+      font-family: 'Caveat', 'Brush Script MT', cursive;
+      font-size: 34px;
+      font-weight: 700;
+      color: #0f172a;
+      text-decoration: none;
+      user-select: none;
+      letter-spacing: -0.01em;
+    }
+
+    .cart-wrapper {
+      position: absolute;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #0284c7;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    /* Page Main Container */
+    .main-wrapper {
+      flex: 1;
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 24px 80px 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #0f172a;
+      text-align: center;
+      margin: 0 0 44px 0;
+      letter-spacing: -0.02em;
+    }
+
+    /* Two-column Layout */
+    .checkout-columns {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    @media (max-width: 820px) {
+      .checkout-columns {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      .main-wrapper {
+        padding: 24px 16px 60px 16px;
+      }
+    }
+
+    /* Left Column: Payment Methods */
+    .payment-column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    /* Direct Checkout Wrapper Box */
+    .gpay-checkout-box {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 0;
+      margin-bottom: 24px;
+      background-color: #ffffff;
+      overflow: hidden;
+      transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Direct Checkout Target Container */
+    #gpay-direct-checkout-container {
+      width: 100%;
+      min-height: 250px;
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      overflow: hidden;
+      transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1), min-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #gpay-direct-checkout-container iframe {
+      align-self: flex-start;
+      margin-top: 0;
+      transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .more-options-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 8px 0 16px 0;
+    }
+
+    /* Payment Option Rows */
+    .payment-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .payment-card-option {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 16px 20px;
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: default;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .payment-card-option:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .option-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .option-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: #0f172a;
+    }
+
+    .option-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Brand Logos and Badges */
+    .payment-icon-img {
+      height: 20px;
+      width: auto;
+      max-height: 22px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .card-logo-img {
+      height: 18px;
+      width: auto;
+      max-height: 20px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .badge-counter {
+      background-color: #f1f5f9;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    /* Right Column: Order Summary */
+    .summary-column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .summary-divider {
+      border: none;
+      border-top: 1px solid #f1f5f9;
+      margin: 16px 0;
+    }
+
+    .order-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 4px 0;
+    }
+
+    .order-item-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .order-item-thumb {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      border-radius: 6px;
+      background-color: #f8fafc;
+      padding: 4px;
+    }
+
+    .order-item-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    .order-item-price {
+      font-size: 15px;
+      font-weight: 500;
+      color: #475569;
+    }
+
+    .order-total-container {
+      display: flex;
+      justify-content: flex-end;
+      align-items: baseline;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .order-total-label {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .order-total-val {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    /* Fallback Card Form */
+    #card-fallback-form {
+      margin-top: 16px;
+      padding: 20px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      background-color: #f8fafc;
+    }
+
+    .fallback-note {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-top: 0;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 8px;
+      line-height: 1.4;
+    }
+
+    .card-field {
+      margin-bottom: 12px;
+    }
+
+    .card-field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+
+    .card-field input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #ffffff;
+    }
+
+    .card-field-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .submit-card-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #0f172a;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background-color 0.2s;
+    }
+
+    .submit-card-btn:hover {
+      background-color: #1e293b;
+    }
+
+    /* Success View */
+    .success-view {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 40px 20px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background-color: #dcfce7;
+      color: #16a34a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+
+    .success-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 8px 0;
+    }
+
+    .success-message {
+      font-size: 0.95rem;
+      color: #64748b;
+      margin: 0 0 24px 0;
+      max-width: 440px;
+    }
+
+    .buy-again-btn {
+      background-color: #0f172a;
+      color: #ffffff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .payload-details {
+      margin-top: 24px;
+      width: 100%;
+      text-align: left;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 12px;
+      background: #f8fafc;
+    }
+
+    .payload-details summary {
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    .payload-details pre {
+      font-size: 0.75rem;
+      margin-top: 10px;
+      overflow-x: auto;
+      color: #0f172a;
+    }
+
+    /* Page Footer */
+    .store-footer {
+      width: 100%;
+      border-top: 1px solid #f1f5f9;
+      background-color: #ffffff;
+      padding: 24px 0;
+      margin-top: auto;
+    }
+
+    .footer-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-copyright {
+      font-size: 14px;
+      color: #64748b;
+    }
+
+    .country-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 6px 12px;
+      background-color: #ffffff;
+      color: #111827;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .country-selector:hover {
+      border-color: #9ca3af;
+    }
+
+    .flag-icon {
+      width: 18px;
+      height: 12px;
+      border-radius: 2px;
+      display: inline-block;
+      box-shadow: 0 0 1px rgba(0,0,0,0.3);
+    }
+
+    /* Floating Debug Bar */
+    .debug-bar {
+      position: fixed;
+      bottom: 12px;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 6px 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      backdrop-filter: blur(8px);
+      z-index: 99;
+    }
+
+    .shipping-required-label {
+      font-size: 0.75rem;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .env-switcher {
+      font-size: 0.75rem;
+      padding: 3px 6px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      background: #ffffff;
+      color: #334155;
+      cursor: pointer;
+    }
+
+    .debug-link {
+      font-size: 0.75rem;
+      color: #64748b;
+      cursor: pointer;
+      text-decoration: none;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    .debug-link:hover {
+      background-color: #f1f5f9;
+      color: #0f172a;
+    }
+
+    /* Debug Console Overlay */
+    .debug-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .debug-panel {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      font-family: monospace;
+      font-size: 0.8rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 800px;
+      height: 70%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .debug-header {
+      background: #2d2d2d;
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #3e3e3e;
+    }
+
+    .debug-header h3 {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #fff;
+    }
+
+    .debug-header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .debug-btn {
+      background: #3e3e3e;
+      border: none;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.75rem;
+    }
+
+    .debug-btn:hover {
+      background: #4e4e4e;
+    }
+
+    .debug-output {
+      flex: 1;
+      padding: 12px 16px;
+      overflow-y: auto;
+    }
+
+    .debug-line {
+      margin-bottom: 4px;
+      line-height: 1.4;
+      word-break: break-all;
+    }
+
+    .debug-line.debug-log { color: #cccccc; }
+    .debug-line.debug-info { color: #58a6ff; }
+    .debug-line.debug-warn { color: #e3b341; }
+    .debug-line.debug-error { color: #f85149; }
+    .debug-time { color: #6e7681; margin-right: 8px; font-size: 0.75rem; }
+    .debug-empty { color: #6e7681; font-style: italic; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header Navigation -->
+  <header class="store-header">
+    <div class="header-inner">
+      <a href="#" class="brand-logo">MyStore.</a>
+      <div class="cart-wrapper" title="Shopping Cart">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span class="cart-badge">2</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Checkout Content -->
+  <main class="main-wrapper">
+    <h1 class="page-title">Checkout</h1>
+
+    <!-- Success View -->
+    <div class="success-view" id="checkout-success-view">
+      <div class="success-icon">✓</div>
+      <h2 class="success-title">Order Confirmed!</h2>
+      <p class="success-message">Thank you for your purchase from MyStore. A confirmation email with order details has been sent.</p>
+      <button class="buy-again-btn" onclick="window.location.reload();">Buy Again</button>
+
+      <details class="payload-details" id="debug-payload-section" style="display: none;">
+        <summary>View Decryptable Payment Token Payload</summary>
+        <pre id="payload-content"></pre>
+      </details>
+    </div>
+
+    <!-- Active Checkout Flow -->
+    <div class="checkout-columns" id="checkout-entry-flows">
+      
+      <!-- Left Column: Payment Selection -->
+      <section class="payment-column">
+        <div class="section-label">SAVED PAYMENT METHODS</div>
+
+        <!-- Google Pay Direct Checkout Box -->
+        <div id="gpay-checkout-box" class="gpay-checkout-box">
+          <div id="gpay-direct-checkout-container"></div>
+        </div>
+
+        <div id="status-badge" class="status-alert" style="display: none;">
+          Initializing Google Pay Direct Checkout...
+        </div>
+
+        <!-- Fallback Card Form (hidden until Google Pay is unavailable) -->
+        <div id="card-fallback-form" style="display: none;">
+          <p class="fallback-note"><span>ℹ️</span><span>Google Pay Direct Checkout not available. Falling back to a standard card form.</span></p>
+          <form onsubmit="handleCardSubmit(event)">
+            <div class="card-field">
+              <label for="card-number">Card number</label>
+              <input type="text" id="card-number" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" maxlength="19" required>
+            </div>
+            <div class="card-field-row">
+              <div class="card-field" style="flex: 1;">
+                <label for="card-expiry">Expiry</label>
+                <input type="text" id="card-expiry" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5" required>
+              </div>
+              <div class="card-field" style="flex: 1;">
+                <label for="card-cvc">CVC</label>
+                <input type="text" id="card-cvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4" required>
+              </div>
+            </div>
+            <button type="submit" class="submit-card-btn">Pay $48.98</button>
+          </form>
+        </div>
+
+        <!-- More Payment Options Section -->
+        <h3 class="more-options-title">More payment options</h3>
+        <div class="payment-options-list">
+          
+          <!-- Cards -->
+          <div class="payment-card-option">
+            <div class="option-left">
+              <img src="https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/card.svg" alt="Cards" class="payment-icon-img">
+              <span class="option-title">Cards</span>
+            </div>
+            <div class="option-right">
+              <img src="https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/amex.svg" alt="Amex" class="card-logo-img">
+              <img src="https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/mc.svg" alt="Mastercard" class="card-logo-img">
+              <img src="https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/visa.svg" alt="Visa" class="card-logo-img">
+              <span class="badge-counter">+ 5</span>
+            </div>
+          </div>
+
+          <!-- PayPal -->
+          <div class="payment-card-option">
+            <div class="option-left">
+              <img src="https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/paypal.svg" alt="PayPal" class="payment-icon-img">
+              <span class="option-title">PayPal</span>
+            </div>
+          </div>
+
+          <!-- Klarna -->
+          <div class="payment-card-option">
+            <div class="option-left">
+              <img src="https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/klarna_account.svg" alt="Klarna" class="payment-icon-img">
+              <span class="option-title">Pay over time with Klarna.</span>
+            </div>
+          </div>
+
+          <!-- Pay by Bank -->
+          <div class="payment-card-option">
+            <div class="option-left">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+              <span class="option-title">Pay by Bank</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Right Column: Order Summary -->
+      <section class="summary-column">
+        <div class="section-label">ORDER SUMMARY</div>
+        
+        <hr class="summary-divider">
+
+        <!-- Product 1: Polo shirt -->
+        <div class="order-item-row">
+          <div class="order-item-left">
+            <img src="https://www.mystoredemo.io/1689f3f40b292d1de2c6.png" alt="Polo shirt" class="order-item-thumb">
+            <span class="order-item-name">Polo shirt</span>
+          </div>
+          <span class="order-item-price">$24.99</span>
+        </div>
+
+        <hr class="summary-divider">
+
+        <!-- Product 2: Joypad -->
+        <div class="order-item-row">
+          <div class="order-item-left">
+            <img src="https://www.mystoredemo.io/6df62995d39927d21ba1.png" alt="Joypad" class="order-item-thumb">
+            <span class="order-item-name">Joypad</span>
+          </div>
+          <span class="order-item-price">$23.99</span>
+        </div>
+
+        <hr class="summary-divider">
+
+        <!-- Order Total -->
+        <div class="order-total-container">
+          <span class="order-total-label">Total:</span>
+          <span class="order-total-val">$48.98</span>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Page Footer -->
+  <footer class="store-footer">
+    <div class="footer-inner">
+      <div class="footer-copyright">© 2026 MyStore</div>
+      <div class="country-selector" title="Select Country / Region">
+        <svg class="flag-icon" viewBox="0 0 7410 3900">
+          <rect width="7410" height="3900" fill="#b22234"/>
+          <path d="M0,450H7410M0,1050H7410M0,1650H7410M0,2250H7410M0,2850H7410M0,3450H7410" stroke="#fff" stroke-width="300"/>
+          <rect width="2964" height="2100" fill="#3c3b6e"/>
+        </svg>
+        <span>United States</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Debug Controls -->
+  <div class="debug-bar">
+    <label class="shipping-required-label">
+      <input type="checkbox" id="shipping-required-checkbox" onchange="onShippingRequiredChange()" style="margin: 0; cursor: pointer;">
+      Shipping required
+    </label>
+    <select class="env-switcher" id="env-switcher" onchange="onEnvironmentChange(this.value)" title="Google Pay environment">
+      <option value="SANDBOX">SANDBOX</option>
+      <option value="TEST">TEST</option>
+      <option value="PRODUCTION" selected>PRODUCTION</option>
+      <option value="EMULATOR">🧪 Emulator</option>
+    </select>
+    <a class="debug-link" onclick="toggleDebugOverlay(true)">🐛 Debug</a>
+  </div>
+
+  <!-- Debug Console Overlay -->
+  <div class="debug-overlay" id="debug-overlay">
+    <div class="debug-panel">
+      <div class="debug-header">
+        <h3>🐛 Console Output</h3>
+        <div class="debug-header-actions">
+          <button class="debug-btn" onclick="debugLog.length = 0; renderDebugLog();">Clear</button>
+          <button class="debug-btn" onclick="toggleDebugOverlay(false)">Close</button>
+        </div>
+      </div>
+      <div class="debug-output" id="debug-console-output"></div>
+    </div>
+  </div>
+
+  <!-- Google Pay Direct Checkout Scripts -->
+  <script>
+    // --- Debug console capture ---
+    const debugLog = [];
+
+    function renderDebugLog() {
+      const output = document.getElementById("debug-console-output");
+      if (!output) return;
+      if (debugLog.length === 0) {
+        output.innerHTML = '<div class="debug-empty">No console messages yet.</div>';
+        return;
+      }
+      output.innerHTML = debugLog.map(function (entry) {
+        return '<div class="debug-line debug-' + entry.type + '">' +
+          '<span class="debug-time">' + entry.time + '</span>' +
+          '<span class="debug-msg">' + entry.message + '</span>' +
+          '</div>';
+      }).join("");
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function captureConsole(type, args) {
+      const message = Array.prototype.map.call(args, function (arg) {
+        if (typeof arg === "object" && arg !== null) {
+          try {
+            return JSON.stringify(arg, null, 2);
+          } catch (e) {
+            return String(arg);
+          }
+        }
+        return String(arg);
+      }).join(" ");
+
+      const now = new Date();
+      const time = now.toTimeString().split(" ")[0] + "." +
+        String(now.getMilliseconds()).padStart(3, "0");
+
+      debugLog.push({ type: type, message: escapeHtml(message), time: time });
+      renderDebugLog();
+    }
+
+    ["log", "warn", "error", "info"].forEach(function (method) {
+      const original = console[method];
+      console[method] = function () {
+        captureConsole(method, arguments);
+        original.apply(console, arguments);
+      };
+    });
+
+    window.addEventListener("error", function (e) {
+      captureConsole("error", [e.message + " (" + e.filename + ":" + e.lineno + ")"]);
+    });
+
+    function toggleDebugOverlay(show) {
+      const overlay = document.getElementById("debug-overlay");
+      if (!overlay) return;
+      overlay.style.display = show ? "flex" : "none";
+      if (show) renderDebugLog();
+    }
+
+    // Base request configurations
+    const baseRequest = {
+      apiVersion: 2,
+      apiVersionMinor: 0,
+    };
+
+    const allowedCardNetworks = ["AMEX", "DISCOVER", "JCB", "MASTERCARD", "VISA"];
+    const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
+
+    const tokenizationSpecification = {
+      type: "PAYMENT_GATEWAY",
+      parameters: {
+        gateway: "arianev2",
+        gatewayMerchantId: "ariane2GatewayMerchantId",
+      },
+    };
+
+    const baseCardPaymentMethod = {
+      type: "CARD",
+      parameters: {
+        allowedAuthMethods: allowedCardAuthMethods,
+        allowedCardNetworks: allowedCardNetworks,
+      },
+    };
+
+    const cardPaymentMethod = Object.assign({}, baseCardPaymentMethod, {
+      tokenizationSpecification: tokenizationSpecification,
+    });
+
+    let checkoutClient = null;
+
+    const isLocalhost = Boolean(
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1" ||
+      window.location.hostname === "[::1]" ||
+      window.location.hostname.endsWith(".localhost")
+    );
+
+    let currentEnvironment = isLocalhost ? "EMULATOR" : "PRODUCTION";
+
+    if (isLocalhost) {
+      const envSelect = document.getElementById("env-switcher");
+      if (envSelect) {
+        envSelect.value = "EMULATOR";
+        const testOption = envSelect.querySelector('option[value="TEST"]');
+        if (testOption) {
+          testOption.disabled = true;
+        }
+      }
+      console.log("Page served from localhost: Automatically switched environment to EMULATOR.");
+    }
+
+    const UNAVAILABLE_REASONS =
+      "\nReasons might be:" +
+      "\n  • User not logged in to Google" +
+      "\n  • User logged in to Google but no existing payment method" +
+      "\n  • Browser not supported" +
+      "\n  • Browser does not allow cross-site tracking" +
+      "\n  • You are in incognito mode" +
+      "\n  • This page is served from localhost";
+
+    function updateStatus(message, type) {
+      if (type === "error") {
+        console.error(message);
+      } else {
+        console.log(message);
+      }
+    }
+
+    function getGooglePaymentDataRequest() {
+      const paymentDataRequest = Object.assign({}, baseRequest);
+      paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
+      paymentDataRequest.allowedPaymentMethods[0].parameters.assuranceDetailsRequired = true;
+
+      const shippingCheckbox = document.getElementById("shipping-required-checkbox");
+      if (shippingCheckbox && shippingCheckbox.checked) {
+        paymentDataRequest.shippingAddressRequired = true;
+      }
+
+      paymentDataRequest.merchantInfo = {
+        merchantId: currentEnvironment === "SANDBOX" ? "BCR2DN6TXDBYXAJ7" : "14697717800897553235",
+        merchantName: "MyStore",
+      };
+      paymentDataRequest.callbackIntents = ["PAYMENT_AUTHORIZATION"];
+      paymentDataRequest.transactionInfo = {
+        currencyCode: "USD",
+        totalPriceStatus: "FINAL",
+        totalPrice: "48.98",
+        displayItems: [
+          {
+            label: "Polo shirt",
+            type: "LINE_ITEM",
+            price: "24.99"
+          },
+          {
+            label: "Joypad",
+            type: "LINE_ITEM",
+            price: "23.99"
+          }
+        ]
+      };
+
+      paymentDataRequest.i = {
+        disableNgbf: false,
+        productType: "ACCELERATED_CHECKOUT"
+      };
+
+      return paymentDataRequest;
+    }
+
+    function onShippingRequiredChange() {
+      const isRequired = document.getElementById("shipping-required-checkbox").checked;
+      console.log("Shipping required changed to: " + isRequired + ". Reloading direct checkout flow...");
+      onEnvironmentChange(currentEnvironment);
+    }
+
+    function onEnvironmentChange(env) {
+      currentEnvironment = env;
+      console.log("Environment switched to: " + env + ". Reloading direct checkout flow...");
+
+      document.getElementById("checkout-entry-flows").style.display = "grid";
+      document.getElementById("checkout-success-view").style.display = "none";
+      document.getElementById("card-fallback-form").style.display = "none";
+      document.getElementById("debug-payload-section").style.display = "none";
+      document.getElementById("status-badge").style.display = "none";
+
+      const gpayBox = document.getElementById("gpay-checkout-box");
+      if (gpayBox) {
+        gpayBox.style.display = "block";
+      }
+      const container = document.getElementById("gpay-direct-checkout-container");
+      container.style.display = "flex";
+      container.style.height = "";
+      container.style.minHeight = "";
+      container.innerHTML = "";
+
+      checkoutClient = null;
+      onGooglePayDirectCheckoutLoaded();
+    }
+
+    async function onGooglePayDirectCheckoutLoaded() {
+      const checkoutRequest = getGooglePaymentDataRequest();
+
+      const options = {
+        environment: currentEnvironment,
+        acceleratedCheckoutConfig: {
+          type: "INLINE",
+          containerId: "gpay-direct-checkout-container"
+        },
+        paymentDataCallbacks: {
+          onPaymentAuthorized: onPaymentAuthorized
+        },
+        checkoutUiCallbacks: {
+          onPaymentSheetResized: onPaymentSheetResized
+        },
+        checkoutRequest: checkoutRequest
+      };
+
+      try {
+        checkoutClient = new google.payments.api.AcceleratedCheckoutClient(options);
+        console.log("DirectCheckoutClient successfully instantiated.");
+
+        const availability = await checkoutClient.isAvailable();
+        if (!availability || availability.status !== "SUCCESS") {
+          console.warn("DirectCheckoutClient is not available:", availability);
+          updateStatus("Direct checkout unavailable. " + UNAVAILABLE_REASONS, "error");
+          showCardFallback();
+          return;
+        }
+
+        console.log("DirectCheckoutClient is available. Loading session...");
+        const loaded = await checkoutClient.load();
+
+        if (loaded.status === "SUCCESS") {
+          console.log("DirectCheckoutClient loaded successfully. Ready for checkout.");
+          document.getElementById("status-badge").style.display = "none";
+        } else {
+          console.warn("Client loaded but status is: ", loaded.status);
+          updateStatus("Direct checkout was available but failed to load the session. Status: " + (loaded.errorMessage || loaded.status), "error");
+        }
+      } catch (err) {
+        console.error("DirectCheckoutClient sequence error:", err);
+        updateStatus("Failed to load Google Pay direct checkout session.", "error");
+      }
+    }
+
+    function showCardFallback() {
+      const form = document.getElementById("card-fallback-form");
+      if (form) {
+        form.style.display = "block";
+      }
+      console.log("Revealing card fallback form.");
+
+      const gpayBox = document.getElementById("gpay-checkout-box");
+      if (gpayBox) {
+        gpayBox.style.display = "none";
+      }
+      const gpayContainer = document.getElementById("gpay-direct-checkout-container");
+      if (gpayContainer) {
+        gpayContainer.style.display = "none";
+      }
+    }
+
+    function handleCardSubmit(event) {
+      event.preventDefault();
+      console.log("Card form submitted. Processing payment...");
+
+      document.getElementById("checkout-entry-flows").style.display = "none";
+      document.getElementById("checkout-success-view").style.display = "flex";
+    }
+
+    function onPaymentSheetResized(resizeData) {
+      console.log("onPaymentSheetResized received:", resizeData);
+      if (!resizeData) return;
+
+      const container = document.getElementById("gpay-direct-checkout-container");
+      if (!container) return;
+
+      let newHeightCss = resizeData.heightCss;
+      if (!newHeightCss && typeof resizeData.height === "number") {
+        newHeightCss = resizeData.height + "px";
+      }
+
+      if (newHeightCss) {
+        console.info("Resizing #gpay-direct-checkout-container to: " + newHeightCss);
+        container.style.height = newHeightCss;
+        container.style.minHeight = newHeightCss;
+      }
+    }
+
+    function onPaymentAuthorized(paymentData) {
+      console.log("onPaymentAuthorized received:", paymentData);
+      
+      const debugSection = document.getElementById("debug-payload-section");
+      const preElement = document.getElementById("payload-content");
+      preElement.textContent = JSON.stringify(paymentData, null, 2);
+      debugSection.style.display = "block";
+
+      return new Promise(function(resolve, reject) {
+        setTimeout(() => {
+          document.getElementById("checkout-entry-flows").style.display = "none";
+          document.getElementById("checkout-success-view").style.display = "flex";
+          
+          resolve({ transactionState: 'SUCCESS' });
+        }, 800);
+      });
+    }
+  </script>
+
+  <!-- Load Google Pay libraries -->
+  <script async src="https://pay.sandbox.google.com/gp/p/acceleratedcheckout.js" onload="onGooglePayDirectCheckoutLoaded()"></script>
+  <script async src="https://pay.sandbox.google.com/gp/p/pay.js"></script>
+
+</body>
+</html>
