@@ -117,10 +117,26 @@
       border: 1px solid #e8eaed;
       border-radius: 12px;
       padding: 0;
-      margin-bottom: 20px;
+      margin: 0 0 16px 0;
       background-color: #ffffff;
       overflow: hidden;
-      transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      max-height: 600px;
+      opacity: 1;
+      transform: translateY(0);
+      transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  margin 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.4s ease,
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .gpay-checkout-box.is-collapsed {
+      max-height: 0 !important;
+      opacity: 0;
+      margin: 0;
+      border-color: transparent;
+      transform: translateY(-8px);
+      pointer-events: none;
     }
 
     /* Direct Checkout Container */
@@ -149,24 +165,146 @@
 
     .saved-payment-method-title {
       font-size: 1.15rem;
-      font-weight: 500;
+      font-weight: 600;
       margin-top: 0;
-      margin-bottom: 24px;
-      color: #202124;
+      margin-bottom: 20px;
+      color: #111827;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
-    .mastercard-payment-option {
+    /* Collapsed Google Pay option */
+    .gpay-collapsed-option {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 16px;
+      gap: 14px;
+      padding: 0 20px;
+      max-height: 0;
+      opacity: 0;
+      margin: 0;
+      overflow: hidden;
       background-color: #ffffff;
-      border: 1px solid #dadce0;
+      border: 0 solid #d1d5db;
       border-radius: 8px;
-      margin-top: 15px;
-      margin-bottom: 20px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      cursor: pointer;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  padding 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  margin 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-width 0.4s ease,
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.2s ease,
+                  box-shadow 0.2s ease;
+      user-select: none;
+    }
+
+    .gpay-collapsed-option.is-active {
+      max-height: 80px;
+      opacity: 1;
+      padding: 16px 20px;
+      margin: 0 0 16px 0;
+      border-width: 1px;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .gpay-collapsed-option.is-active:hover {
+      border-color: #9ca3af;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .gpay-mark-logo {
+      height: 28px;
+      width: auto;
+      vertical-align: middle;
+      border-radius: 4px;
+    }
+
+    .saved-method-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #111827;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* Collapsed Mastercard option */
+    .mastercard-collapsed-option {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      max-height: 80px;
+      opacity: 1;
+      margin: 0;
+      background-color: #ffffff;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      cursor: pointer;
+      overflow: hidden;
+      transform: translateY(0);
+      transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  padding 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  margin 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-width 0.4s ease,
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.2s ease,
+                  box-shadow 0.2s ease;
+      user-select: none;
+    }
+
+    .mastercard-collapsed-option.is-hidden {
+      max-height: 0;
+      opacity: 0;
+      padding: 0 20px;
+      margin: 0;
+      border-width: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+    }
+
+    .mastercard-collapsed-option:hover {
+      border-color: #9ca3af;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Expanded Mastercard Option */
+    .mastercard-expanded-option {
+      background-color: #ffffff;
+      border: 0 solid #cbd5e1;
+      border-radius: 8px;
+      padding: 0 20px;
+      max-height: 0;
+      opacity: 0;
+      margin: 0;
+      overflow: hidden;
+      transform: translateY(-8px);
+      pointer-events: none;
+      transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  padding 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  margin 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-width 0.4s ease,
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.4s ease;
+    }
+
+    .mastercard-expanded-option.is-expanded {
+      max-height: 500px;
+      opacity: 1;
+      padding: 20px;
+      margin: 0;
+      border-width: 1px;
+      transform: translateY(0);
+      pointer-events: auto;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    }
+
+    .mastercard-expanded-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
     }
 
     .mastercard-logo {
@@ -177,9 +315,103 @@
 
     .mastercard-text {
       font-size: 1rem;
-      font-weight: 500;
-      color: #3c4043;
+      font-weight: 600;
+      color: #111827;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .mastercard-subtext {
+      font-size: 0.85rem;
+      color: #4b5563;
+      margin: 14px 0 16px 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .mastercard-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .mastercard-field-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mastercard-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 6px;
+    }
+
+    .mastercard-input {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      color: #111827;
+      background: #ffffff;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .mastercard-input:focus {
+      border-color: #0f172a;
+      box-shadow: 0 0 0 1px #0f172a;
+    }
+
+    .mastercard-input-disabled {
+      background-color: #f3f4f6;
+      color: #6b7280;
+      border-color: #d1d5db;
+      cursor: not-allowed;
+    }
+
+    .mastercard-cvv-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .mastercard-cvv-wrapper input {
+      padding-right: 38px;
+    }
+
+    .mastercard-cvv-icon {
+      position: absolute;
+      right: 10px;
+      pointer-events: none;
+    }
+
+    .mastercard-hint {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    .mastercard-pay-btn {
+      width: 100%;
+      margin-top: 20px;
+      background-color: #031427;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      padding: 13px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.2s;
+    }
+
+    .mastercard-pay-btn:hover {
+      background-color: #0f233a;
     }
 
     /* Status Notifications */
@@ -525,16 +757,59 @@
         <div id="saved-payment-method-container">
           <h3 class="saved-payment-method-title">Saved payment methods</h3>
 
-          <!-- Direct Checkout Box Wrapper -->
+          <!-- Google Pay Collapsed Option (shown when Mastercard is expanded) -->
+          <div id="gpay-collapsed-option" class="gpay-collapsed-option" onclick="selectSavedPaymentMethod('gpay')">
+            <img src="https://developers.google.com/static/pay/api/images/brand-guidelines/google-pay-mark.png" alt="Google Pay" class="gpay-mark-logo">
+            <span class="saved-method-name">Google Pay</span>
+          </div>
+
+          <!-- Direct Checkout Box Wrapper (Expanded Google Pay) -->
           <div id="gpay-checkout-box" class="gpay-checkout-box">
             <!-- Direct Checkout Target Container -->
             <div id="gpay-direct-checkout-container"></div>
           </div>
 
-          <!-- Mastercard Option -->
-          <div class="mastercard-payment-option">
+          <!-- Mastercard Collapsed Option (shown when Google Pay is expanded) -->
+          <div id="mastercard-collapsed-option" class="mastercard-collapsed-option" onclick="selectSavedPaymentMethod('mastercard')">
             <img src="https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/mc_voucher_br.svg" alt="Mastercard" class="mastercard-logo">
             <span class="mastercard-text">•••• 0002</span>
+          </div>
+
+          <!-- Mastercard Expanded Option (shown when Mastercard is clicked) -->
+          <div id="mastercard-expanded-option" class="mastercard-expanded-option">
+            <div class="mastercard-expanded-header">
+              <img src="https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/mc_voucher_br.svg" alt="Mastercard" class="mastercard-logo">
+              <span class="mastercard-text">•••• 0002</span>
+            </div>
+            <p class="mastercard-subtext">All fields are required unless marked otherwise.</p>
+            <form onsubmit="handleMastercardSubmit(event)">
+              <div class="mastercard-form-grid">
+                <div class="mastercard-field-group">
+                  <label class="mastercard-label" for="mc-expiry">Expiry date</label>
+                  <input type="text" id="mc-expiry" class="mastercard-input mastercard-input-disabled" value="03 / 30" readonly tabindex="-1">
+                </div>
+                <div class="mastercard-field-group">
+                  <label class="mastercard-label" for="mc-cvv">Security code</label>
+                  <div class="mastercard-cvv-wrapper">
+                    <input type="password" id="mc-cvv" class="mastercard-input" maxlength="4" placeholder="" required inputmode="numeric" autocomplete="cc-csc">
+                    <svg class="mastercard-cvv-icon" width="24" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="24" height="16" rx="2" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="1"/>
+                      <rect y="3" width="24" height="3.5" fill="#4B5563"/>
+                      <rect x="2" y="8.5" width="12" height="4" fill="#FFFFFF"/>
+                      <circle cx="18" cy="10.5" r="2.5" fill="#EF4444" stroke="#DC2626" stroke-width="0.5"/>
+                    </svg>
+                  </div>
+                  <span class="mastercard-hint">3 digits on back of card</span>
+                </div>
+              </div>
+              <button type="submit" class="mastercard-pay-btn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                Pay $13.37
+              </button>
+            </form>
           </div>
         </div>
 
@@ -803,6 +1078,46 @@
     }
 
     /**
+     * Toggles between Google Pay Direct Checkout and the Mastercard expanded form
+     * using smooth height and opacity accordion transitions.
+     * @param {'gpay'|'mastercard'} method
+     */
+    function selectSavedPaymentMethod(method) {
+      const gpayBox = document.getElementById("gpay-checkout-box");
+      const gpayCollapsed = document.getElementById("gpay-collapsed-option");
+      const mcCollapsed = document.getElementById("mastercard-collapsed-option");
+      const mcExpanded = document.getElementById("mastercard-expanded-option");
+
+      if (method === "mastercard") {
+        if (gpayBox) gpayBox.classList.add("is-collapsed");
+        if (gpayCollapsed) gpayCollapsed.classList.add("is-active");
+        if (mcCollapsed) mcCollapsed.classList.add("is-hidden");
+        if (mcExpanded) {
+          mcExpanded.classList.add("is-expanded");
+          const cvvInput = document.getElementById("mc-cvv");
+          if (cvvInput) setTimeout(() => cvvInput.focus(), 300);
+        }
+      } else {
+        if (mcExpanded) mcExpanded.classList.remove("is-expanded");
+        if (mcCollapsed) mcCollapsed.classList.remove("is-hidden");
+        if (gpayCollapsed) gpayCollapsed.classList.remove("is-active");
+        if (gpayBox) gpayBox.classList.remove("is-collapsed");
+      }
+    }
+
+    /**
+     * Handles submission of the expanded Mastercard form (demo only)
+     */
+    function handleMastercardSubmit(event) {
+      event.preventDefault();
+      console.log("Mastercard form submitted. Processing payment...");
+
+      // Transition to the success state (demo flow)
+      document.getElementById("checkout-entry-flows").style.display = "none";
+      document.getElementById("checkout-success-view").style.display = "flex";
+    }
+
+    /**
      * Handles the environment switcher: resets the UI and re-runs the whole
      * direct checkout flow against the newly selected environment.
      */
@@ -822,6 +1137,9 @@
       if (savedContainer) {
         savedContainer.style.display = "block";
       }
+
+      // Reset active saved method to Google Pay
+      selectSavedPaymentMethod("gpay");
 
       // Clear any previously rendered Google Pay UI
       const gpayBox = document.getElementById("gpay-checkout-box");
