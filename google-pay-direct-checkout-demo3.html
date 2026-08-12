@@ -662,12 +662,7 @@
           <!-- Direct Checkout Box Wrapper -->
           <div id="gpay-checkout-box" class="gpay-checkout-box">
             <!-- Direct Checkout Target Container -->
-            <div id="gpay-direct-checkout-container">
-              <!-- Loading placeholder spinner -->
-              <div style="font-size: 0.9rem; color: #5f6368; margin: 32px auto 0 auto;" id="loading-spinner">
-                Loading Google Pay...
-              </div>
-            </div>
+            <div id="gpay-direct-checkout-container"></div>
           </div>
 
           <div id="status-badge" class="status-alert" style="display: none;">
@@ -964,13 +959,6 @@
       return paymentDataRequest;
     }
 
-    function hideSpinner() {
-      const spinner = document.getElementById("loading-spinner");
-      if (spinner) {
-        spinner.style.display = "none";
-      }
-    }
-
     function onShippingRequiredChange() {
       const isRequired = document.getElementById("shipping-required-checkbox").checked;
       console.log("Shipping required changed to: " + isRequired + ". Reloading direct checkout flow...");
@@ -995,8 +983,7 @@
       container.style.display = "flex";
       container.style.height = "";
       container.style.minHeight = "";
-      container.innerHTML =
-        '<div style="font-size: 0.9rem; color: #5f6368; margin: 32px auto 0 auto;" id="loading-spinner">Loading Google Pay...</div>';
+      container.innerHTML = "";
 
       checkoutClient = null;
       onGooglePayDirectCheckoutLoaded();
@@ -1028,14 +1015,12 @@
         if (!availability || availability.status !== "SUCCESS") {
           console.warn("DirectCheckoutClient is not available:", availability);
           updateStatus("Direct checkout unavailable. " + UNAVAILABLE_REASONS, "error");
-          hideSpinner();
           showCardFallback();
           return;
         }
 
         console.log("DirectCheckoutClient is available. Loading session...");
         const loaded = await checkoutClient.load();
-        hideSpinner();
 
         if (loaded.status === "SUCCESS") {
           console.log("DirectCheckoutClient loaded successfully. Ready for checkout.");
@@ -1046,7 +1031,6 @@
         }
       } catch (err) {
         console.error("DirectCheckoutClient sequence error:", err);
-        hideSpinner();
         updateStatus("Failed to load Google Pay direct checkout session.", "error");
       }
     }
