@@ -34,7 +34,7 @@
     }
 
     .header-inner {
-      max-width: 1100px;
+      max-width: 1000px;
       margin: 0 auto;
       padding: 16px 24px;
       display: flex;
@@ -114,6 +114,13 @@
       }
       .main-wrapper {
         padding: 24px 16px 60px 16px;
+      }
+      .header-inner,
+      .footer-inner {
+        padding: 16px 16px;
+      }
+      .cart-wrapper {
+        right: 16px;
       }
     }
 
@@ -491,55 +498,157 @@
       box-shadow: 0 0 1px rgba(0,0,0,0.3);
     }
 
-    /* Floating Debug Bar */
-    .debug-bar {
+    /* Collapsible Floating Debug Widget */
+    .debug-widget {
       position: fixed;
-      bottom: 12px;
-      right: 12px;
+      bottom: 16px;
+      right: 16px;
+      z-index: 999;
+    }
+
+    .debug-trigger-btn {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       background: rgba(255, 255, 255, 0.95);
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 6px 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      border: 1px solid #cbd5e1;
+      border-radius: 20px;
+      padding: 6px 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       backdrop-filter: blur(8px);
-      z-index: 99;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .debug-trigger-btn:hover {
+      background: #ffffff;
+      border-color: #94a3b8;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+      color: #0f172a;
+    }
+
+    .debug-trigger-icon {
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    .debug-expanded-panel {
+      display: none;
+      flex-direction: column;
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      backdrop-filter: blur(12px);
+      padding: 14px;
+      min-width: 240px;
+      animation: debugSlideUp 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes debugSlideUp {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .debug-expanded-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .debug-expanded-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .debug-close-btn {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      line-height: 1;
+    }
+
+    .debug-close-btn:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    .debug-expanded-body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .debug-control-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .debug-control-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #475569;
     }
 
     .shipping-required-label {
       font-size: 0.75rem;
-      color: #64748b;
+      color: #475569;
+      font-weight: 500;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       cursor: pointer;
       user-select: none;
     }
 
     .env-switcher {
       font-size: 0.75rem;
-      padding: 3px 6px;
+      padding: 4px 8px;
       border: 1px solid #cbd5e1;
-      border-radius: 4px;
+      border-radius: 6px;
       background: #ffffff;
+      color: #1e293b;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .debug-console-btn {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
       color: #334155;
-      cursor: pointer;
-    }
-
-    .debug-link {
       font-size: 0.75rem;
-      color: #64748b;
+      font-weight: 600;
+      padding: 6px 10px;
       cursor: pointer;
-      text-decoration: none;
-      padding: 2px 4px;
-      border-radius: 4px;
+      text-align: center;
+      transition: all 0.15s;
     }
 
-    .debug-link:hover {
-      background-color: #f1f5f9;
-      color: #0f172a;
+    .debug-console-btn:hover {
+      background: #0f172a;
+      color: #ffffff;
+      border-color: #0f172a;
     }
 
     /* Debug Console Overlay */
@@ -800,19 +909,39 @@
     </div>
   </footer>
 
-  <!-- Floating Debug Controls -->
-  <div class="debug-bar">
-    <label class="shipping-required-label">
-      <input type="checkbox" id="shipping-required-checkbox" onchange="onShippingRequiredChange()" style="margin: 0; cursor: pointer;">
-      Shipping required
-    </label>
-    <select class="env-switcher" id="env-switcher" onchange="onEnvironmentChange(this.value)" title="Google Pay environment">
-      <option value="SANDBOX">SANDBOX</option>
-      <option value="TEST">TEST</option>
-      <option value="PRODUCTION" selected>PRODUCTION</option>
-      <option value="EMULATOR">🧪 Emulator</option>
-    </select>
-    <a class="debug-link" onclick="toggleDebugOverlay(true)">🐛 Debug</a>
+  <!-- Floating Debug Controls (Collapsible) -->
+  <div class="debug-widget" id="debug-widget">
+    <!-- Collapsed Trigger Button -->
+    <button class="debug-trigger-btn" id="debug-trigger-btn" onclick="toggleDebugPanel(true)" title="Open Debug Controls" aria-label="Open Debug Controls">
+      <span class="debug-trigger-icon">⚙️</span>
+      <span class="debug-trigger-text">Debug</span>
+    </button>
+
+    <!-- Expanded Debug Panel -->
+    <div class="debug-expanded-panel" id="debug-expanded-panel">
+      <div class="debug-expanded-header">
+        <span class="debug-expanded-title">⚙️ Debug Controls</span>
+        <button class="debug-close-btn" onclick="toggleDebugPanel(false)" title="Collapse debug panel">✕</button>
+      </div>
+      <div class="debug-expanded-body">
+        <label class="shipping-required-label">
+          <input type="checkbox" id="shipping-required-checkbox" onchange="onShippingRequiredChange()" style="margin: 0; cursor: pointer;">
+          Shipping required
+        </label>
+        <div class="debug-control-group">
+          <label for="env-switcher" class="debug-control-label">Environment:</label>
+          <select class="env-switcher" id="env-switcher" onchange="onEnvironmentChange(this.value)" title="Google Pay environment">
+            <option value="SANDBOX">SANDBOX</option>
+            <option value="TEST">TEST</option>
+            <option value="PRODUCTION" selected>PRODUCTION</option>
+            <option value="EMULATOR">🧪 Emulator</option>
+          </select>
+        </div>
+        <button class="debug-console-btn" onclick="toggleDebugOverlay(true)">
+          🐛 Open Debug Console
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Debug Console Overlay -->
@@ -894,6 +1023,23 @@
       if (!overlay) return;
       overlay.style.display = show ? "flex" : "none";
       if (show) renderDebugLog();
+    }
+
+    function toggleDebugPanel(show) {
+      const triggerBtn = document.getElementById("debug-trigger-btn");
+      const expandedPanel = document.getElementById("debug-expanded-panel");
+      if (!triggerBtn || !expandedPanel) return;
+
+      const isCurrentlyOpen = expandedPanel.style.display === "flex";
+      const shouldOpen = typeof show === "boolean" ? show : !isCurrentlyOpen;
+
+      if (shouldOpen) {
+        triggerBtn.style.display = "none";
+        expandedPanel.style.display = "flex";
+      } else {
+        expandedPanel.style.display = "none";
+        triggerBtn.style.display = "flex";
+      }
     }
 
     // Base request configurations
