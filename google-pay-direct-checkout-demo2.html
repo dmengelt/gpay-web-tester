@@ -122,20 +122,17 @@
       overflow: hidden;
       max-height: 600px;
       opacity: 1;
-      transform: translateY(0);
-      transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                  opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                  margin 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                  border-color 0.4s ease,
-                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.4s ease,
+                  margin 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.3s ease;
     }
 
     .gpay-checkout-box.is-collapsed {
       max-height: 0 !important;
       opacity: 0;
-      margin: 0;
+      margin: 0 !important;
       border-color: transparent;
-      transform: translateY(-8px);
       pointer-events: none;
     }
 
@@ -148,13 +145,11 @@
       align-items: flex-start;
       justify-content: center;
       overflow: hidden;
-      transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1), min-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     #gpay-direct-checkout-container iframe {
       align-self: flex-start;
       margin-top: 0;
-      transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* Saved Payment Method Section */
@@ -187,13 +182,11 @@
       border-radius: 8px;
       cursor: pointer;
       pointer-events: none;
-      transform: translateY(-8px);
-      transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                  padding 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                  opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                  margin 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                  border-width 0.4s ease,
-                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  padding 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.4s ease,
+                  margin 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-width 0.3s ease,
                   border-color 0.2s ease,
                   box-shadow 0.2s ease;
       user-select: none;
@@ -206,7 +199,6 @@
       margin: 0 0 16px 0;
       border-width: 1px;
       pointer-events: auto;
-      transform: translateY(0);
     }
 
     .gpay-collapsed-option.is-active:hover {
@@ -242,13 +234,11 @@
       border-radius: 8px;
       cursor: pointer;
       overflow: hidden;
-      transform: translateY(0);
-      transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                  padding 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                  opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                  margin 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                  border-width 0.4s ease,
-                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  padding 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.4s ease,
+                  margin 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-width 0.3s ease,
                   border-color 0.2s ease,
                   box-shadow 0.2s ease;
       user-select: none;
@@ -260,7 +250,6 @@
       padding: 0 20px;
       margin: 0;
       border-width: 0;
-      transform: translateY(-8px);
       pointer-events: none;
     }
 
@@ -279,15 +268,13 @@
       opacity: 0;
       margin: 0;
       overflow: hidden;
-      transform: translateY(-8px);
       pointer-events: none;
-      transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                  padding 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                  opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                  margin 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                  border-width 0.4s ease,
-                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                  box-shadow 0.4s ease;
+      transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  padding 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.4s ease,
+                  margin 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-width 0.3s ease,
+                  box-shadow 0.3s ease;
     }
 
     .mastercard-expanded-option.is-expanded {
@@ -296,7 +283,6 @@
       padding: 20px;
       margin: 0;
       border-width: 1px;
-      transform: translateY(0);
       pointer-events: auto;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
     }
@@ -863,7 +849,7 @@
     <!-- Footer bar: environment switcher + debug link (below container, bottom-right) -->
     <div class="debug-bar">
       <label class="shipping-required-label" style="font-size: 0.75rem; color: #5f6368; display: flex; align-items: center; gap: 4px; cursor: pointer; user-select: none;">
-        <input type="checkbox" id="shipping-required-checkbox" onchange="onShippingRequiredChange()" checked style="margin: 0; cursor: pointer;">
+        <input type="checkbox" id="shipping-required-checkbox" onchange="onShippingRequiredChange()" style="margin: 0; cursor: pointer;">
         Shipping required
       </label>
       <select class="env-switcher" id="env-switcher" onchange="onEnvironmentChange(this.value)" title="Google Pay environment">
@@ -1043,7 +1029,7 @@
       paymentDataRequest.allowedPaymentMethods[0].parameters.assuranceDetailsRequired = true;
       
       const shippingCheckbox = document.getElementById("shipping-required-checkbox");
-      if (!shippingCheckbox || shippingCheckbox.checked) {
+      if (shippingCheckbox && shippingCheckbox.checked) {
         paymentDataRequest.shippingAddressRequired = true;
       }
 
@@ -1092,11 +1078,7 @@
         if (gpayBox) gpayBox.classList.add("is-collapsed");
         if (gpayCollapsed) gpayCollapsed.classList.add("is-active");
         if (mcCollapsed) mcCollapsed.classList.add("is-hidden");
-        if (mcExpanded) {
-          mcExpanded.classList.add("is-expanded");
-          const cvvInput = document.getElementById("mc-cvv");
-          if (cvvInput) setTimeout(() => cvvInput.focus(), 300);
-        }
+        if (mcExpanded) mcExpanded.classList.add("is-expanded");
       } else {
         if (mcExpanded) mcExpanded.classList.remove("is-expanded");
         if (mcCollapsed) mcCollapsed.classList.remove("is-hidden");
@@ -1257,6 +1239,11 @@
     function onPaymentSheetResized(resizeData) {
       console.log("onPaymentSheetResized received:", resizeData);
       if (!resizeData) return;
+
+      const gpayBox = document.getElementById("gpay-checkout-box");
+      if (gpayBox && gpayBox.classList.contains("is-collapsed")) {
+        return;
+      }
 
       const container = document.getElementById("gpay-direct-checkout-container");
       if (!container) return;
