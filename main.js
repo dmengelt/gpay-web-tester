@@ -41,6 +41,7 @@ const allowedCardNetworks = ["AMEX", "DISCOVER", "INTERAC", "JCB", "MASTERCARD",
  * supported card networks
  */
 let allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
+let allowCreditCardsValue = true;
 
 /**
  * Identify your gateway and your site's gateway merchant identifier
@@ -81,6 +82,7 @@ let baseCardPaymentMethod = {
   parameters: {
     allowedAuthMethods: allowedCardAuthMethods,
     allowedCardNetworks: allowedCardNetworks,
+    allowCreditCards: allowCreditCardsValue,
     cvcRequired: false
   }
 };
@@ -135,7 +137,7 @@ function getGooglePaymentDataRequest() {
   paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
   paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
   paymentDataRequest.allowedPaymentMethods[0].parameters.assuranceDetailsRequired = true;
-  //paymentDataRequest.allowedPaymentMethods[0].parameters.allowCreditCards = false;  
+  paymentDataRequest.allowedPaymentMethods[0].parameters.allowCreditCards = allowCreditCardsValue;  
   paymentDataRequest.allowedPaymentMethods[0].parameters.billingAddressRequired = true;  
   paymentDataRequest.allowedPaymentMethods[0].parameters.billingAddressParameters = {
     format: 'FULL'
@@ -189,6 +191,12 @@ function existingPaymentMethodRequired(event) {
 
 function onPaymentAuthorizedCallback(event) {
   onPaymentAuthorizedCallbackValue = (event.target.value === 'true');  
+  onGooglePayLoaded();
+}
+
+function allowCreditCards(event) {
+  allowCreditCardsValue = event.target.checked;
+  baseCardPaymentMethod.parameters.allowCreditCards = allowCreditCardsValue;
   onGooglePayLoaded();
 }
 
@@ -308,6 +316,10 @@ function onGooglePayLoaded() {
     input.addEventListener('change', onPaymentAuthorizedCallback);
   });
 
+  document.querySelectorAll("input[name='allowCreditCards']").forEach((input) => {
+    input.addEventListener('change', allowCreditCards);
+  });
+
   /*
   document.querySelectorAll("input[name='buttonShape']").forEach((input) => {
     input.addEventListener('change', buttonShape);
@@ -389,8 +401,9 @@ function renderButton(paymentsClient, element, allowedCardNetworks) {
         allowedPaymentMethods: [{
           "type": "CARD",
           "parameters": {
-            "allowedAuthMethods": ["PAN_ONLY", "CRYPTOGRAM_3DS"],
-            "allowedCardNetworks": allowedCardNetworks
+            "allowedAuthMethods": baseCardPaymentMethod.parameters.allowedAuthMethods,
+            "allowedCardNetworks": allowedCardNetworks,
+            "allowCreditCards": allowCreditCardsValue
           }
 
         }]
