@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Google Pay API for Web - DPU</title>
+    <title>Google Pay API for Web - DPU (5s Delay)</title>
 </head>
 
 <body>
-    <p>Demo merchant checkout page with a Google Pay button - DPU Reproducer</p>
+    <p>Demo merchant checkout page with a Google Pay button - DPU Reproducer (5s Delay)</p>
     <div id="gpay-container"></div>    
     <hr/>
     <div id="user-agent"></div>
@@ -174,8 +174,10 @@
                             ]
                         }
                     };
-                    console.log("Resolving SHIPPING_ADDRESS trigger immediately without delay");
-                    resolve(paymentDataRequestUpdate);
+                    setTimeout(function() {
+                        console.log("Resolving SHIPPING_ADDRESS trigger after 5s delay");
+                        resolve(paymentDataRequestUpdate);
+                    }, 5000);
                 } else {
                     resolve(paymentDataRequestUpdate);
                 }
