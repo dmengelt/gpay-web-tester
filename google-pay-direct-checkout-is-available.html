@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Pay Direct Checkout - isAvailable</title>
+    <style>
+        #log {
+            white-space: pre;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <p>Google Pay Direct Checkout isAvailable API tester</p>
+    <hr/>
+    <div id="isAvailable" class="padding-after"><b>isAvailable API response:</b></div>
+    <div id="log" class="padding-after"></div>    
+    <hr/>
+    <div id="userAgent" class="padding-after"><b>User-Agent</b></div>
+    <div id="user-agent"></div>
+    <div id="gpay-direct-checkout-container" style="display:none;"></div>
+
+    <script async src="https://pay.sandbox.google.com/gp/p/acceleratedcheckout.js" onload="onGooglePayDirectCheckoutLoaded()"></script>
+    <script async src="https://pay.sandbox.google.com/gp/p/pay.js"></script>
+    <script type="text/javascript">
+        const baseRequest = {
+            apiVersion: 2,
+            apiVersionMinor: 0,
+        };
+
+        const allowedCardNetworks = ['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA'];
+        const allowedCardAuthMethods = ['PAN_ONLY', 'CRYPTOGRAM_3DS'];
+
+        const tokenizationSpecification = {
+            type: 'PAYMENT_GATEWAY',
+            parameters: {
+                gateway: 'ariane',
+                gatewayMerchantId: 'exampleGatewayMerchantId',
+            },
+        };
+
+        const baseCardPaymentMethod = {
+            type: 'CARD',
+            parameters: {
+                allowedAuthMethods: allowedCardAuthMethods,
+                allowedCardNetworks: allowedCardNetworks,
+                assuranceDetailsRequired: true,
+            },
+        };
+
+        const cardPaymentMethod = Object.assign({}, baseCardPaymentMethod, {
+            tokenizationSpecification: tokenizationSpecification,
+        });
+
+        function getGooglePaymentDataRequest() {
+            const paymentDataRequest = Object.assign({}, baseRequest);
+            paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
+            paymentDataRequest.merchantInfo = {
+                merchantId: '14697717800897553235',
+                merchantName: 'Example Merchant',
+            };
+            paymentDataRequest.callbackIntents = ['PAYMENT_AUTHORIZATION'];
+            paymentDataRequest.transactionInfo = {
+                currencyCode: 'USD',
+                totalPriceStatus: 'FINAL',
+                totalPrice: '1.00',
+            };
+            paymentDataRequest.i = {
+                disableNgbf: false,
+                productType: 'ACCELERATED_CHECKOUT'
+            };
+            return paymentDataRequest;
+        }
+
+        function onPaymentAuthorized(paymentData) {
+            return Promise.resolve({ transactionState: 'SUCCESS' });
+        }
+
+        function onPaymentSheetResized() {}
+
+        async function onGooglePayDirectCheckoutLoaded() {
+            document.getElementById('user-agent').innerHTML = window.navigator.userAgent;
+
+            const checkoutRequest = getGooglePaymentDataRequest();
+            const options = {
+                environment: 'PRODUCTION',
+                acceleratedCheckoutConfig: {
+                    type: 'INLINE',
+                    containerId: 'gpay-direct-checkout-container'
+                },
+                paymentDataCallbacks: {
+                    onPaymentAuthorized: onPaymentAuthorized
+                },
+                checkoutUiCallbacks: {
+                    onPaymentSheetResized: onPaymentSheetResized
+                },
+                checkoutRequest: checkoutRequest
+            };
+
+            try {
+                const checkoutClient = new google.payments.api.AcceleratedCheckoutClient(options);
+                console.log('AcceleratedCheckoutClient successfully instantiated.');
+
+                const availability = await checkoutClient.isAvailable();
+                console.log('isAvailable response:', availability);
+                document.getElementById('log').innerHTML = JSON.stringify(availability, null, 2);
+            } catch (err) {
+                console.error('isAvailable error:', err);
+                document.getElementById('log').innerHTML = JSON.stringify(err, Object.getOwnPropertyNames(err), 2);
+            }
+        }
+
+    </script>
+</body>
+</html>
