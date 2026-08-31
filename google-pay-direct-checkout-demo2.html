@@ -120,7 +120,7 @@
       margin: 0 0 16px 0;
       background-color: #ffffff;
       overflow: hidden;
-      max-height: 600px;
+      max-height: 750px;
       opacity: 1;
       transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1),
                   opacity 0.4s ease,
@@ -140,16 +140,41 @@
     #gpay-direct-checkout-container {
       width: 100%;
       min-height: 250px;
+      max-height: 700px;
       position: relative;
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+      scrollbar-width: thin;
+      scrollbar-color: #dadce0 transparent;
+      transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1), min-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #gpay-direct-checkout-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #gpay-direct-checkout-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    #gpay-direct-checkout-container::-webkit-scrollbar-thumb {
+      background-color: #dadce0;
+      border-radius: 3px;
+    }
+
+    #gpay-direct-checkout-container::-webkit-scrollbar-thumb:hover {
+      background-color: #bdc1c6;
     }
 
     #gpay-direct-checkout-container iframe {
       align-self: flex-start;
       margin-top: 0;
+      transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* Saved Payment Method Section */
@@ -1256,7 +1281,7 @@
       if (newHeightCss) {
         console.info("Resizing #gpay-direct-checkout-container to: " + newHeightCss);
         container.style.height = newHeightCss;
-        container.style.minHeight = newHeightCss;
+        container.style.minHeight = "0";
       }
     }
 
