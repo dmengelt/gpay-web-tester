@@ -1,7 +1,7 @@
 function onBuyClicked() {
   var supportedInstruments = [
     {
-      supportedMethods: 'https://pay.sandbox.google.com/gp/p/payment_method_manifest.json',
+      supportedMethods: 'https://bunpay.app/google-pay/payment-method-manifest.json',
       data: {
         apiVersion: 2,
         apiVersionMinor: 0,
