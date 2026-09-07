@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Pay API for Web - DPU (Payment Method)</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            max-width: 900px;
+            margin: 24px auto;
+            padding: 0 16px;
+            background-color: #f8f9fa;
+            color: #202124;
+            line-height: 1.5;
+        }
+
+        h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #5f6368;
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+
+        #gpay-container {
+            margin: 16px 0;
+            min-height: 40px;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: #dadce0;
+            margin: 20px 0;
+        }
+
+        #user-agent {
+            font-size: 12px;
+            color: #5f6368;
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            padding: 10px 14px;
+            border-radius: 6px;
+            word-break: break-all;
+            margin-bottom: 20px;
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+        }
+
+        .result-section {
+            margin-top: 20px;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .result-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            color: #202124;
+        }
+
+        .clear-btn {
+            background-color: #ffffff;
+            border: 1px solid #dadce0;
+            color: #3c4043;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .clear-btn:hover {
+            background-color: #f1f3f4;
+        }
+
+        #result {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .result-placeholder {
+            color: #70757a;
+            font-style: italic;
+            padding: 24px;
+            background: #ffffff;
+            border: 1px dashed #dadce0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .log-entry {
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(60, 64, 67, 0.06);
+            overflow: hidden;
+        }
+
+        .log-entry-header {
+            background: #f8f9fa;
+            padding: 8px 14px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e8eaed;
+        }
+
+        .log-entry-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 7px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .badge-callback {
+            background: #e8f0fe;
+            color: #1a73e8;
+        }
+
+        .badge-response {
+            background: #e6f4ea;
+            color: #137333;
+        }
+
+        .badge-error {
+            background: #fce8e6;
+            color: #c5221f;
+        }
+
+        .badge-event {
+            background: #feefe3;
+            color: #b06000;
+        }
+
+        .log-entry-time {
+            font-size: 11px;
+            color: #5f6368;
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+        }
+
+        .log-entry pre {
+            margin: 0;
+            padding: 14px;
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-word;
+            background: #ffffff;
+            color: #202124;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+
+        /* JSON syntax highlighting */
+        .json-key {
+            color: #0550ae;
+            font-weight: 600;
+        }
+
+        .json-string {
+            color: #0a3069;
+        }
+
+        .json-number {
+            color: #116329;
+        }
+
+        .json-boolean {
+            color: #cf222e;
+            font-weight: 600;
+        }
+
+        .json-null {
+            color: #8250df;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Google Pay API for Web - DPU (Payment Method)</h1>
+    <p class="subtitle">Demo merchant checkout page with a Google Pay button - DPU Reproducer (PAYMENT_METHOD)</p>
+    <div id="gpay-container"></div>    
+    <hr/>
+    <div id="user-agent"></div>
+    <div class="result-section">
+        <div class="result-header">
+            <h2>Callback &amp; Result Log</h2>
+            <button class="clear-btn" type="button" onclick="clearResult()">Clear Log</button>
+        </div>
+        <div id="result">
+            <div class="result-placeholder">No callbacks triggered yet. Click the Google Pay button to start checkout.</div>
+        </div>
+    </div>
+    <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
+    <script type="text/javascript">
+        const GPAY_BUTTON_CONTAINER_ID = 'gpay-container';
+
+        const merchantInfo = {
+            merchantId: '12345678901234567890',
+            merchantName: 'Example Merchant',
+        };
+
+        const baseGooglePayRequest = {
+            apiVersion: 2,
+            apiVersionMinor: 0,
+            allowedPaymentMethods: [
+                {
+                    type: 'CARD',
+                    parameters: {
+                        allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+                        allowedCardNetworks: ['AMEX', 'DISCOVER', 'INTERAC', 'JCB', 'MASTERCARD', 'VISA'],
+                        billingAddressRequired: true,
+                        billingAddressParameters: {
+                            format: 'FULL',
+                        },
+                    },
+                    tokenizationSpecification: {
+                        type: 'PAYMENT_GATEWAY',
+                        parameters: {
+                            gateway: 'example',
+                            gatewayMerchantId: 'exampleGatewayMerchantId',
+                        },
+                    },
+                },
+            ],
+            merchantInfo,
+        };
+
+        Object.freeze(baseGooglePayRequest);
+
+        let paymentsClient = null;
+
+        function getGooglePaymentsClient() {           
+            if (paymentsClient === null) {                
+                paymentsClient = new google.payments.api.PaymentsClient({                 
+                    environment: 'TEST',                  
+                    merchantInfo,
+                    paymentDataCallbacks: {
+                        onPaymentAuthorized: onPaymentAuthorizedCallbackHandler,
+                        onPaymentDataChanged: onPaymentDataChanged
+                    }
+                });
+            }
+
+            return paymentsClient;
+        }
+
+        const deepCopy = obj => JSON.parse(JSON.stringify(obj));
+
+        function safeStringify(obj) {
+            if (obj === undefined) return 'undefined';
+            if (obj === null) return 'null';
+            if (typeof obj === 'string') {
+                try {
+                    const parsed = JSON.parse(obj);
+                    return JSON.stringify(parsed, null, 2);
+                } catch (e) {
+                    return JSON.stringify(obj, null, 2);
+                }
+            }
+            if (typeof obj !== 'object') {
+                return JSON.stringify(obj, null, 2);
+            }
+            try {
+                if (obj instanceof Error || (obj.message && obj.stack)) {
+                    const errorObj = {};
+                    Object.getOwnPropertyNames(obj).forEach(key => {
+                        errorObj[key] = obj[key];
+                    });
+                    return JSON.stringify(errorObj, null, 2);
+                }
+                return JSON.stringify(obj, null, 2);
+            } catch (e) {
+                try {
+                    const seen = new WeakSet();
+                    return JSON.stringify(obj, (key, value) => {
+                        if (typeof value === 'object' && value !== null) {
+                            if (seen.has(value)) return '[Circular]';
+                            seen.add(value);
+                        }
+                        return value;
+                    }, 2);
+                } catch (err) {
+                    return String(obj);
+                }
+            }
+        }
+
+        function escapeHtml(str) {
+            if (typeof str !== 'string') str = String(str);
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function formatJsonToHtml(data) {
+            const jsonString = safeStringify(data);
+            const escaped = escapeHtml(jsonString);
+
+            return escaped.replace(
+                /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+                function (match) {
+                    let cls = 'json-number';
+                    if (/^"/.test(match)) {
+                        if (/:$/.test(match)) {
+                            cls = 'json-key';
+                        } else {
+                            cls = 'json-string';
+                        }
+                    } else if (/true|false/.test(match)) {
+                        cls = 'json-boolean';
+                    } else if (/null/.test(match)) {
+                        cls = 'json-null';
+                    }
+                    return '<span class="' + cls + '">' + match + '</span>';
+                }
+            );
+        }
+
+        function clearResult() {
+            const resultDiv = document.getElementById('result');
+            if (!resultDiv) return;
+            resultDiv.innerHTML = '<div class="result-placeholder">No callbacks triggered yet. Click the Google Pay button to start checkout.</div>';
+        }
+
+        function logToResult(title, data, badgeType = 'callback') {
+            const resultDiv = document.getElementById('result');
+            if (!resultDiv) return;
+
+            const placeholder = resultDiv.querySelector('.result-placeholder');
+            if (placeholder) {
+                resultDiv.removeChild(placeholder);
+            }
+
+            const now = new Date();
+            const timestamp = now.toLocaleTimeString() + '.' + String(now.getMilliseconds()).padStart(3, '0');
+
+            let badgeClass = 'badge-callback';
+            let badgeText = 'CALLBACK';
+            if (badgeType === 'response') {
+                badgeClass = 'badge-response';
+                badgeText = 'RESPONSE';
+            } else if (badgeType === 'error') {
+                badgeClass = 'badge-error';
+                badgeText = 'ERROR';
+            } else if (badgeType === 'event') {
+                badgeClass = 'badge-event';
+                badgeText = 'EVENT';
+            }
+
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+
+            const header = document.createElement('div');
+            header.className = 'log-entry-header';
+
+            const titleEl = document.createElement('div');
+            titleEl.className = 'log-entry-title';
+            titleEl.innerHTML = `<span class="badge ${badgeClass}">${badgeText}</span> <span>${escapeHtml(title)}</span>`;
+
+            const timeEl = document.createElement('div');
+            timeEl.className = 'log-entry-time';
+            timeEl.textContent = timestamp;
+
+            header.appendChild(titleEl);
+            header.appendChild(timeEl);
+
+            const pre = document.createElement('pre');
+            pre.innerHTML = `<code>${formatJsonToHtml(data)}</code>`;
+
+            entry.appendChild(header);
+            entry.appendChild(pre);
+
+            resultDiv.appendChild(entry);
+        }
+
+        function renderGooglePayButton() {            
+            const button = getGooglePaymentsClient().createButton({             
+                onClick: onGooglePaymentButtonClicked,
+            });            
+            document.getElementById(GPAY_BUTTON_CONTAINER_ID).appendChild(button);
+        }
+
+        function onGooglePayLoaded() {
+            document.getElementById('user-agent').innerHTML = '<strong>User Agent:</strong> ' + escapeHtml(window.navigator.userAgent);
+
+            const req = deepCopy(baseGooglePayRequest);
+            getGooglePaymentsClient()
+                .isReadyToPay(req)
+                .then(function (res) {
+                    if (res.result) {
+                        renderGooglePayButton();
+                    } else {
+                        //console.log('Google Pay is not ready for this user.');
+                        renderGooglePayButton();
+                    }
+                })
+                .catch(console.error);
+        }
+
+        function onGooglePaymentButtonClicked() {
+            const req = {
+                ...deepCopy(baseGooglePayRequest),
+                callbackIntents: ['PAYMENT_AUTHORIZATION', 'PAYMENT_METHOD'],
+                transactionInfo: {
+                    countryCode: 'US',
+                    currencyCode: 'USD',
+                    totalPriceStatus: 'FINAL',
+                    totalPrice: '1.00',
+                    totalPriceLabel: 'Total',
+                    displayItems: [
+                        {
+                            label: 'Subtotal',
+                            type: 'SUBTOTAL',
+                            price: '1.00'
+                        }
+                    ]
+                },
+            };
+
+            console.log('onGooglePaymentButtonClicked', req);
+            clearResult();
+            logToResult('loadPaymentData Request', req, 'event');
+
+            getGooglePaymentsClient()
+                .loadPaymentData(req)
+                .then(function (res) {
+                    console.log("loadPaymentData success resolved", res);
+                    logToResult('loadPaymentData Success Resolved', res, 'response');
+                })
+                .catch(function (err) {
+                    console.error("loadPaymentData catch error", err);
+                    logToResult('loadPaymentData Catch Error', err, 'error');
+                });
+        }
+
+        function onPaymentAuthorizedCallbackHandler(paymentData) {
+            console.log('onPaymentAuthorized callback triggered', paymentData);
+            logToResult('onPaymentAuthorized Callback', paymentData, 'callback');
+
+            return new Promise(function(resolve, reject){
+                // handle the response
+                processPayment(paymentData)
+                .then(function() {
+                    setTimeout(function() {        
+                        console.log("resolving the success promise in onPaymentAuthorizedCallbackHandler");
+                        const res = { transactionState: 'SUCCESS' };
+                        logToResult('onPaymentAuthorized Success Response', res, 'response');
+                        resolve(res);
+                    }, 1000);
+                })
+                .catch(function() {
+                    const errRes = {
+                        transactionState: 'ERROR',
+                        error: {
+                            intent: 'PAYMENT_AUTHORIZATION',
+                            message: 'Insufficient funds',
+                            reason: 'PAYMENT_DATA_INVALID'
+                        }
+                    };
+                    logToResult('onPaymentAuthorized Error Response', errRes, 'error');
+                    resolve(errRes);
+                });
+            });
+        }
+
+        function onPaymentDataChanged(intermediatePaymentData) {  
+            console.log('onPaymentDataChanged callback triggered', intermediatePaymentData);
+            const trigger = intermediatePaymentData.callbackTrigger || 'UNKNOWN_TRIGGER';
+            logToResult(`onPaymentDataChanged Callback (${trigger})`, intermediatePaymentData, 'callback');
+
+            return new Promise(function(resolve, reject) {   
+                let paymentDataRequestUpdate = {};
+                if (intermediatePaymentData.callbackTrigger === 'PAYMENT_METHOD') {
+                    console.log("Handling PAYMENT_METHOD trigger", intermediatePaymentData.paymentMethodData);
+                    logToResult(`onPaymentDataChanged Response Update (${trigger})`, paymentDataRequestUpdate, 'response');
+                    resolve(paymentDataRequestUpdate);
+                } else {
+                    logToResult(`onPaymentDataChanged Response Update (${trigger})`, paymentDataRequestUpdate, 'response');
+                    resolve(paymentDataRequestUpdate);
+                }
+            });
+        }
+
+        function processPayment(paymentData) {
+            return new Promise(function(resolve, reject) {
+                setTimeout(function() {
+                    let paymentToken = paymentData &&
+                                       paymentData.paymentMethodData &&
+                                       paymentData.paymentMethodData.tokenizationData &&
+                                       paymentData.paymentMethodData.tokenizationData.token;
+                    console.log("loadPaymentData success (triggered over onPaymentAuthorized callback)");     
+                    logToResult('processPayment Complete', {
+                        status: 'SUCCESS',
+                        token: paymentToken || 'Token received'
+                    }, 'event');
+                    resolve({});
+                }, 1000);
+            });
+        }
+
+    </script>
+</body>
+</html>
