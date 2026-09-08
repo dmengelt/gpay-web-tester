@@ -27,6 +27,42 @@
             margin-bottom: 16px;
         }
 
+        .options-container {
+            margin: 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #202124;
+            user-select: none;
+            background: #ffffff;
+            padding: 8px 14px;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .checkbox-container:hover {
+            background-color: #f1f3f4;
+            border-color: #bec0c4;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            accent-color: #1a73e8;
+            margin: 0;
+        }
+
         #gpay-container {
             margin: 16px 0;
             min-height: 40px;
@@ -207,6 +243,12 @@
 <body>
     <h1>Google Pay API for Web - DPU (Payment Method)</h1>
     <p class="subtitle">Demo merchant checkout page with a Google Pay button - DPU Reproducer (PAYMENT_METHOD)</p>
+    <div class="options-container">
+        <label class="checkbox-container" for="fail-debit-cards-checkbox">
+            <input type="checkbox" id="fail-debit-cards-checkbox">
+            <span>Fail for Debit Cards (PAYMENT_METHOD callback only)</span>
+        </label>
+    </div>
     <div id="gpay-container"></div>    
     <hr/>
     <div id="user-agent"></div>
@@ -502,6 +544,20 @@
                 let paymentDataRequestUpdate = {};
                 if (intermediatePaymentData.callbackTrigger === 'PAYMENT_METHOD') {
                     console.log("Handling PAYMENT_METHOD trigger", intermediatePaymentData.paymentMethodData);
+                    const failDebitCheckbox = document.getElementById('fail-debit-cards-checkbox');
+                    if (failDebitCheckbox && failDebitCheckbox.checked) {
+                        paymentDataRequestUpdate = {
+                            error: {
+                                reason: 'PAYMENT_DATA_INVALID',
+                                message: 'Debit cards are not accepted. Please select a credit card.',
+                                intent: 'PAYMENT_METHOD'
+                            }
+                        };
+                        console.log("Failing PAYMENT_METHOD trigger because 'Fail for Debit Cards' is checked:", paymentDataRequestUpdate);
+                        logToResult(`onPaymentDataChanged Error Response (${trigger})`, paymentDataRequestUpdate, 'error');
+                        resolve(paymentDataRequestUpdate);
+                        return;
+                    }
                     logToResult(`onPaymentDataChanged Response Update (${trigger})`, paymentDataRequestUpdate, 'response');
                     resolve(paymentDataRequestUpdate);
                 } else {
