@@ -27,42 +27,6 @@
             margin-bottom: 16px;
         }
 
-        .options-container {
-            margin: 16px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .checkbox-container {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            color: #202124;
-            user-select: none;
-            background: #ffffff;
-            padding: 8px 14px;
-            border: 1px solid #dadce0;
-            border-radius: 6px;
-            transition: background-color 0.15s ease, border-color 0.15s ease;
-        }
-
-        .checkbox-container:hover {
-            background-color: #f1f3f4;
-            border-color: #bec0c4;
-        }
-
-        .checkbox-container input[type="checkbox"] {
-            cursor: pointer;
-            width: 16px;
-            height: 16px;
-            accent-color: #1a73e8;
-            margin: 0;
-        }
-
         #gpay-container {
             margin: 16px 0;
             min-height: 40px;
@@ -243,12 +207,6 @@
 <body>
     <h1>Google Pay API for Web - DPU (Payment Method)</h1>
     <p class="subtitle">Demo merchant checkout page with a Google Pay button - DPU Reproducer (PAYMENT_METHOD)</p>
-    <div class="options-container">
-        <label class="checkbox-container" for="fail-debit-cards-checkbox">
-            <input type="checkbox" id="fail-debit-cards-checkbox">
-            <span>Fail for Debit Cards (PAYMENT_METHOD callback only)</span>
-        </label>
-    </div>
     <div id="gpay-container"></div>    
     <hr/>
     <div id="user-agent"></div>
@@ -469,26 +427,78 @@
                 .catch(console.error);
         }
 
-        function onGooglePaymentButtonClicked() {
-            const req = {
-                ...deepCopy(baseGooglePayRequest),
-                callbackIntents: ['PAYMENT_AUTHORIZATION', 'PAYMENT_METHOD'],
-                transactionInfo: {
+        function getTransactionInfo(cardFundingSource) {
+            const isDebit = cardFundingSource && cardFundingSource.toUpperCase() === 'DEBIT';
+            if (isDebit) {
+                return {
                     countryCode: 'US',
                     currencyCode: 'USD',
-                    totalPriceStatus: 'FINAL',
-                    totalPrice: '1.00',
+                    totalPriceStatus: 'ESTIMATED',
+                    totalPrice: '0.90',
                     totalPriceLabel: 'Total',
                     displayItems: [
                         {
                             label: 'Subtotal',
                             type: 'SUBTOTAL',
                             price: '1.00'
+                        },
+                        {
+                            label: 'Price reduced by 10% because your are using a debit card',
+                            type: 'DISCOUNT',
+                            price: '-0.10'
                         }
                     ]
-                },
-            };
+                };
+            }
 
+            return {
+                countryCode: 'US',
+                currencyCode: 'USD',
+                totalPriceStatus: 'ESTIMATED',
+                totalPrice: '1.00',
+                totalPriceLabel: 'Total',
+                displayItems: [
+                    {
+                        label: 'Subtotal',
+                        type: 'SUBTOTAL',
+                        price: '1.00'
+                    }
+                ]
+            };
+        }
+
+        let currentCardFundingSource = null;
+
+        function getDefaultShippingOptionParameters() {
+            return {
+                defaultSelectedOptionId: 'shipping-001',
+                shippingOptions: [
+                    {
+                        id: 'shipping-001',
+                        label: 'Free worldwide shipping',
+                        description: 'Free Shipping delivered in 5 business days.'
+                    },
+                    {
+                        id: 'shipping-002',
+                        label: 'Fast worldwide shipping',
+                        description: 'Fast Shipping delivered in 1-2 business days.'
+                    }
+                ]
+            };
+        }
+
+        function onGooglePaymentButtonClicked() {
+            currentCardFundingSource = null;
+            const req = {
+                ...deepCopy(baseGooglePayRequest),
+                callbackIntents: ['PAYMENT_AUTHORIZATION', 'PAYMENT_METHOD', 'SHIPPING_ADDRESS', 'SHIPPING_OPTION'],
+                shippingAddressRequired: true,
+                shippingOptionRequired: true,
+                shippingAddressParameters: {
+                    phoneNumberRequired: false
+                },
+                transactionInfo: getTransactionInfo(),
+            };
             console.log('onGooglePaymentButtonClicked', req);
             clearResult();
             logToResult('loadPaymentData Request', req, 'event');
@@ -542,28 +552,24 @@
 
             return new Promise(function(resolve, reject) {   
                 let paymentDataRequestUpdate = {};
-                if (intermediatePaymentData.callbackTrigger === 'PAYMENT_METHOD') {
-                    console.log("Handling PAYMENT_METHOD trigger", intermediatePaymentData.paymentMethodData);
-                    const failDebitCheckbox = document.getElementById('fail-debit-cards-checkbox');
-                    if (failDebitCheckbox && failDebitCheckbox.checked) {
-                        paymentDataRequestUpdate = {
-                            error: {
-                                reason: 'PAYMENT_DATA_INVALID',
-                                message: 'Debit cards are not accepted. Please select a credit card.',
-                                intent: 'PAYMENT_METHOD'
-                            }
-                        };
-                        console.log("Failing PAYMENT_METHOD trigger because 'Fail for Debit Cards' is checked:", paymentDataRequestUpdate);
-                        logToResult(`onPaymentDataChanged Error Response (${trigger})`, paymentDataRequestUpdate, 'error');
-                        resolve(paymentDataRequestUpdate);
-                        return;
-                    }
-                    logToResult(`onPaymentDataChanged Response Update (${trigger})`, paymentDataRequestUpdate, 'response');
-                    resolve(paymentDataRequestUpdate);
-                } else {
-                    logToResult(`onPaymentDataChanged Response Update (${trigger})`, paymentDataRequestUpdate, 'response');
-                    resolve(paymentDataRequestUpdate);
+                const cardFundingSource = intermediatePaymentData &&
+                                           intermediatePaymentData.paymentMethodData &&
+                                           intermediatePaymentData.paymentMethodData.info &&
+                                           intermediatePaymentData.paymentMethodData.info.cardFundingSource;
+
+                if (cardFundingSource) {
+                    currentCardFundingSource = cardFundingSource;
                 }
+
+                if (trigger === 'INITIALIZE' || trigger === 'SHIPPING_ADDRESS') {
+                    paymentDataRequestUpdate.newShippingOptionParameters = getDefaultShippingOptionParameters();
+                    paymentDataRequestUpdate.newTransactionInfo = getTransactionInfo(currentCardFundingSource);
+                } else if (trigger === 'SHIPPING_OPTION' || trigger === 'PAYMENT_METHOD') {
+                    paymentDataRequestUpdate.newTransactionInfo = getTransactionInfo(currentCardFundingSource);
+                }
+
+                logToResult(`onPaymentDataChanged Response Update (${trigger})`, paymentDataRequestUpdate, 'response');
+                resolve(paymentDataRequestUpdate);
             });
         }
 
