@@ -526,13 +526,14 @@
 
             return new Promise(function(resolve, reject) {   
                 let paymentDataRequestUpdate = {};
-                const cardFundingSource = intermediatePaymentData &&
-                                           intermediatePaymentData.paymentMethodData &&
-                                           intermediatePaymentData.paymentMethodData.info &&
-                                           intermediatePaymentData.paymentMethodData.info.cardFundingSource;
+                const paymentMethodData = intermediatePaymentData &&
+                                           (intermediatePaymentData.paymentMethodData || intermediatePaymentData.intermediatePaymentMethodData);
+                const cardFundingSource = paymentMethodData &&
+                                           paymentMethodData.info &&
+                                           paymentMethodData.info.cardFundingSource;
 
                 if (trigger === 'INITIALIZE' || trigger === 'PAYMENT_METHOD') {
-                    console.log(`Handling ${trigger} trigger (cardFundingSource: ${cardFundingSource})`, intermediatePaymentData.paymentMethodData);
+                    console.log(`Handling ${trigger} trigger (cardFundingSource: ${cardFundingSource})`, paymentMethodData);
                     paymentDataRequestUpdate.newTransactionInfo = getTransactionInfo(cardFundingSource);
                 }
 
