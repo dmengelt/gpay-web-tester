@@ -52,7 +52,6 @@
                     },
                 },
             ],
-            existingPaymentMethodRequired: true,
             merchantInfo,
         };
 
@@ -84,7 +83,10 @@
 
             document.getElementById('user-agent').innerHTML = window.navigator.userAgent;
 
-            const req = deepCopy(baseGooglePayRequest);
+            const req = {
+                ...deepCopy(baseGooglePayRequest),
+                existingPaymentMethodRequired: true,
+            };
             getGooglePaymentsClient()
                 .isReadyToPay(req)
                 .then(function (res) {
