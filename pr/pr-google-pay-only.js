@@ -1,4 +1,7 @@
 function onBuyClicked() {
+  var panOnly = document.querySelector("input[type='radio'][name=panOnly]:checked").value === 'true';
+  var allowedAuthMethods = panOnly ? ['PAN_ONLY'] : ['PAN_ONLY', 'CRYPTOGRAM_3DS'];
+
   var supportedInstruments = [
     {
       supportedMethods: 'https://google.com/pay',
@@ -9,7 +12,7 @@ function onBuyClicked() {
           allowedPaymentMethods: [{
             type: 'CARD',
             parameters: {
-              allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+              allowedAuthMethods: allowedAuthMethods,
               allowedCardNetworks: ['AMEX', 'DISCOVER', 'VISA', 'MASTERCARD'],
             },
             tokenizationSpecification: {
