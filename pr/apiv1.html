@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Payment Request API tester (APIv1)</title>
+  <style>
+    .prNotSupported {
+      color: white;
+      background-color: #EE0000;
+      padding: 3px;
+    }
+
+    .prSupported {
+      color: white;
+      background-color: green;
+      padding: 3px;
+    }
+
+    #log {
+      white-space: pre;
+      font-family: monospace;
+    }
+  </style>
+</head>
+
+<body onload="checkPaymentRequestSupport()">
+  <div id="contents">
+    <h1>Payment Request API tester (APIv1)</h1>
+
+    <p>
+      Browser supports Payment Request API: <span id="pr" class="prNotSupported">false</span>
+    </p>
+
+    <p>
+      supportedMethods:
+    </p>
+    <ul>
+      <li>https://google.com/pay (apiVersion: 1)</li>
+    </ul>
+    PAN_ONLY:
+    <input type="radio" name="panOnly" value="true" /> true
+    <input type="radio" name="panOnly" value="false" checked="checked" /> false
+
+    <br /><br />
+
+    <h3>Setting <a href="https://www.w3.org/TR/2019/CR-payment-request-20190416/#paymentoptions-dictionary"
+        target="_parent">PaymentOptions:</a></h3>
+
+    requestPayerName:
+    <input type="radio" name="requestPayerName" value="true" /> true
+    <input type="radio" name="requestPayerName" value="false" checked="checked" /> false
+
+    <br /><br />
+
+    requestBillingAddress:
+    <input type="radio" name="requestBillingAddress" value="true" /> true
+    <input type="radio" name="requestBillingAddress" value="false" checked="checked" /> false
+
+    <br /><br />
+
+    requestPayerEmail:
+    <input type="radio" name="requestPayerEmail" value="true" /> true
+    <input type="radio" name="requestPayerEmail" value="false" checked="checked" /> false
+
+    <br /><br />
+
+    requestPayerPhone:
+    <input type="radio" name="requestPayerPhone" value="true" /> true
+    <input type="radio" name="requestPayerPhone" value="false" checked="checked" /> false
+
+    <br /><br />
+
+    requestShipping:
+    <input type="radio" name="requestShipping" value="true" /> true
+    <input type="radio" name="requestShipping" value="false" checked="checked" /> false
+
+    <br /><br />
+
+    shippingType:
+    <select name="shippingTypes" id="shippingTypes">
+      <option value="shipping" selected="selected">shipping</option>
+      <option value="delivery">delivery</option>
+      <option value="pickup">pickup</option>
+    </select>
+
+    <p><button onclick="onBuyClicked()">Buy</button></p>
+  </div>
+
+  <div id="log"></div>
+
+  <script>
+    function checkPaymentRequestSupport() {
+      if (window.PaymentRequest) {
+        let element = document.getElementById("pr");
+        element.classList.remove("prNotSupported");
+        element.classList.add("prSupported");
+        element.innerText = 'true';
+      }
+    }
+
+    function onBuyClicked() {
+      var panOnly = document.querySelector("input[type='radio'][name=panOnly]:checked").value === 'true';
+      var allowedPaymentMethods = panOnly ? ['CARD'] : ['CARD', 'TOKENIZED_CARD'];
+
+      var supportedInstruments = [
+        {
+          supportedMethods: 'https://google.com/pay',
+          data: {
+            environment: 'TEST',
+            merchantId: "14697717800897553235",
+            apiVersion: 1,
+            allowedPaymentMethods: allowedPaymentMethods,
+            cardRequirements: {
+              allowedCardNetworks: [
+                "AMEX",
+                "DISCOVER",
+                "JCB",
+                "MASTERCARD",
+                "VISA"
+              ],
+              billingAddressRequired: true,
+              billingAddressFormat: "FULL"
+            },
+            paymentMethodTokenizationParameters: {
+              tokenizationType: "PAYMENT_GATEWAY",
+              parameters: {
+                gateway: "stripe",
+                'stripe:publishableKey': "pk_test_51Mg8nWA9tv049KWdCFQOwUElIVS3FvQLaGlugWfltUCuTjp4oj5oLkH5pq26W4cTr5GscxAgNaKAMA3z85j6GZUW00D54sM83r",
+                'stripe:version': "Stripe.js\/PayWithGoogle"
+              }
+            },
+            transactionInfo: {
+              totalPriceStatus: "ESTIMATED",
+              totalPrice: "10.99",
+              currencyCode: "USD"
+            }
+          }
+        }
+      ];
+
+      var details = {
+        total: {
+          label: 'Donation',
+          amount: {
+            currency: 'USD',
+            value: '55.00'
+          }
+        },
+        displayItems: [
+          {
+            label: 'Original donation amount',
+            amount: {
+              currency: 'USD',
+              value: '65.00'
+            }
+          },
+          {
+            label: 'Friends and family discount',
+            amount: {
+              currency: 'USD',
+              value: '-10.00'
+            }
+          },
+          {
+            label: 'Free worldwide shipping',
+            amount: {
+              currency: 'USD',
+              value: '0.00'
+            }
+          }
+        ],
+        shippingOptions: [{
+          id: 'freeShippingOption',
+          label: 'Free worldwide shipping',
+          amount: {
+            currency: 'USD',
+            value: '0.00'
+          },
+          selected: true
+        }]
+      };
+
+      var options = {
+        requestBillingAddress: document.querySelector("input[type='radio'][name=requestBillingAddress]:checked").value === 'true',
+        requestPayerName: document.querySelector("input[type='radio'][name=requestPayerName]:checked").value === 'true',
+        requestPayerEmail: document.querySelector("input[type='radio'][name=requestPayerEmail]:checked").value === 'true',
+        requestPayerPhone: document.querySelector("input[type='radio'][name=requestPayerPhone]:checked").value === 'true',
+        requestShipping: document.querySelector("input[type='radio'][name=requestShipping]:checked").value === 'true',
+        shippingType: document.getElementById("shippingTypes").value
+      };
+
+      console.log(options);
+
+      if (!window.PaymentRequest) {
+        console.error('PaymentRequest API is not supported.');
+        return;
+      }
+
+      try {
+        var request = new PaymentRequest(supportedInstruments, details, options);
+
+        if (request.canMakePayment) {
+          request.canMakePayment().then(function (result) {
+            console.log(result ? "Can make payment" : "Cannot make payment");
+          }).catch(function (err) {
+            error(err);
+          });
+        }
+
+        if (request.hasEnrolledInstrument) {
+          request.hasEnrolledInstrument().then(function (result) {
+            console.log(result ? "Has enrolled instrument" : "No enrolled instrument");
+          }).catch(function (err) {
+            error(err);
+          });
+        }
+
+        request.addEventListener('shippingaddresschange', function (e) {
+          e.updateWith(new Promise(function (resolve) {
+            // No changes in price based on shipping address change.
+            resolve(details);
+          }));
+        });
+
+        request.addEventListener('shippingoptionchange', function (e) {
+          e.updateWith(new Promise(function (resolve) {
+            resolve(details);
+          }));
+        });
+
+        request.show()
+          .then(function (instrumentResponse) {
+            instrumentResponse.complete('success')
+              .then(function () {
+                document.getElementById('log').innerHTML = JSON.stringify(instrumentResponse, null, 2);
+                console.log('This is a demo website. No payment will be processed.', instrumentResponse);
+              })
+              .catch(function (err) {
+                error(err);
+              });
+          })
+          .catch(function (err) {
+            error(err);
+          });
+      } catch (e) {
+        error(e.message);
+      }
+    }
+
+    function error(msg) {
+      console.error(msg);
+      document.getElementById('log').innerHTML = msg;
+    }
+  </script>
+</body>
+
+</html>
