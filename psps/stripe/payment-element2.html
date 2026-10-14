@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stripe Payment Element Example 2</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f6f9fc;
+      color: #262626;
+      margin: 0;
+      padding: 32px 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 540px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      padding: 28px;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 0 0 16px;
+    }
+
+    #payment-element {
+      margin-bottom: 20px;
+      min-height: 200px;
+    }
+
+    #submit {
+      width: 100%;
+      padding: 12px 16px;
+      background-color: #0055de;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    #submit:hover:not(:disabled) {
+      background-color: #0044b3;
+    }
+
+    #submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    #payment-message {
+      margin-top: 14px;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #df1b41;
+    }
+
+    #payment-message.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Stripe Payment Element</h1>
+
+    <form id="payment-form">
+      <div id="payment-element">
+        <!-- Stripe.js injects the Payment Element here -->
+      </div>
+      <button id="submit" type="submit">
+        <span id="button-text">Pay now</span>
+      </button>
+      <div id="payment-message" class="hidden" role="alert"></div>
+    </form>
+  </div>
+
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    const stripe = Stripe(
+      'pk_test_51Mg8nWA9tv049KWdCFQOwUElIVS3FvQLaGlugWfltUCuTjp4oj5oLkH5pq26W4cTr5GscxAgNaKAMA3z85j6GZUW00D54sM83r',
+      { apiVersion: '2024-04-10' }
+    );
+
+    const appearance = {
+      theme: 'stripe',
+    };
+
+    const options = {
+      layout: {
+        type: 'accordion',
+        defaultCollapsed: false,
+        radios: 'never',
+        spacedAccordionItems: true,
+      },
+      business: { name: 'RocketRides' },
+      wallets: {
+        applePay: 'auto',
+        googlePay: 'auto',
+      },
+    };
+
+    // In a working integration, this is a value your backend passes with details such as the amount of a payment.
+    const clientSecret = 'pi_3PxQfrA9tv049KWd1lF1KTcm_secret_p583E7HMkQcbpPjZ1xdVJARPr';
+
+    const elements = stripe.elements({ clientSecret, appearance });
+    const paymentElement = elements.create('payment', options);
+    paymentElement.mount('#payment-element');
+
+    function showMessage(messageText) {
+      const messageContainer = document.getElementById('payment-message');
+      messageContainer.classList.remove('hidden');
+      messageContainer.textContent = messageText;
+    }
+
+    function setLoading(isLoading) {
+      const submitBtn = document.getElementById('submit');
+      submitBtn.disabled = isLoading;
+      document.getElementById('button-text').textContent = isLoading ? 'Processing...' : 'Pay now';
+    }
+
+    document.getElementById('payment-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      setLoading(true);
+      document.getElementById('payment-message').classList.add('hidden');
+
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: window.location.href,
+        },
+      });
+
+      if (error) {
+        showMessage(error.message);
+      }
+
+      setLoading(false);
+    });
+  </script>
+</body>
+</html>
