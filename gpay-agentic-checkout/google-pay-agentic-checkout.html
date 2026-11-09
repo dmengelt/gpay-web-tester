@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Checkout page demonstrating a 100% stock Google Pay API integration alongside a standard credit card form, powered by a custom ./pay.js build with native WebMCP support." />
+  <title>Checkout | Studio Audio Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-page: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-subtle: #f1f5f9;
+      --border-color: #e2e8f0;
+      --border-focus: #1a73e8;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --accent-blue: #1a73e8;
+      --accent-blue-hover: #1557b0;
+      --success-bg: #ecfdf5;
+      --success-border: #a7f3d0;
+      --success-text: #065f46;
+      --shadow-card: 0 10px 30px -5px rgba(15, 23, 42, 0.06), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+      --radius-lg: 16px;
+      --radius-md: 10px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: 'Google Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .checkout-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .checkout-card {
+      width: 100%;
+      max-width: 480px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .store-header {
+      margin-bottom: 24px;
+    }
+
+    .store-brand {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .store-header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    /* Order Summary */
+    .order-summary {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      margin-bottom: 26px;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .order-item-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .order-item-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .order-item-price {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .order-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-color);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* Google Pay Button Container */
+    #container {
+      width: 100%;
+      min-height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #container > div {
+      width: 100%;
+    }
+
+    /* Separator: "or Pay with" */
+    .separator {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 24px 0;
+      color: var(--text-muted);
+      font-size: 13.5px;
+      font-weight: 500;
+    }
+
+    .separator::before,
+    .separator::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .separator span {
+      padding: 0 14px;
+    }
+
+    /* Credit Card Form */
+    .card-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    label {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 11px 13px;
+      font-size: 14.5px;
+      font-family: inherit;
+      color: var(--text-primary);
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input[type="text"]::placeholder {
+      color: #94a3b8;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.14);
+    }
+
+    .submit-btn {
+      margin-top: 6px;
+      width: 100%;
+      padding: 13px 18px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      color: #ffffff;
+      background-color: var(--accent-blue);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--accent-blue-hover);
+    }
+
+    .submit-btn:active {
+      transform: translateY(1px);
+    }
+
+    /* Order Confirmation View */
+    #confirmation-view {
+      display: none;
+      text-align: center;
+      padding: 16px 0 8px;
+    }
+
+    .success-badge {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: var(--success-text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-bottom: 16px;
+    }
+
+    #confirmation-view h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      color: var(--text-primary);
+    }
+
+    #confirmation-view p {
+      margin: 0 0 20px;
+      font-size: 14.5px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .receipt-box {
+      text-align: left;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 20px;
+      font-size: 13.5px;
+    }
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .receipt-row:last-child {
+      border-bottom: none;
+    }
+
+    .receipt-label {
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+
+    .receipt-value {
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: right;
+      word-break: break-all;
+    }
+
+    .reset-btn {
+      background: transparent;
+      border: 1px solid #cbd5e1;
+      color: var(--text-secondary);
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .reset-btn:hover {
+      background: var(--bg-subtle);
+      color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+  <main class="checkout-wrapper">
+    <section class="checkout-card" aria-label="Checkout">
+      <header class="store-header">
+        <div class="store-brand">Studio Audio</div>
+        <h1>Checkout</h1>
+      </header>
+
+      <div class="order-summary" aria-label="Order Summary">
+        <div class="order-item">
+          <div>
+            <div class="order-item-title">Studio Pro Wireless Earbuds</div>
+            <div class="order-item-subtitle">Qty: 1 &bull; Standard Shipping</div>
+          </div>
+          <div class="order-item-price">$49.00</div>
+        </div>
+        <div class="order-total-row">
+          <span>Total</span>
+          <span id="order-total-amount">$49.00</span>
+        </div>
+      </div>
+
+      <!-- Active Checkout View -->
+      <div id="checkout-view">
+        <!-- Google Pay Button Container (populated by paymentsClient.createButton) -->
+        <div id="container"></div>
+
+        <!-- Separator -->
+        <div class="separator" role="separator">
+          <span>or Pay with</span>
+        </div>
+
+        <!-- Credit Card Form -->
+        <form id="credit-card-form" class="card-form" autocomplete="on">
+          <div class="form-group">
+            <label for="card-name">Name on card</label>
+            <input
+              type="text"
+              id="card-name"
+              name="cardName"
+              placeholder="Jane Doe"
+              autocomplete="cc-name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="card-number">Card number</label>
+            <input
+              type="text"
+              id="card-number"
+              name="cardNumber"
+              inputmode="numeric"
+              placeholder="1234 5678 9012 3456"
+              autocomplete="cc-number"
+              maxlength="19"
+              required
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="card-expiry">Expiry (MM/YY)</label>
+              <input
+                type="text"
+                id="card-expiry"
+                name="cardExpiry"
+                inputmode="numeric"
+                placeholder="MM/YY"
+                autocomplete="cc-exp"
+                maxlength="5"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="card-cvv">CVV</label>
+              <input
+                type="text"
+                id="card-cvv"
+                name="cardCvv"
+                inputmode="numeric"
+                placeholder="123"
+                autocomplete="cc-csc"
+                maxlength="4"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="postal-code">Postal code</label>
+            <input
+              type="text"
+              id="postal-code"
+              name="postalCode"
+              placeholder="94043"
+              autocomplete="postal-code"
+              required
+            />
+          </div>
+
+          <button type="submit" id="pay-card-submit-btn" class="submit-btn">
+            Pay $49.00
+          </button>
+        </form>
+      </div>
+
+      <!-- Order Confirmation View -->
+      <div id="confirmation-view" aria-live="polite">
+        <div class="success-badge" aria-hidden="true">&#10003;</div>
+        <h2>Order Confirmed</h2>
+        <p id="confirmation-message">Thank you for your purchase. Your payment has been processed.</p>
+        <div class="receipt-box">
+          <div class="receipt-row">
+            <span class="receipt-label">Order ID</span>
+            <span class="receipt-value" id="receipt-order-id">ORD-90421</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Payment Method</span>
+            <span class="receipt-value" id="receipt-payment-method">Google Pay</span>
+          </div>
+          <div class="receipt-row" id="receipt-token-row" style="display: none;">
+            <span class="receipt-label">Payment Token</span>
+            <span class="receipt-value" id="receipt-token"></span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Amount Paid</span>
+            <span class="receipt-value">$49.00 USD</span>
+          </div>
+        </div>
+        <button type="button" id="reset-checkout-btn" class="reset-btn">
+          Back to Checkout
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    /**
+     * Define the version of the Google Pay API referenced when creating your
+     * configuration
+     *
+     * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest|apiVersion in PaymentDataRequest}
+     */
+    const baseRequest = {
+      apiVersion: 2,
+      apiVersionMinor: 0
+    };
+
+    /**
+     * Card networks supported by your site and your gateway
+     *
+     * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters|CardParameters}
+     */
+    const allowedCardNetworks = ["AMEX", "DISCOVER", "INTERAC", "JCB", "MASTERCARD", "VISA"];
+
+    /**
+     * Card authentication methods supported by your site and your gateway
+     *
+     * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters|CardParameters}
+     */
+    const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
+
+    /**
+     * Identify your gateway and your site's gateway merchant identifier
+     *
+     * The Google Pay API response will return an encrypted payment method capable
+     * of being charged by a supported gateway after payer authorization
+     *
+     * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#gateway|PaymentMethodTokenizationSpecification}
+     */
+    const tokenizationSpecification = {
+      type: 'PAYMENT_GATEWAY',
+      parameters: {
+        'gateway': 'example',
+        'gatewayMerchantId': 'exampleGatewayMerchantId'
+      }
+    };
+
+    /**
+     * Describe your site's support for the CARD payment method and its required
+     * fields
+     *
+     * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters|CardParameters}
+     */
+    const baseCardPaymentMethod = {
+      type: 'CARD',
+      parameters: {
+        allowedAuthMethods: allowedCardAuthMethods,
+        allowedCardNetworks: allowedCardNetworks
+      }
+    };
+
+    /**
+     * Describe your site's support for the CARD payment method including optional
+     * fields
+     *
+     * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters|CardParameters}
+     */
+    const cardPaymentMethod = Object.assign(
+      {},
+      baseCardPaymentMethod,
+      {
+        tokenizationSpecification: tokenizationSpecification
+      }
+    );
+
+    /**
+     * An initialized google.payments.api.PaymentsClient object or null if not yet set
+     *
+     * @see {@link getGooglePaymentsClient}
+     */
+    let paymentsClient = null;
+
+    /**
+     * Configure your site's support for payment methods supported by the Google Pay
+     * API.
+     *
+     * @returns {object} Google Pay API version, payment methods supported by the site
+     */
+    function getGoogleIsReadyToPayRequest() {
+      return Object.assign(
+        {},
+        baseRequest,
+        {
+          allowedPaymentMethods: [baseCardPaymentMethod]
+        }
+      );
+    }
+
+    /**
+     * Configure support for the Google Pay API
+     *
+     * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest|PaymentDataRequest}
+     * @returns {object} PaymentDataRequest fields
+     */
+    function getGooglePaymentDataRequest() {
+      const paymentDataRequest = Object.assign({}, baseRequest);
+      paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
+      paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
+      paymentDataRequest.merchantInfo = {
+        merchantName: 'Studio Audio Store'
+      };
+      return paymentDataRequest;
+    }
+
+    /**
+     * Return an active PaymentsClient or initialize
+     *
+     * @see {@link https://developers.google.com/pay/api/web/reference/client#PaymentsClient|PaymentsClient constructor}
+     * @returns {google.payments.api.PaymentsClient} Google Pay API client
+     */
+    function getGooglePaymentsClient() {
+      if (paymentsClient === null) {
+        paymentsClient = new google.payments.api.PaymentsClient({environment: 'TEST'});
+      }
+      return paymentsClient;
+    }
+
+    /**
+     * Initialize Google PaymentsClient after Google-hosted JavaScript has loaded
+     *
+     * Display a Google Pay payment button after confirmation of the viewer's
+     * ability to pay.
+     */
+    function onGooglePayLoaded() {
+      const paymentsClient = getGooglePaymentsClient();
+      paymentsClient.isReadyToPay(getGoogleIsReadyToPayRequest())
+        .then(function(response) {
+          if (response.result) {
+            addGooglePayButton();
+          }
+        })
+        .catch(function(err) {
+          console.error(err);
+        });
+    }
+
+    /**
+     * Add a Google Pay purchase button alongside an existing checkout button
+     *
+     * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#ButtonOptions|Button options}
+     * @see {@link https://developers.google.com/pay/api/web/guides/brand-guidelines|Google Pay brand guidelines}
+     */
+    function addGooglePayButton() {
+      const paymentsClient = getGooglePaymentsClient();
+      const button = paymentsClient.createButton({
+        onClick: onGooglePaymentButtonClicked,
+        allowedPaymentMethods: [baseCardPaymentMethod],
+        buttonSizeMode: 'fill'
+      });
+      document.getElementById('container').appendChild(button);
+    }
+
+    /**
+     * Provide Google Pay API with a payment amount, currency, and amount status
+     *
+     * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo|TransactionInfo}
+     * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
+     */
+    function getGoogleTransactionInfo() {
+      return {
+        countryCode: 'US',
+        currencyCode: 'USD',
+        totalPriceStatus: 'FINAL',
+        totalPrice: '49.00'
+      };
+    }
+
+    /**
+     * Show Google Pay payment sheet when Google Pay payment button is clicked
+     */
+    function onGooglePaymentButtonClicked() {
+      const paymentDataRequest = getGooglePaymentDataRequest();
+      paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
+
+      const paymentsClient = getGooglePaymentsClient();
+      paymentsClient.loadPaymentData(paymentDataRequest)
+        .then(function(paymentData) {
+          processPayment(paymentData, 'Google Pay');
+        })
+        .catch(function(err) {
+          console.error(err);
+        });
+    }
+
+    /**
+     * Process payment data returned by the Google Pay API
+     *
+     * @param {object} paymentData response from Google Pay API after user approves payment
+     * @param {string} [methodLabel] display label for the confirmation receipt
+     * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentData|PaymentData object reference}
+     */
+    function processPayment(paymentData, methodLabel = 'Google Pay') {
+      console.log(paymentData);
+      const paymentToken = paymentData.paymentMethodData.tokenizationData.token;
+      const cardInfo = paymentData.paymentMethodData.info;
+      const cardDescription =
+        paymentData.paymentMethodData.description ||
+        (cardInfo && cardInfo.cardNetwork && cardInfo.cardDetails
+          ? `${cardInfo.cardNetwork} •••• ${cardInfo.cardDetails}`
+          : 'Card');
+      showOrderConfirmation(`${methodLabel} (${cardDescription})`, paymentToken);
+      return paymentToken;
+    }
+
+    /**
+     * Transition the UI from the checkout form to the Order Confirmation state
+     */
+    function showOrderConfirmation(paymentMethodText, paymentToken) {
+      const orderId = 'ORD-' + Math.floor(10000 + Math.random() * 90000);
+      document.getElementById('receipt-order-id').textContent = orderId;
+      document.getElementById('receipt-payment-method').textContent = paymentMethodText;
+      const tokenRow = document.getElementById('receipt-token-row');
+      const tokenEl = document.getElementById('receipt-token');
+      if (paymentToken) {
+        const preview = String(paymentToken).length > 36
+          ? String(paymentToken).slice(0, 36) + '...'
+          : String(paymentToken);
+        tokenEl.textContent = preview;
+        tokenRow.style.display = 'flex';
+      } else {
+        tokenEl.textContent = '';
+        tokenRow.style.display = 'none';
+      }
+      document.getElementById('checkout-view').style.display = 'none';
+      document.getElementById('confirmation-view').style.display = 'block';
+      return orderId;
+    }
+
+    // Handle standard Credit Card Form submission
+    document.getElementById('credit-card-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const rawCardNumber = document.getElementById('card-number').value.replace(/\s+/g, '');
+      const last4 = rawCardNumber.slice(-4) || '0000';
+      showOrderConfirmation(`Credit Card (•••• ${last4})`);
+    });
+
+    // Reset button to return to the checkout view
+    document.getElementById('reset-checkout-btn').addEventListener('click', function() {
+      document.getElementById('credit-card-form').reset();
+      document.getElementById('confirmation-view').style.display = 'none';
+      document.getElementById('checkout-view').style.display = 'block';
+    });
+  </script>
+
+  <!-- Load the custom Google Pay JavaScript library with built-in WebMCP support -->
+  <script
+    async
+    src="./pay.js"
+    onload="onGooglePayLoaded()"
+  ></script>
+</body>
+</html>
