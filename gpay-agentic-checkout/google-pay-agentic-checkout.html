@@ -193,42 +193,25 @@
     }
 
     /* Separator: "or Pay with" */
-    /* Manual Card Disclosure */
-    .manual-card-details {
-      margin-top: 20px;
-    }
-
-    .manual-card-summary {
+    .divider {
       display: flex;
       align-items: center;
       text-align: center;
-      margin: 4px 0 16px;
+      margin: 22px 0 18px;
       color: var(--text-muted);
       font-size: 13.5px;
       font-weight: 500;
-      cursor: pointer;
-      list-style: none;
-      user-select: none;
     }
 
-    .manual-card-summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .manual-card-summary::before,
-    .manual-card-summary::after {
+    .divider::before,
+    .divider::after {
       content: '';
       flex: 1;
       border-bottom: 1px solid var(--border-color);
     }
 
-    .manual-card-summary span {
+    .divider span {
       padding: 0 14px;
-      transition: color 0.15s ease;
-    }
-
-    .manual-card-summary:hover span {
-      color: var(--text-primary);
     }
 
     /* Credit Card Form */
@@ -414,97 +397,87 @@
 
       <!-- Active Checkout View -->
       <div id="checkout-view">
-        <!-- Express Checkout Section -->
-        <section class="express-checkout-section" aria-label="Express Checkout">
-          <div class="express-checkout-header">
-            <h2 class="express-checkout-title">Express Checkout</h2>
-            <span class="express-checkout-subtitle">Fast 1-click checkout</span>
+        <!-- Google Pay Button Container (populated by paymentsClient.createButton) -->
+        <div id="container"></div>
+
+        <div class="divider">
+          <span>or Pay with</span>
+        </div>
+
+        <!-- Credit Card Form -->
+        <form id="credit-card-form" class="card-form" autocomplete="on">
+          <div class="form-group">
+            <label for="card-name">Name on card</label>
+            <input
+              type="text"
+              id="card-name"
+              name="cardName"
+              placeholder="Jane Doe"
+              autocomplete="cc-name"
+              required
+            />
           </div>
-          <!-- Google Pay Button Container (populated by paymentsClient.createButton) -->
-          <div id="container" aria-label="Express Checkout"></div>
-        </section>
 
-        <!-- Manual Credit Card Fallback (Collapsed by Default) -->
-        <details class="manual-card-details" id="manual-card-details">
-          <summary class="manual-card-summary">
-            <span>Or enter card details manually</span>
-          </summary>
+          <div class="form-group">
+            <label for="card-number">Card number</label>
+            <input
+              type="text"
+              id="card-number"
+              name="cardNumber"
+              inputmode="numeric"
+              placeholder="1234 5678 9012 3456"
+              autocomplete="cc-number"
+              maxlength="19"
+              required
+            />
+          </div>
 
-          <!-- Credit Card Form -->
-          <form id="credit-card-form" class="card-form" autocomplete="on">
+          <div class="form-row">
             <div class="form-group">
-              <label for="card-name">Name on card</label>
+              <label for="card-expiry">Expiry (MM/YY)</label>
               <input
                 type="text"
-                id="card-name"
-                name="cardName"
-                placeholder="Jane Doe"
-                autocomplete="cc-name"
-                required
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="card-number">Card number</label>
-              <input
-                type="text"
-                id="card-number"
-                name="cardNumber"
+                id="card-expiry"
+                name="cardExpiry"
                 inputmode="numeric"
-                placeholder="1234 5678 9012 3456"
-                autocomplete="cc-number"
-                maxlength="19"
+                placeholder="MM/YY"
+                autocomplete="cc-exp"
+                maxlength="5"
                 required
               />
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="card-expiry">Expiry (MM/YY)</label>
-                <input
-                  type="text"
-                  id="card-expiry"
-                  name="cardExpiry"
-                  inputmode="numeric"
-                  placeholder="MM/YY"
-                  autocomplete="cc-exp"
-                  maxlength="5"
-                  required
-                />
-              </div>
-
-              <div class="form-group">
-                <label for="card-cvv">CVV</label>
-                <input
-                  type="text"
-                  id="card-cvv"
-                  name="cardCvv"
-                  inputmode="numeric"
-                  placeholder="123"
-                  autocomplete="cc-csc"
-                  maxlength="4"
-                  required
-                />
-              </div>
             </div>
 
             <div class="form-group">
-              <label for="postal-code">Postal code</label>
+              <label for="card-cvv">CVV</label>
               <input
                 type="text"
-                id="postal-code"
-                name="postalCode"
-                placeholder="94043"
-                autocomplete="postal-code"
+                id="card-cvv"
+                name="cardCvv"
+                inputmode="numeric"
+                placeholder="123"
+                autocomplete="cc-csc"
+                maxlength="4"
                 required
               />
             </div>
+          </div>
 
-            <button type="submit" id="pay-card-submit-btn" class="submit-btn">
-              Submit Card Order ($49.00)
-            </button>
-          </form>
-        </details>
+          <div class="form-group">
+            <label for="postal-code">Postal code</label>
+            <input
+              type="text"
+              id="postal-code"
+              name="postalCode"
+              placeholder="94043"
+              autocomplete="postal-code"
+              required
+            />
+          </div>
+
+          <button type="submit" id="pay-card-submit-btn" class="submit-btn">
+            Pay $49.00
+          </button>
+        </form>
       </div>
 
       <!-- Order Confirmation View -->
