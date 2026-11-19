@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Checkout</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            background: #f6f8fa;
+            color: #1a1f36;
+            display: flex;
+            justify-content: center;
+            padding: 48px 16px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 440px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            padding: 32px;
+        }
+
+        h1 {
+            font-size: 20px;
+            margin: 0 0 4px;
+        }
+
+        .summary {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 0;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #e6e8eb;
+            font-size: 15px;
+        }
+
+        .summary strong {
+            font-size: 18px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #6b7280;
+            font-size: 13px;
+            margin: 20px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e6e8eb;
+        }
+
+        button#submit {
+            width: 100%;
+            margin-top: 24px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            background: #635bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button#submit:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        #message {
+            margin-top: 16px;
+            font-size: 14px;
+            color: #df1b41;
+            min-height: 20px;
+        }
+
+        #message.ok {
+            color: #0a7d32;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>Checkout</h1>
+        <div class="summary">
+            <span>Demo product</span>
+            <strong>$13.37</strong>
+        </div>
+
+        <!-- Google Pay (Express Checkout Element) on top -->
+        <div id="express-checkout-element"></div>
+
+        <div class="divider">or pay another way</div>
+
+        <form id="payment-form">
+            <div id="payment-element"></div>
+            <button id="submit" type="submit">Pay $13.37</button>
+            <div id="message" role="alert"></div>
+        </form>
+    </div>
+
+    <script>
+        // ---------------------------------------------------------------------
+        // Config
+        // ---------------------------------------------------------------------
+        const PUBLISHABLE_KEY = 'pk_test_51Mg8nWA9tv049KWdCFQOwUElIVS3FvQLaGlugWfltUCuTjp4oj5oLkH5pq26W4cTr5GscxAgNaKAMA3z85j6GZUW00D54sM83r';
+        const AMOUNT = 1337;       // in the smallest currency unit (cents)
+        const CURRENCY = 'usd';
+
+        // TODO: point this at your backend. It should create a PaymentIntent for
+        // AMOUNT / CURRENCY and respond with JSON: { "clientSecret": "pi_..._secret_..." }.
+        // Leave as null to run the page as a UI-only demo.
+        const CREATE_INTENT_URL = null;
+
+        // ---------------------------------------------------------------------
+        // Stripe setup
+        // ---------------------------------------------------------------------
+        const stripe = Stripe(PUBLISHABLE_KEY, {
+            betas: ['google_pay_beta_1'],
+        });
+
+        // Deferred intent: render Elements without a client secret.
+        const elements = stripe.elements({
+            mode: 'payment',
+            amount: AMOUNT,
+            currency: CURRENCY,
+            appearance: { theme: 'stripe' },
+        });
+
+        // Express Checkout Element with Google Pay first. When this element is
+        // used, wallets are shown here and not duplicated in the Payment Element.
+        const expressCheckoutElement = elements.create('expressCheckout', {
+            paymentMethodOrder: ['google_pay', 'apple_pay', 'link'],
+            paymentMethods: { googlePay: 'always' },
+            buttonType: { googlePay: 'buy' },
+            buttonHeight: 48,
+        });
+        expressCheckoutElement.mount('#express-checkout-element');
+
+        const paymentElement = elements.create('payment', {
+            layout: 'accordion',
+        });
+        paymentElement.mount('#payment-element');
+
+        // ---------------------------------------------------------------------
+        // Helpers
+        // ---------------------------------------------------------------------
+        const form = document.getElementById('payment-form');
+        const submitBtn = document.getElementById('submit');
+        const messageEl = document.getElementById('message');
+
+        function showMessage(text, ok = false) {
+            messageEl.textContent = text;
+            messageEl.classList.toggle('ok', ok);
+        }
+
+        async function createPaymentIntent() {
+            if (!CREATE_INTENT_URL) return null;
+            const res = await fetch(CREATE_INTENT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: AMOUNT, currency: CURRENCY }),
+            });
+            if (!res.ok) throw new Error('Failed to create PaymentIntent');
+            const { clientSecret } = await res.json();
+            return clientSecret;
+        }
+
+        async function confirm() {
+            const clientSecret = await createPaymentIntent();
+            if (!clientSecret) {
+                return {
+                    error: {
+                        message: 'Demo mode: set CREATE_INTENT_URL to a backend that returns a PaymentIntent client secret.',
+                    },
+                };
+            }
+            return stripe.confirmPayment({
+                elements,
+                clientSecret,
+                confirmParams: { return_url: window.location.href },
+            });
+        }
+
+        // ---------------------------------------------------------------------
+        // Express Checkout (Google Pay) flow
+        // ---------------------------------------------------------------------
+        expressCheckoutElement.on('ready', ({ availablePaymentMethods }) => {
+            if (!availablePaymentMethods) {
+                document.getElementById('express-checkout-element').style.display = 'none';
+                document.querySelector('.divider').style.display = 'none';
+            }
+        });
+
+        expressCheckoutElement.on('confirm', async (event) => {
+            const { error: submitError } = await elements.submit();
+            if (submitError) {
+                showMessage(submitError.message);
+                event.paymentFailed({ reason: 'fail' });
+                return;
+            }
+            try {
+                const { error } = await confirm();
+                if (error) {
+                    showMessage(error.message);
+                    event.paymentFailed({ reason: 'fail' });
+                }
+            } catch (e) {
+                showMessage(e.message);
+                event.paymentFailed({ reason: 'fail' });
+            }
+        });
+
+        // ---------------------------------------------------------------------
+        // Payment Element flow
+        // ---------------------------------------------------------------------
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            showMessage('');
+
+            const { error: submitError } = await elements.submit();
+            if (submitError) {
+                showMessage(submitError.message);
+                submitBtn.disabled = false;
+                return;
+            }
+
+            try {
+                const { error } = await confirm();
+                // On success the customer is redirected to return_url.
+                if (error) showMessage(error.message);
+            } catch (err) {
+                showMessage(err.message);
+            }
+            submitBtn.disabled = false;
+        });
+
+        // ---------------------------------------------------------------------
+        // Handle redirect back from confirmPayment
+        // ---------------------------------------------------------------------
+        const returnedSecret = new URLSearchParams(window.location.search)
+            .get('payment_intent_client_secret');
+        if (returnedSecret) {
+            stripe.retrievePaymentIntent(returnedSecret).then(({ paymentIntent }) => {
+                if (!paymentIntent) return;
+                if (paymentIntent.status === 'succeeded') showMessage('Payment succeeded!', true);
+                else if (paymentIntent.status === 'processing') showMessage('Payment processing.', true);
+                else showMessage('Payment failed. Please try again.');
+            });
+        }
+    </script>
+</body>
+
+</html>
